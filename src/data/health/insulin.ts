@@ -74,6 +74,45 @@ When the brain becomes insulin resistant:
 • **Lose visceral fat** — especially liver fat; this has the most dramatic effect`,
       tags: ["Exercise", "Diet", "Sleep", "Lifestyle"],
     },
+    {
+      id: "fasting-nad-metabolic-reset",
+      title: "Fasting, NAD⁺ & Metabolic Reset",
+      content: `Fasting is one of the most powerful tools for restoring metabolic health — and it works in part through a molecule called **NAD⁺** (nicotinamide adenine dinucleotide). NAD⁺ is essential for energy metabolism, DNA repair, and cellular maintenance.
+
+As we age, NAD⁺ levels fall sharply. By around age 50, your body produces roughly **half the NAD⁺** it did at 20. This decline matters directly for metabolic health: NAD⁺ is the critical fuel for **sirtuins** — enzymes that regulate gene expression, mitochondrial function, and fat oxidation. When sirtuins run low on NAD⁺, metabolic efficiency drops and insulin sensitivity suffers.
+
+**How fasting restores the system:**
+• Switches the body from glucose-burning to fat-burning, raising NAD⁺ in the process
+• Elevated NAD⁺ reactivates sirtuins, improving mitochondrial function and glucose disposal
+• A **14–16 hour overnight fast** (e.g. last meal at 8 pm, first meal at 10–12 pm next day) is enough to begin triggering this cascade
+• Extended fasts (beyond 2–3 days, occasionally) activate deeper cellular recycling — **autophagy** — which clears damaged proteins that contribute to metabolic dysfunction
+
+**The adversity principle (hormesis):** When cells sense scarcity, they activate ancient stress-response pathways — DNA repair, autophagy, and metabolic optimization. Fasting mimics this "adversity mode." Modern life, with constant food availability and three meals a day, keeps the body in abundance mode, suppressing these repair systems and accelerating metabolic decline.
+
+**NMN as a NAD⁺ precursor:** NMN (nicotinamide mononucleotide) is a direct precursor that the body converts into NAD⁺. Research suggests 1g of NMN can roughly double blood NAD⁺ levels, with early human trial data showing improvements in body composition, inflammation markers, and cholesterol.`,
+      tags: ["NAD⁺", "Sirtuins", "Autophagy", "Fasting", "Metabolic Flexibility"],
+    },
+    {
+      id: "ampk-insulin-sensitizing-switch",
+      title: "AMPK — The Insulin-Sensitizing Master Switch",
+      content: `**AMPK** (AMP-activated protein kinase) is the body's cellular fuel gauge — a master enzyme that switches on when energy is low and fundamentally improves how the body handles glucose and insulin.
+
+When AMPK is active, it drives the body into a metabolically efficient state: it increases glucose uptake in muscle cells (partly independently of insulin), promotes fat burning, clears ectopic fat from the liver, and suppresses **mTOR** — the nutrient-sensing pathway that, when chronically overactivated by constant eating, contributes to insulin resistance.
+
+**What activates AMPK:**
+• **Exercise** — especially aerobic exercise; the most potent natural activator
+• **Fasting and calorie restriction** — energy scarcity is AMPK's primary trigger
+• **Metformin** — the world's most prescribed diabetes drug works primarily through AMPK activation
+• **Berberine** — a plant-derived compound that activates AMPK through a nearly identical mechanism to metformin, often used as a natural alternative
+• **Cold exposure** — activates AMPK in brown adipose tissue
+
+**The mTOR connection:** mTOR responds to amino acids (protein) and signals cell growth. Chronically elevated mTOR — from eating frequently and in large amounts — suppresses AMPK and promotes the anabolic, storage-oriented state that worsens insulin resistance. Fasting and AMPK activators rebalance this axis.
+
+**The pulsing approach:** Taking AMPK activators like metformin or berberine every other day — rather than daily — and avoiding them for a few hours before exercise may preserve the full training-induced AMPK response while still capturing the metabolic benefits on rest days. Daily use around workouts can blunt muscle adaptation by ~5%.
+
+**Blood sugar as a compass:** Keeping blood glucose levels steady and low throughout the day — avoiding large spikes from ultra-processed foods or excessive fruit — is the simplest proxy for a well-functioning insulin/AMPK system.`,
+      tags: ["AMPK", "Metformin", "Berberine", "mTOR", "Blood Sugar"],
+    },
   ],
   studies: [
     {
@@ -104,11 +143,27 @@ When the brain becomes insulin resistant:
       url: "https://pubmed.ncbi.nlm.nih.gov/33338439/",
       summary: "Dietary carb restriction directly reduces liver fat and improves insulin sensitivity",
     },
+    {
+      title: "Declining NAD⁺ Induces a Pseudohypoxic State Disrupting Nuclear-Mitochondrial Communication during Aging",
+      journal: "Cell",
+      year: 2013,
+      url: "https://pubmed.ncbi.nlm.nih.gov/24360282/",
+      summary: "Sinclair lab: age-related NAD⁺ decline disrupts sirtuin activity and mitochondrial function — reversible with NAD⁺ precursors",
+    },
+    {
+      title: "Metformin improves healthspan and lifespan in mice",
+      journal: "Nature Communications",
+      year: 2013,
+      url: "https://pubmed.ncbi.nlm.nih.gov/23900241/",
+      summary: "AMPK-activating drug extends lifespan and improves metabolic markers in aging mice",
+    },
   ],
   quickStats: [
     { label: "Americans with Prediabetes", value: "88M+", note: "84% undiagnosed" },
     { label: "Sleep deprivation insulin impact", value: "~25%", note: "sensitivity drop" },
     { label: "Visceral fat reduction needed", value: "5–10%", note: "to see major improvement" },
     { label: "Exercise effect (one session)", value: "24–48h", note: "insulin sensitizing" },
+    { label: "NAD⁺ at age 50", value: "~50%", note: "of youthful levels" },
+    { label: "Fasting window target", value: "14–16h", note: "overnight minimum" },
   ],
 };
