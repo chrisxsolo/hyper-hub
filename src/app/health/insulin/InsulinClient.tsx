@@ -319,7 +319,7 @@ const surprisingTriggers: { emoji: string; title: string; desc: React.ReactNode 
   {
     emoji: "🍊",
     title: "Fruit Juice & Smoothies",
-    desc: "Removing fiber from fruit turns fructose into a liver burden. A glass of OJ has the sugar of 4 oranges with none of the fiber that slows absorption.",
+    desc: <>Removing fiber from fruit turns it into a liver burden. A glass of OJ has <span className="text-amber-300 font-medium">the same 25g of sugar as a can of Coca-Cola</span> — identical glucose and fructose molecules processed the same way. The WHO&apos;s daily sugar limit is 25g. One morning glass hits your entire daily budget before breakfast ends. &ldquo;No added sugars&rdquo; on the label? Technically true — the sugar was in the orange from the start, which is why the claim is legal and misleading.</>,
   },
   {
     emoji: "🫙",
@@ -456,6 +456,13 @@ const contributors = [
     credentials: "MD · Interventional Cardiology",
     affiliation: "Preventive Cardiology Practice, Florida",
     focus: "Heart disease prevention; 30,000+ cardiac patients treated; gut-heart-insulin axis; fasting protocols",
+  },
+  {
+    initials: "JI",
+    name: "Jesse Inchauspé",
+    credentials: "Biochemist · Author",
+    affiliation: "Glucose Goddess",
+    focus: "Glucose spike mechanisms, post-meal hacks, mood and behavior consequences of blood sugar dysregulation; pregnancy nutrition and epigenetics",
   },
 ];
 
@@ -775,6 +782,106 @@ export default function InsulinClient() {
             </div>
           </Section>
 
+          {/* Glucose, Mood & Cravings */}
+          <Section>
+            <div className="glass rounded-2xl p-6 border border-violet-500/20 relative overflow-hidden">
+              <div className="absolute inset-0 bg-gradient-to-br from-violet-500/8 to-transparent pointer-events-none" />
+              <div className="relative">
+                <div className="flex flex-wrap items-center gap-2 mb-4">
+                  <Brain size={16} className="text-violet-400" />
+                  <h2 className="text-base font-semibold text-white">Glucose, Mood & The Craving Trap</h2>
+                  <span className="text-[10px] px-2 py-0.5 rounded-full border bg-violet-500/10 text-violet-300/80 border-violet-500/15">
+                    Behavior Science
+                  </span>
+                </div>
+                <p className="text-sm text-white/50 leading-relaxed mb-5">
+                  Blood sugar isn&apos;t just a metabolic number — it directly controls mood, willpower, and decision-making.
+                  Glucose crashes don&apos;t just make you hungry; they impair your brain&apos;s capacity to resist anything.
+                </p>
+
+                {/* Voodoo doll study */}
+                <div className="glass rounded-xl p-4 border border-violet-500/20 mb-5">
+                  <div className="flex items-start gap-3">
+                    <span className="text-2xl shrink-0">🪆</span>
+                    <div>
+                      <p className="text-xs font-semibold text-violet-400 mb-1">The Voodoo Doll Study</p>
+                      <p className="text-xs text-white/50 leading-relaxed">
+                        Researchers gave married couples a voodoo doll representing their spouse and asked them to insert a pin every time their partner annoyed them.
+                        After two weeks, participants with the <span className="text-violet-300">lowest glucose levels</span> had inserted the most pins.
+                        Scientists confirmed through glucose monitoring that unsteady glucose disrupts the neurotransmitter <span className="text-violet-300">tyrosine</span>, which governs mood stability — making you significantly more reactive and irritable toward the people closest to you.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Three mechanisms */}
+                <p className="text-xs font-semibold text-white/40 mb-3 uppercase tracking-wider">Why Glucose Crashes Rob Your Willpower</p>
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-5">
+                  {[
+                    {
+                      icon: "🔋",
+                      title: "Prefrontal Cortex Dims",
+                      color: "text-violet-400",
+                      border: "border-violet-500/20",
+                      body: "During a glucose crash, the prefrontal cortex — responsible for decision-making and willpower — is the first area to dim to conserve energy for vital functions. Executive function shuts down, making it nearly impossible to resist impulses like snacking or doom scrolling.",
+                    },
+                    {
+                      icon: "📲",
+                      title: "The Dopamine Trap",
+                      color: "text-blue-400",
+                      border: "border-blue-500/20",
+                      body: "Sugar releases dopamine — the exact same molecule released by Instagram scrolling. Both create spike-and-crash dopamine cycles. A glucose crash makes you significantly more likely to doom scroll because it simultaneously weakens willpower AND activates dopamine-seeking circuits in the brain.",
+                    },
+                    {
+                      icon: "😤",
+                      title: "Emotional Regulation Fails",
+                      color: "text-red-400",
+                      border: "border-red-500/20",
+                      body: "Unsteady glucose destabilizes emotional regulation. You feel more reactive, less in control, and prone to compulsive behavior — not a personality flaw, but a fuel supply problem. Stable glucose means stable mood. This is biology, not character.",
+                    },
+                  ].map((card) => (
+                    <div key={card.title} className={`glass rounded-xl p-3.5 border ${card.border}`}>
+                      <div className="flex items-center gap-2 mb-2">
+                        <span>{card.icon}</span>
+                        <span className={`text-xs font-semibold ${card.color}`}>{card.title}</span>
+                      </div>
+                      <p className="text-xs text-white/50 leading-relaxed">{card.body}</p>
+                    </div>
+                  ))}
+                </div>
+
+                {/* Two voices */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-4">
+                  <div className="glass rounded-xl p-4 border border-red-500/20 relative overflow-hidden">
+                    <div className="absolute inset-0 bg-gradient-to-br from-red-500/5 to-transparent pointer-events-none" />
+                    <div className="relative">
+                      <p className="text-xs font-semibold text-red-400 mb-2">🚨 The Addiction Voice</p>
+                      <p className="text-xs text-white/50 leading-relaxed italic mb-2">&ldquo;I need sugar right now. Whatever&apos;s in the kitchen. I can&apos;t feel good without it.&rdquo;</p>
+                      <p className="text-xs text-white/40 leading-relaxed">This is a <span className="text-red-300">biological crash signal</span> — not a lack of willpower. A glucose crash triggers a near-irresistible craving mechanism that cannot be overridden by telling yourself to eat less sugar. You have to fix the underlying crash first.</p>
+                    </div>
+                  </div>
+                  <div className="glass rounded-xl p-4 border border-emerald-500/20 relative overflow-hidden">
+                    <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/5 to-transparent pointer-events-none" />
+                    <div className="relative">
+                      <p className="text-xs font-semibold text-emerald-400 mb-2">✓ The Enjoyment Voice</p>
+                      <p className="text-xs text-white/50 leading-relaxed italic mb-2">&ldquo;That cookie looks great. I&apos;ll do some calf raises after.&rdquo;</p>
+                      <p className="text-xs text-white/40 leading-relaxed">This is what <span className="text-emerald-300">stable glucose</span> sounds like. The goal isn&apos;t to never eat sugar — it&apos;s to reach a state where sugar is a <span className="text-emerald-300">choice, not a compulsion</span>. Reduce the crashes and the addiction voice goes quiet on its own.</p>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="glass rounded-xl p-3 border border-amber-500/15 flex items-start gap-2">
+                  <AlertCircle size={13} className="text-amber-400 shrink-0 mt-0.5" />
+                  <p className="text-xs text-white/50 leading-relaxed">
+                    <span className="text-white/70 font-medium">The Protein Leverage Hypothesis:</span>{" "}
+                    Your body will keep you hungry and seeking food until you&apos;ve consumed enough protein. A breakfast of oats and toast fires hunger signals all morning — no matter how many calories it contained.
+                    40g of protein at breakfast shuts down the cascade. Your body got what it actually needed and stops signaling for more.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </Section>
+
           {/* Muscle */}
           <Section>
             <div className="glass rounded-2xl p-6 border border-emerald-500/20 relative overflow-hidden">
@@ -807,6 +914,129 @@ export default function InsulinClient() {
                       <p className="text-[9px] text-emerald-400/70 mt-1.5 leading-tight">{s.sub}</p>
                     </div>
                   ))}
+                </div>
+              </div>
+            </div>
+          </Section>
+
+          {/* Post-Meal Glucose Hacks */}
+          <Section>
+            <div className="glass rounded-2xl p-6 border border-teal-500/20 relative overflow-hidden">
+              <div className="absolute inset-0 bg-gradient-to-br from-teal-500/8 to-transparent pointer-events-none" />
+              <div className="relative">
+                <div className="flex flex-wrap items-center gap-2 mb-4">
+                  <Zap size={16} className="text-teal-400" />
+                  <h2 className="text-base font-semibold text-white">Post-Meal Glucose Hacks</h2>
+                  <span className="text-[10px] px-2 py-0.5 rounded-full border bg-teal-500/10 text-teal-300/80 border-teal-500/15">
+                    Practical
+                  </span>
+                </div>
+                <p className="text-sm text-white/50 leading-relaxed mb-5">
+                  You have roughly <span className="text-white/75 font-medium">90 minutes</span> after eating before a glucose spike peaks.
+                  During this window, muscle contractions pull glucose from your bloodstream independently of insulin.
+                  You don&apos;t need a gym — you need movement.
+                </p>
+
+                {/* 90-min window */}
+                <div className="glass rounded-xl p-4 border border-teal-500/15 mb-5">
+                  <p className="text-xs font-semibold text-teal-400 mb-3">Your 90-Minute Glucose Window</p>
+                  <div className="flex items-center gap-3 mb-3">
+                    <div className="flex-1 relative">
+                      <div className="h-3 rounded-full bg-white/8 overflow-hidden">
+                        <div className="h-full bg-gradient-to-r from-emerald-500/70 via-amber-500/80 to-red-500/60 rounded-full" />
+                      </div>
+                      <div className="flex justify-between mt-1.5">
+                        <span className="text-[10px] text-emerald-400">Eat</span>
+                        <span className="text-[10px] text-amber-400">Spike builds</span>
+                        <span className="text-[10px] text-red-400/70">~90 min peak</span>
+                      </div>
+                    </div>
+                  </div>
+                  <p className="text-xs text-white/40 leading-relaxed">
+                    Move within this window to channel incoming glucose into muscles instead of blood.
+                    The earlier you move after eating, the more of the spike you intercept.
+                  </p>
+                </div>
+
+                {/* Hacks grid */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-4">
+                  {[
+                    {
+                      emoji: "🦵",
+                      title: "Calf Raises",
+                      subtitle: "Anywhere, at your desk",
+                      effectiveness: "High",
+                      effectClass: "text-teal-400",
+                      border: "border-teal-500/20",
+                      body: "The soleus muscle in your calf is exceptionally efficient at soaking up glucose from the bloodstream. Lift your heels up and down — nobody notices. Even 5 minutes at your desk significantly blunts the spike from a sweet meal.",
+                    },
+                    {
+                      emoji: "🏋️",
+                      title: "Squats",
+                      subtitle: "5–10 reps every 5 min",
+                      effectiveness: "Very High",
+                      effectClass: "text-emerald-400",
+                      border: "border-emerald-500/20",
+                      body: "Your glutes are the largest muscle group in the body. Squats put the biggest glucose sink to work. Studies show 5–10 squats every 5 minutes is one of the most powerful post-meal glucose interventions available without equipment.",
+                    },
+                    {
+                      emoji: "🚶",
+                      title: "Walking After Meals",
+                      subtitle: "10–15 min walk",
+                      effectiveness: "High",
+                      effectClass: "text-teal-400",
+                      border: "border-teal-500/20",
+                      body: "A 10-minute walk after eating reduces post-meal glucose spikes by approximately 30%. This is the biological basis of the cultural tradition of walking after dinner — the practice predates the science, but the mechanism is now clear.",
+                    },
+                    {
+                      emoji: "🥦",
+                      title: "Vegetables First",
+                      subtitle: "Fiber before carbs",
+                      effectiveness: "High",
+                      effectClass: "text-teal-400",
+                      border: "border-teal-500/20",
+                      body: "Fiber eaten at the start of a meal forms a viscous mesh in the intestine that physically slows how quickly glucose from carbs enters the bloodstream — smaller, flatter spike. Eat your salad or vegetables before the rice, bread, or pasta. This is called \"crudités\" in France.",
+                    },
+                    {
+                      emoji: "🍾",
+                      title: "Vinegar Before Eating",
+                      subtitle: "1 tbsp in water",
+                      effectiveness: "Moderate",
+                      effectClass: "text-amber-400",
+                      border: "border-amber-500/20",
+                      body: "A tablespoon of vinegar before a carbohydrate-heavy meal blunts the glucose spike — acetic acid slows gastric emptying and reduces glucose absorption rate. Use pasteurized vinegar. Especially useful before high-carb meals at restaurants or social events.",
+                    },
+                    {
+                      emoji: "🍗",
+                      title: "Protein Before Sugar",
+                      subtitle: "Front-load protein",
+                      effectiveness: "High",
+                      effectClass: "text-teal-400",
+                      border: "border-teal-500/20",
+                      body: "Eating protein before a sweet food reduces glucose spike height — for everyone. If two people both ate chicken before honey, both would get a smaller spike than without the protein. Protein slows gastric emptying and blunts the glucose response universally, regardless of individual baseline variability.",
+                    },
+                  ].map((hack) => (
+                    <div key={hack.title} className={`glass rounded-xl p-4 border ${hack.border} flex items-start gap-3`}>
+                      <span className="text-xl shrink-0">{hack.emoji}</span>
+                      <div>
+                        <div className="flex items-center gap-2 mb-0.5">
+                          <p className="text-xs font-semibold text-white/75">{hack.title}</p>
+                          <span className={`text-[9px] font-semibold ${hack.effectClass}`}>{hack.effectiveness}</span>
+                        </div>
+                        <p className="text-[10px] text-white/35 mb-1.5">{hack.subtitle}</p>
+                        <p className="text-xs text-white/45 leading-relaxed">{hack.body}</p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+
+                <div className="glass rounded-xl p-3 border border-white/8 flex items-start gap-2">
+                  <AlertCircle size={13} className="text-teal-400 shrink-0 mt-0.5" />
+                  <p className="text-xs text-white/50 leading-relaxed">
+                    <span className="text-white/70 font-medium">Individual variability:</span>{" "}
+                    Two people eating identical meals will get different absolute glucose spikes — based on microbiome, muscle mass, hydration, stress, and sleep.
+                    But hacks work for <span className="text-white/65">everyone in relative terms</span> — protein before a meal will produce a smaller spike for you regardless of your baseline, and the same is true for walking, calf raises, and fiber-first meal order.
+                  </p>
                 </div>
               </div>
             </div>
