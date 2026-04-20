@@ -38,6 +38,12 @@ function Section({ children, className = "" }: { children: React.ReactNode; clas
 }
 
 // ─── Glossary ─────────────────────────────────────────────────────────────────
+type GlossaryEntry = Readonly<{
+  title: string;
+  body: string;
+  learnMore?: string;
+}>;
+
 const glossaryData = {
   alzheimers: {
     title: "Alzheimer's Disease",
@@ -394,6 +400,7 @@ const contributors = [
 export default function InsulinPage() {
   const [expandedPillar, setExpandedPillar] = useState<number | null>(null);
   const [activeGlossary, setActiveGlossary] = useState<GlossaryKey | null>(null);
+  const activeGlossaryEntry: GlossaryEntry | null = activeGlossary ? glossaryData[activeGlossary] : null;
 
   return (
     <GlossaryContext.Provider value={setActiveGlossary}>
@@ -1210,7 +1217,7 @@ export default function InsulinPage() {
 
       {/* Glossary Bottom Sheet */}
       <AnimatePresence>
-        {activeGlossary && (
+        {activeGlossaryEntry && (
           <>
             <motion.div
               initial={{ opacity: 0 }}
@@ -1233,7 +1240,7 @@ export default function InsulinPage() {
                   <div>
                     <p className="text-[10px] font-semibold text-amber-400/70 tracking-widest uppercase mb-1">Glossary</p>
                     <h3 className="text-xl font-bold text-white leading-snug">
-                      {glossaryData[activeGlossary].title}
+                      {activeGlossaryEntry.title}
                     </h3>
                   </div>
                   <button
@@ -1244,11 +1251,11 @@ export default function InsulinPage() {
                   </button>
                 </div>
                 <p className="text-sm text-white/60 leading-relaxed mb-4">
-                  {glossaryData[activeGlossary].body}
+                  {activeGlossaryEntry.body}
                 </p>
-                {glossaryData[activeGlossary].learnMore && (
+                {activeGlossaryEntry.learnMore && (
                   <a
-                    href={glossaryData[activeGlossary].learnMore}
+                    href={activeGlossaryEntry.learnMore}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="inline-flex items-center gap-1.5 text-xs text-amber-400/80 hover:text-amber-300 transition-colors"
