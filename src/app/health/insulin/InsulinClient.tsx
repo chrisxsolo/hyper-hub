@@ -171,6 +171,18 @@ const glossaryData = {
     title: "Nattokinase",
     body: "An enzyme derived from natto (fermented soybeans) with fibrinolytic activity — meaning it helps dissolve blood clots and break down fibrin, the protein scaffold of clots. Metabolic syndrome increases clotting tendency (hypercoagulability), making nattokinase potentially valuable for cardiovascular risk management. Typical dose: 2,000–8,000 FU (fibrinolytic units) daily. Generally considered blood-thinning; avoid if on anticoagulants without physician oversight.",
   },
+  mtorc1: {
+    title: "mTORC1 (Mechanistic Target of Rapamycin Complex 1)",
+    body: "A master regulator of cell growth and metabolism that senses nutrient availability (especially amino acids and insulin signaling). When chronically overactivated by sustained hyperinsulinemia, mTORC1 suppresses PGC-1α — the primary driver of mitochondrial biogenesis. This means fewer, less efficient mitochondria over time. mTORC1 overactivation is also implicated in accelerated aging, cancer progression, and reduced autophagy. Intermittent fasting and calorie restriction are among the most effective ways to periodically lower mTORC1 activity.",
+  },
+  nfkb: {
+    title: "NF-κB / IKKβ (Inflammatory Signaling Pathway)",
+    body: "NF-κB (Nuclear Factor kappa-light-chain-enhancer of activated B cells) is the master transcription factor for pro-inflammatory gene expression. IKKβ is the kinase that activates it. Chronically elevated insulin directly phosphorylates IKKβ, triggering NF-κB to switch on dozens of inflammatory cytokines (TNF-α, IL-1β, IL-6). Critically, this inflammation then feeds back to worsen insulin resistance — creating a self-reinforcing loop where high insulin causes inflammation that causes more insulin resistance that causes higher insulin.",
+  },
+  srebp1c: {
+    title: "SREBP-1c (Sterol Regulatory Element-Binding Protein 1c)",
+    body: "A transcription factor activated by insulin that acts as a master switch for fat production. When SREBP-1c is turned on by high insulin, it upregulates acetyl-CoA carboxylase and fatty acid synthase — the key enzymes that convert excess glucose and acetyl-CoA into stored fat. The disturbing implication: even as muscle and liver cells become insulin-resistant to glucose uptake, fat cells can remain SREBP-1c sensitive — meaning you continue storing fat from glucose even as other metabolic processes break down. This partially explains why hyperinsulinemia can drive fat accumulation independent of caloric surplus.",
+  },
 } as const;
 
 type GlossaryKey = keyof typeof glossaryData;
@@ -660,6 +672,110 @@ export default function InsulinClient() {
                     </ul>
                     <p className="text-[10px] text-white/30 mt-3 italic">Silent for years — damage occurs long before symptoms</p>
                   </div>
+                </div>
+              </div>
+            </div>
+          </Section>
+
+          {/* Hyperinsulinemia Direct Damage */}
+          <Section>
+            <div className="glass rounded-2xl p-6 border border-rose-500/20 relative overflow-hidden">
+              <div className="absolute inset-0 bg-gradient-to-br from-rose-500/8 to-transparent pointer-events-none" />
+              <div className="relative">
+                <div className="flex flex-wrap items-center gap-2 mb-4">
+                  <AlertCircle size={16} className="text-rose-400" />
+                  <h2 className="text-base font-semibold text-white">Hyperinsulinemia: 6 Mechanisms of Direct Damage</h2>
+                  <span className="text-[10px] px-2 py-0.5 rounded-full border bg-rose-500/10 text-rose-300/80 border-rose-500/15">
+                    Molecular Biology
+                  </span>
+                </div>
+                <p className="text-sm text-white/50 leading-relaxed mb-5">
+                  Most people understand that insulin resistance causes problems over time. What&apos;s less understood is that{" "}
+                  <span className="text-white/75 font-medium">high insulin itself directly damages tissue</span> through six mechanistically distinct pathways that operate in parallel — not in sequence. These processes don&apos;t wait for insulin resistance to fully develop first.<Cite id={9} />
+                </p>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-5">
+                  {([
+                    {
+                      num: "1",
+                      emoji: "🩸",
+                      title: "Direct Vascular Damage",
+                      color: "text-rose-400",
+                      border: "border-rose-500/20",
+                      bg: "bg-rose-500/10",
+                      body: <><GlossaryTerm termKey="hyperinsulinemia">Hyperinsulinemia</GlossaryTerm> promotes endothelial dysfunction through increased oxidative stress and reduced nitric oxide bioavailability. This is <span className="text-white/65 font-medium">mechanistically separate from insulin resistance</span> — the insulin itself damages vessel walls, independent of whether cells are responding to it or not.</>,
+                    },
+                    {
+                      num: "2",
+                      emoji: "🏭",
+                      title: "Lipogenesis Override",
+                      color: "text-orange-400",
+                      border: "border-orange-500/20",
+                      bg: "bg-orange-500/10",
+                      body: <>High insulin activates <GlossaryTerm termKey="srebp1c">SREBP-1c</GlossaryTerm> transcription factors, upregulating lipogenic enzymes — acetyl-CoA carboxylase and fatty acid synthase. This converts glucose → fat even as tissues become insulin-resistant to glucose uptake. You can be storing more fat while simultaneously becoming less able to use glucose for energy.</>,
+                    },
+                    {
+                      num: "3",
+                      emoji: "🔒",
+                      title: "Lipolysis Suppressed",
+                      color: "text-amber-400",
+                      border: "border-amber-500/20",
+                      bg: "bg-amber-500/10",
+                      body: <>Insulin potently inhibits hormone-sensitive lipase — the enzyme that releases stored triglycerides. Chronically elevated insulin locks you in fat-storage mode by blocking <GlossaryTerm termKey="lipolysis">lipolysis</GlossaryTerm> even during a caloric deficit. You can be eating less and still struggle to mobilize stored fat if insulin stays frequently elevated.</>,
+                    },
+                    {
+                      num: "4",
+                      emoji: "⚡",
+                      title: "Mitochondrial Dysfunction",
+                      color: "text-violet-400",
+                      border: "border-violet-500/20",
+                      bg: "bg-violet-500/10",
+                      body: <>Sustained hyperinsulinemia impairs mitochondrial biogenesis through <GlossaryTerm termKey="mtorc1">mTORC1 overactivation</GlossaryTerm>, which reduces PGC-1α activity. The result: fewer functional mitochondria, reduced metabolic flexibility, and diminished capacity to oxidize fat for fuel — a compounding deficiency that worsens over years.</>,
+                    },
+                    {
+                      num: "5",
+                      emoji: "🔥",
+                      title: "Inflammatory Signaling",
+                      color: "text-red-400",
+                      border: "border-red-500/20",
+                      bg: "bg-red-500/10",
+                      body: <>Insulin directly activates <GlossaryTerm termKey="nfkb">IKKβ and NF-κB pathways</GlossaryTerm>, promoting systemic low-grade inflammation independent of adiposity or insulin resistance. This creates a feed-forward loop: high insulin → more inflammation → worsened insulin sensitivity → higher insulin required → repeat.</>,
+                    },
+                    {
+                      num: "6",
+                      emoji: "🔋",
+                      title: "Beta-Cell Exhaustion",
+                      color: "text-yellow-400",
+                      border: "border-yellow-500/20",
+                      bg: "bg-yellow-500/10",
+                      body: <>Chronic demand for high insulin output eventually leads to <GlossaryTerm termKey="betaCells">beta-cell apoptosis</GlossaryTerm> and dysfunction. The pancreas can only compensate for so long. This is the direct pathway from metabolic syndrome → prediabetes → Type 2 Diabetes. Years of overwork burning out the only cells that produce insulin.</>,
+                    },
+                  ] as { num: string; emoji: string; title: string; color: string; border: string; bg: string; body: React.ReactNode }[]).map((item) => (
+                    <div key={item.num} className={`glass rounded-xl p-4 border ${item.border}`}>
+                      <div className="flex items-start gap-3">
+                        <div className={`shrink-0 w-7 h-7 rounded-lg ${item.bg} border ${item.border} flex items-center justify-center`}>
+                          <span className={`text-[10px] font-bold ${item.color}`}>{item.num}</span>
+                        </div>
+                        <div>
+                          <div className="flex items-center gap-1.5 mb-1.5">
+                            <span className="text-base leading-none">{item.emoji}</span>
+                            <p className={`text-xs font-semibold ${item.color}`}>{item.title}</p>
+                          </div>
+                          <p className="text-xs text-white/45 leading-relaxed">{item.body}</p>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+
+                {/* Critical insight */}
+                <div className="glass rounded-xl p-4 border border-rose-500/20 bg-rose-500/5">
+                  <p className="text-xs font-semibold text-rose-400 mb-2">⚠️ The Parallel Problem — Not a Linear Chain</p>
+                  <p className="text-xs text-white/55 leading-relaxed">
+                    <span className="text-white/75 font-medium">Insulin resistance is both a cause AND a consequence</span> of these processes — all six pathways run in parallel, not sequence.
+                    It&apos;s not &ldquo;spikes → resistance → bad.&rdquo; It&apos;s &ldquo;spikes → resistance <em>plus</em> direct vascular damage <em>plus</em> metabolic inflexibility <em>plus</em> chronic inflammation&rdquo; simultaneously, each reinforcing the others.
+                    This is why treating only blood glucose (the downstream symptom) while ignoring chronically elevated insulin misses most of the actual disease process.
+                  </p>
                 </div>
               </div>
             </div>
