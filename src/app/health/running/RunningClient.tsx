@@ -111,6 +111,15 @@ const glossaryData = {
     body: "First described by exercise physiologist George Brooks (UC Berkeley), the lactate shuttle overturned the old idea that lactate is simply 'waste' from anaerobic metabolism. In reality, lactate produced by working muscles is actively transported into adjacent mitochondria (and the heart) and oxidized as a premium fuel. Athletes with high mitochondrial density don't produce less lactate than untrained people — they clear it dramatically faster, because more mitochondria means more shuttle capacity. This is why trained athletes can run at faster paces before hitting their lactate threshold. Zone 2 training is the primary way to improve lactate shuttle efficiency.",
     learnMore: "https://pubmed.ncbi.nlm.nih.gov/11279330/",
   },
+  lactate: {
+    title: "Lactate (Not Lactic Acid)",
+    body: "Lactate and lactic acid are not the same molecule — a critical distinction. At the pH of human blood, lactic acid instantly dissociates into lactate + a hydrogen ion (H⁺). The H⁺ ion causes cellular acidosis and the burning sensation during hard exercise. Lactate itself is not the culprit. It is a metabolic intermediate produced continuously — even at rest — whenever glucose is broken down via glycolysis. At low intensities, mitochondria clear lactate as fast as it's produced. At higher intensities, production exceeds clearance and blood lactate rises. George Brooks' decades of research (UC Berkeley) established that lactate is a premium fuel, an energy carrier between tissues, and a signaling molecule with systemic effects — one of the most important and misunderstood molecules in exercise physiology.",
+    learnMore: "https://pubmed.ncbi.nlm.nih.gov/29617640/",
+  },
+  MCT: {
+    title: "MCT Proteins (Monocarboxylate Transporters)",
+    body: "Monocarboxylate transporter proteins (primarily MCT1 and MCT4) are the gatekeepers of lactate movement between cells. MCT4 exports lactate from fast-twitch muscle fibers that produce it; MCT1 imports it into slow-twitch fibers and the heart that burn it. Endurance training dramatically increases MCT1 and MCT4 expression — this is a key adaptation that raises lactate threshold. More MCT proteins = faster lactate shuttling = better performance at higher intensities. This is a direct molecular reason why trained athletes handle higher workloads before lactate accumulates.",
+  },
 } as const;
 
 type GlossaryKey = keyof typeof glossaryData;
@@ -374,6 +383,30 @@ const studies = [
     year: 2007,
     url: "https://pubmed.ncbi.nlm.nih.gov/17414804/",
     summary: "Helgerud et al.: 4×4 min intervals at 90–95% HRmax produce significantly greater VO2max gains than continuous moderate or threshold training — the evidence base for the Norwegian 4×4 protocol",
+  },
+  {
+    id: 15,
+    title: "The Science and Translation of Lactate Shuttle Theory",
+    journal: "Cell Metabolism",
+    year: 2018,
+    url: "https://pubmed.ncbi.nlm.nih.gov/29617640/",
+    summary: "Brooks' landmark review: lactate is a premium fuel, energy carrier, and signaling molecule — not waste. Covers the cell-cell and intracellular lactate shuttles, the heart's preference for lactate, and lactate's role in angiogenesis and metabolic signaling",
+  },
+  {
+    id: 16,
+    title: "The Lactate Shuttle During Exercise and Recovery",
+    journal: "Medicine & Science in Sports & Exercise",
+    year: 1986,
+    url: "https://pubmed.ncbi.nlm.nih.gov/3523107/",
+    summary: "Brooks' original lactate shuttle paper — overturning the 'lactic acid = waste' dogma and establishing that lactate is actively transported between cells and oxidized as a premium fuel during and after exercise",
+  },
+  {
+    id: 17,
+    title: "Lactate Mediates the Effects of Exercise on Learning and Memory Through SIRT1-Dependent Activation of Hippocampal Brain-Type Creatine Kinase",
+    journal: "Cell Metabolism",
+    year: 2019,
+    url: "https://pubmed.ncbi.nlm.nih.gov/31056281/",
+    summary: "El Hayek et al.: lactate produced during exercise crosses the blood-brain barrier and directly mediates exercise-induced improvements in learning and memory via hippocampal signaling — establishing lactate as a neuroprotective exercise signal",
   },
 ];
 
@@ -966,6 +999,154 @@ export default function RunningClient() {
                     <p className="text-[10px] text-white/40 leading-relaxed italic">
                       Elite approach: 80% Zone 2 builds the mitochondrial base → 20% HIIT pushes cardiac output to the ceiling. Zone 2 without HIIT plateaus early. HIIT without a Zone 2 base produces rapid gains that stall — and injury follows. You need both, in that ratio.
                     </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </Section>
+
+          {/* ── Lactate: The Misunderstood Molecule ────────────────────────── */}
+          <Section>
+            <div className="glass rounded-2xl p-6 border border-indigo-500/20 relative overflow-hidden">
+              <div className="absolute inset-0 bg-gradient-to-br from-indigo-500/8 to-transparent pointer-events-none" />
+              <div className="relative">
+                <div className="flex flex-wrap items-center gap-2 mb-4">
+                  <span className="text-base">🧪</span>
+                  <h2 className="text-base font-semibold text-white">Lactate: The Misunderstood Molecule</h2>
+                  <span className="text-[10px] px-2 py-0.5 rounded-full border bg-indigo-500/10 text-indigo-300/80 border-indigo-500/15">
+                    George Brooks · UC Berkeley
+                  </span>
+                </div>
+
+                <p className="text-sm text-white/55 leading-relaxed mb-5">
+                  For decades, lactate was blamed for the burn, for soreness, for fatigue. All of it was wrong.
+                  George Brooks spent 40+ years at UC Berkeley demonstrating that <GlossaryTerm termKey="lactate">lactate</GlossaryTerm> is one of
+                  the most important molecules in exercise physiology — a premium fuel, a signaling molecule, and a key
+                  driver of the brain benefits of running.<Cite id={15} />
+                </p>
+
+                {/* Myth vs Reality */}
+                <div className="glass rounded-xl p-4 border border-white/10 mb-5">
+                  <p className="text-xs font-semibold text-white/40 uppercase tracking-wider mb-3">The Old View vs. The Science</p>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                      <p className="text-[10px] font-bold text-rose-400/70 uppercase tracking-wide mb-2">Old view (wrong)</p>
+                      <ul className="space-y-2">
+                        {[
+                          "Lactate = 'lactic acid' = metabolic waste",
+                          "Lactate causes the burning sensation",
+                          "Lactate causes muscle soreness (DOMS)",
+                          "High lactate = bad performance",
+                          "Must be cleared to recover properly",
+                        ].map((item) => (
+                          <li key={item} className="flex items-start gap-2">
+                            <span className="text-rose-400 text-[10px] shrink-0 mt-0.5">✗</span>
+                            <span className="text-[10px] text-white/35 line-through decoration-rose-400/25 leading-snug">{item}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                    <div>
+                      <p className="text-[10px] font-bold text-emerald-400/70 uppercase tracking-wide mb-2">Current science (correct)</p>
+                      <ul className="space-y-2">
+                        {[
+                          "Lactate ≠ lactic acid — chemically distinct",
+                          "The burn is from H⁺ ions (acidosis), not lactate",
+                          "DOMS is caused by micro-tears, not lactate",
+                          "Trained athletes produce MORE lactate, clear it faster",
+                          "Lactate is a fuel, signal, and neuroprotective molecule",
+                        ].map((item) => (
+                          <li key={item} className="flex items-start gap-2">
+                            <span className="text-emerald-400 text-[10px] shrink-0 mt-0.5">✓</span>
+                            <span className="text-[10px] text-white/55 leading-snug">{item}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+
+                {/* What it is */}
+                <div className="glass rounded-xl p-4 border border-indigo-500/20 mb-5">
+                  <p className="text-xs font-semibold text-indigo-400 mb-2">What Lactate Actually Is</p>
+                  <p className="text-xs text-white/50 leading-relaxed">
+                    When glucose is broken down via glycolysis, it produces pyruvate. When mitochondria
+                    can&apos;t process all the pyruvate fast enough, it converts to <GlossaryTerm termKey="lactate">lactate</GlossaryTerm> — not as a failure, but as
+                    a smart overflow valve. Lactate is produced continuously, even at rest. At low intensities,
+                    mitochondria clear it as fast as it&apos;s made. At higher intensities, production exceeds
+                    clearance and blood lactate rises. The burn and fatigue you feel? That comes from H⁺ ions (protons)
+                    released from ATP hydrolysis — a separate process. Blaming lactate for the burn is like blaming
+                    the ambulance for the crash.
+                  </p>
+                </div>
+
+                {/* 6 Benefits */}
+                <p className="text-xs font-semibold text-white/40 uppercase tracking-wider mb-3">
+                  6 Benefits of Lactate During Exercise<Cite id={15} /><Cite id={16} />
+                </p>
+                <div className="space-y-2 mb-5">
+                  {[
+                    {
+                      icon: "❤️",
+                      title: "Premium heart fuel — the heart prefers it over glucose",
+                      desc: <span>The heart muscle preferentially oxidizes lactate over glucose during exercise. Cardiac mitochondria pull lactate directly from the bloodstream and burn it as a high-efficiency fuel. At high intensities, the working heart runs substantially on lactate — which is why your aerobic capacity and cardiac function are so tightly linked to lactate metabolism.<Cite id={15} /></span>,
+                    },
+                    {
+                      icon: "🔀",
+                      title: "Distributed energy currency — the lactate shuttle",
+                      desc: <span>Brooks&apos; lactate shuttle<Cite id={16} /> showed that lactate is an energy carrier between tissues. Fast-twitch muscle fibers produce it; slow-twitch fibers and the heart import it via <GlossaryTerm termKey="MCT">MCT proteins</GlossaryTerm> and burn it. Trained athletes have far more MCT proteins — shuttling lactate more efficiently between producers and consumers. This is a major reason they sustain higher paces before accumulation.</span>,
+                    },
+                    {
+                      icon: "🧠",
+                      title: "Brain fuel and BDNF trigger — the cognitive upside of hard running",
+                      desc: <span>Lactate crosses the blood-brain barrier and is oxidized by neurons as a fuel — particularly during exercise when glucose delivery may lag behind demand. Beyond fuel, lactate directly mediates exercise-induced improvements in learning and memory via hippocampal signaling.<Cite id={17} /> This is a key mechanism behind the well-documented brain benefits of running — not just endorphins.</span>,
+                    },
+                    {
+                      icon: "🩸",
+                      title: "Gluconeogenesis substrate — recycled into glucose (Cori cycle)",
+                      desc: <span>The liver takes up circulating lactate and converts it back to glucose via the Cori cycle. This gluconeogenic recycling maintains blood glucose during prolonged exercise, providing a steady fuel supply to the brain and working muscles. Lactate is not wasted — it completes a full metabolic loop.</span>,
+                    },
+                    {
+                      icon: "🫀",
+                      title: "Angiogenesis signal — triggers new blood vessel growth",
+                      desc: <span>Lactate stimulates VEGF (vascular endothelial growth factor), which drives angiogenesis — the formation of new capillaries inside muscle tissue.<Cite id={15} /> This is partly why endurance training produces dramatically denser muscle vasculature: the lactate produced during hard sessions signals the body to build more delivery infrastructure. More capillaries = better oxygen delivery = higher performance ceiling.</span>,
+                    },
+                    {
+                      icon: "🛡️",
+                      title: "Buffer contribution — not the cause of acidosis",
+                      desc: <span>The conversion of pyruvate to lactate actually consumes H⁺ ions — partially buffering the very acidosis it is blamed for. The cellular pH crisis during intense exercise comes primarily from ATP hydrolysis, which releases H⁺ independently of lactate. Lactate production is a net pH-neutral or slightly pH-protective reaction. Blaming it for the burn is chemically backwards.</span>,
+                    },
+                  ].map((item, i) => (
+                    <div key={i} className="flex items-start gap-3 glass rounded-xl p-3.5 border border-white/8">
+                      <span className="text-base shrink-0 mt-0.5">{item.icon}</span>
+                      <div>
+                        <p className="text-xs font-semibold text-white/70 mb-0.5">{item.title}</p>
+                        <p className="text-xs text-white/45 leading-relaxed">{item.desc}</p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+
+                {/* Training improves lactate handling */}
+                <div className="glass rounded-xl p-4 border border-indigo-500/20 bg-indigo-500/5">
+                  <p className="text-xs font-semibold text-indigo-400 mb-3">How Zone 2 Training Makes You Better at Lactate</p>
+                  <div className="space-y-2">
+                    {[
+                      { step: "Zone 2 training", detail: "Upregulates MCT1 and MCT4 protein expression in muscle fibers" },
+                      { step: "More MCT proteins", detail: "Faster lactate transport between producing and consuming cells" },
+                      { step: "More mitochondria (PGC-1α)", detail: "Greater capacity to oxidize lactate as fuel inside each cell" },
+                      { step: "Net result", detail: "Higher lactate threshold — you sustain faster paces before accumulation, not because you produce less, but because you clear it faster" },
+                    ].map((s, i) => (
+                      <div key={i} className="flex items-start gap-3">
+                        <span className="text-[10px] font-bold text-indigo-400/60 bg-indigo-500/10 rounded px-1.5 py-0.5 shrink-0 mt-0.5 font-mono">
+                          {String(i + 1).padStart(2, "0")}
+                        </span>
+                        <div>
+                          <span className="text-xs font-medium text-white/65">{s.step}</span>
+                          <span className="text-xs text-white/35 ml-2">{s.detail}</span>
+                        </div>
+                      </div>
+                    ))}
                   </div>
                 </div>
               </div>
