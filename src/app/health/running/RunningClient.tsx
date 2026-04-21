@@ -92,6 +92,25 @@ const glossaryData = {
     title: "BDNF (Brain-Derived Neurotrophic Factor)",
     body: "A protein that promotes the survival, growth, and maintenance of neurons — often called 'Miracle-Gro for the brain.' Aerobic exercise is the most reliable way to increase BDNF levels. BDNF drives neurogenesis (new neuron formation) in the hippocampus, the brain region central to memory and learning. Chronic stress and sedentary behavior suppress BDNF. Running-induced BDNF elevation is thought to be responsible for the well-documented antidepressant effects of exercise.",
   },
+  lt1: {
+    title: "Lactate Threshold 1 (LT1 / Aerobic Threshold)",
+    body: "The first lactate threshold is the exercise intensity at which blood lactate first begins rising above resting levels — but is still being cleared as fast as it's produced. Below LT1, your aerobic system handles everything cleanly and fat is the dominant fuel. Above LT1 (Zones 3+), lactate accumulates, carbohydrate becomes dominant, and fatigue accelerates. Zone 2 training sits just below LT1. It is precisely this boundary that makes Zone 2 the mitochondrial sweet spot: you maximally stress the aerobic system without triggering the anaerobic shift that changes the training stimulus. LT1 can be measured precisely via blood lactate testing during an incremental exercise test.",
+    learnMore: "https://pubmed.ncbi.nlm.nih.gov/29921710/",
+  },
+  pgc1alpha: {
+    title: "PGC-1α — The Mitochondrial Master Switch",
+    body: "Peroxisome proliferator-activated receptor gamma coactivator 1-alpha (PGC-1α) is the master transcriptional regulator of mitochondrial biogenesis — the construction of new mitochondria. When activated by sustained aerobic exercise, PGC-1α triggers production of hundreds of mitochondrial proteins, growing both the number and size of mitochondria inside muscle cells. Zone 2 provides the optimal sustained stimulus for PGC-1α: the intensity is high enough to activate it, the duration can be sustained for hours (unlike HIIT), and it can be repeated daily without excessive fatigue. PGC-1α is also activated by fasting, cold exposure, and HIIT — but Zone 2 at high weekly volume is the most powerful driver of chronic mitochondrial adaptation.",
+    learnMore: "https://pubmed.ncbi.nlm.nih.gov/12872135/",
+  },
+  slowTwitch: {
+    title: "Type I Slow-Twitch Muscle Fibers",
+    body: "Muscle fibers come in two primary types. Type I (slow-twitch) fibers are densely packed with mitochondria, highly fatigue-resistant, and rely primarily on fat for fuel — making them the workhorse of aerobic endurance. Type II (fast-twitch) fibers produce more force quickly but fatigue fast and rely more on anaerobic glycolysis. Zone 2 intensity specifically recruits and trains Type I fibers, driving mitochondrial adaptations in exactly the fibers that matter for aerobic performance and metabolic health. With months of Zone 2 training, some Type IIa fibers can adopt Type I-like metabolic properties — expanding the pool of aerobically efficient muscle.",
+  },
+  lactateShuttle: {
+    title: "The Lactate Shuttle",
+    body: "First described by exercise physiologist George Brooks (UC Berkeley), the lactate shuttle overturned the old idea that lactate is simply 'waste' from anaerobic metabolism. In reality, lactate produced by working muscles is actively transported into adjacent mitochondria (and the heart) and oxidized as a premium fuel. Athletes with high mitochondrial density don't produce less lactate than untrained people — they clear it dramatically faster, because more mitochondria means more shuttle capacity. This is why trained athletes can run at faster paces before hitting their lactate threshold. Zone 2 training is the primary way to improve lactate shuttle efficiency.",
+    learnMore: "https://pubmed.ncbi.nlm.nih.gov/11279330/",
+  },
 } as const;
 
 type GlossaryKey = keyof typeof glossaryData;
@@ -204,7 +223,8 @@ const benefits = [
       <>Moore et al. 2016 <Cite id={4} />: exercise reduces risk for 13 of 26 cancer types studied</>,
       "Mechanisms: lower circulating estrogens, reduced inflammation, better immune surveillance",
       "Colon cancer risk reduced 40–50% with regular vigorous activity",
-      "Exercise improves cancer treatment outcomes and reduces recurrence rates",
+      "GDP and cancer rates track nearly as a straight line: the richer (and more sedentary) the country, the higher the cancer incidence — Lieberman",
+      "Bangladeshi women who move to England see cancer rates rise sharply — diet, inactivity, and stress are the primary drivers, not genetics",
     ] as React.ReactNode[],
   },
   {
@@ -237,6 +257,7 @@ const benefits = [
       <><GlossaryTerm termKey="zone2">Zone 2 running</GlossaryTerm> maximizes fat oxidation and <GlossaryTerm termKey="mitochondria">mitochondrial density</GlossaryTerm></>,
       "Reduces visceral fat more effectively than caloric restriction alone",
       <>Improves <GlossaryTerm termKey="VO2max">VO2 max</GlossaryTerm> — the single strongest predictor of longevity</>,
+      "Exercise outperforms intermittent fasting: both activate overlapping cellular repair genes, but exercise triggers more of them more acutely — fasting is not a movement substitute (Lieberman)",
     ] as React.ReactNode[],
   },
 ];
@@ -321,6 +342,38 @@ const studies = [
     year: 2002,
     url: "https://pubmed.ncbi.nlm.nih.gov/12167916/",
     summary: "Each 1-MET increase in exercise capacity: 12% lower mortality. Low fitness was a stronger mortality predictor than smoking, hypertension, or diabetes",
+  },
+  {
+    id: 11,
+    title: "Assessment of Metabolic Flexibility by Means of Measuring Blood Lactate, Fat, and Carbohydrate Oxidation During an Incremental Exercise Test",
+    journal: "Frontiers in Physiology",
+    year: 2018,
+    url: "https://pubmed.ncbi.nlm.nih.gov/30429801/",
+    summary: "San Millán & Brooks identify Zone 2 (below LT1) as the intensity maximally stimulating mitochondrial biogenesis and metabolic flexibility — foundational science behind Zone 2's metabolic health benefits",
+  },
+  {
+    id: 12,
+    title: "Adaptations of Skeletal Muscle to Endurance Exercise and Their Metabolic Consequences",
+    journal: "Journal of Applied Physiology",
+    year: 1984,
+    url: "https://pubmed.ncbi.nlm.nih.gov/6373687/",
+    summary: "Holloszy & Coyle: endurance training causes mitochondrial proliferation in muscle, increasing fat oxidation capacity, raising lactate threshold, and improving performance at submaximal intensities",
+  },
+  {
+    id: 13,
+    title: "Limiting Factors for Maximum Oxygen Uptake and Determinants of Endurance Performance",
+    journal: "Medicine & Science in Sports & Exercise",
+    year: 2000,
+    url: "https://pubmed.ncbi.nlm.nih.gov/10694118/",
+    summary: "Bassett & Howley: VO2 max is limited by cardiac output (central) and mitochondrial oxygen extraction (peripheral). Zone 2 improves peripheral extraction; HIIT improves cardiac output — both are required",
+  },
+  {
+    id: 14,
+    title: "Aerobic High-Intensity Intervals Improve VO2max More Than Moderate Training",
+    journal: "Medicine & Science in Sports & Exercise",
+    year: 2007,
+    url: "https://pubmed.ncbi.nlm.nih.gov/17414804/",
+    summary: "Helgerud et al.: 4×4 min intervals at 90–95% HRmax produce significantly greater VO2max gains than continuous moderate or threshold training — the evidence base for the Norwegian 4×4 protocol",
   },
 ];
 
@@ -792,6 +845,129 @@ export default function RunningClient() {
                     </div>
                   ))}
                 </div>
+
+                {/* Why exactly 60-70%? */}
+                <div className="mt-5">
+                  <p className="text-xs font-semibold text-white/40 uppercase tracking-wider mb-3">
+                    Why Exactly 60–70%? The Physiology<Cite id={11} />
+                  </p>
+                  <div className="space-y-2">
+                    {[
+                      {
+                        icon: "📉",
+                        title: "Below the first lactate threshold (LT1)",
+                        desc: <><GlossaryTerm termKey="lt1">LT1</GlossaryTerm> is the precise intensity where lactate first starts rising above resting. Below it, your body handles energy production almost entirely aerobically — fat burns cleanly, mitochondria run at near-full capacity, and you can sustain effort for hours. Above LT1 (Zone 3+), carbohydrate takes over, lactate accumulates, and the training stimulus changes character. Zone 2 sits just under this threshold, making it the most productive place to spend long training hours.</>,
+                      },
+                      {
+                        icon: "💪",
+                        title: "Slow-twitch fiber recruitment — the mitochondria-rich fibers",
+                        desc: <><GlossaryTerm termKey="slowTwitch">Type I (slow-twitch) muscle fibers</GlossaryTerm> are packed with mitochondria and burn fat efficiently. Zone 2 intensity specifically recruits and stresses these fibers. Go harder (Zone 4+) and fast-twitch fibers take over — producing different adaptations with far less mitochondrial stimulus. Zone 2 is the sweet spot that loads the right fibers without fatiguing them, allowing you to accumulate high aerobic volume each week.</>,
+                      },
+                      {
+                        icon: "🔥",
+                        title: "Peak fat oxidation rate",
+                        desc: "Fat can only be burned inside mitochondria. At Zone 2, fat oxidation (grams per minute) peaks in absolute terms. Above Zone 2 you shift progressively toward carbohydrate. Training consistently at Zone 2 teaches your body to mobilize and burn fat at higher rates — sparing glycogen, sustaining effort longer, and improving body composition even without caloric restriction.",
+                      },
+                      {
+                        icon: "🧬",
+                        title: "PGC-1α: the mitochondrial master switch fires here",
+                        desc: <><GlossaryTerm termKey="pgc1alpha">PGC-1α</GlossaryTerm> is the protein that triggers construction of new mitochondria. Sustained aerobic exercise at Zone 2 provides the ideal PGC-1α stimulus: high enough intensity to activate it, long enough duration to drive meaningful expression, and repeatable daily without the recovery cost of hard intervals. This is the molecular mechanism behind everything Zone 2 does.</>,
+                      },
+                    ].map((item, i) => (
+                      <div key={i} className="flex items-start gap-3 glass rounded-xl p-3.5 border border-white/8">
+                        <span className="text-base shrink-0 mt-0.5">{item.icon}</span>
+                        <div>
+                          <p className="text-xs font-semibold text-white/70 mb-0.5">{item.title}</p>
+                          <p className="text-xs text-white/45 leading-relaxed">{item.desc}</p>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Mitochondria deep dive */}
+                <div className="glass rounded-xl p-4 border border-green-500/25 mt-4">
+                  <p className="text-xs font-semibold text-green-400 mb-3">
+                    What Mitochondria Actually Do — and Why Density Matters<Cite id={12} />
+                  </p>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-3">
+                    {[
+                      {
+                        icon: "⚡",
+                        title: "ATP Production",
+                        desc: "Mitochondria produce ATP — the universal energy currency of every cell — via oxidative phosphorylation: combining oxygen with fuel to generate energy ~18× more efficiently than anaerobic glycolysis. More mitochondria per muscle cell = more ATP production capacity = higher sustainable power output and less fatigue at any given pace.",
+                      },
+                      {
+                        icon: "🧈",
+                        title: "Fat Burning (Beta-Oxidation)",
+                        desc: "Fat can only be burned inside mitochondria. Fatty acids enter the mitochondrion and are broken down via beta-oxidation into acetyl-CoA, which fuels the Krebs cycle. A sedentary person burns fat slowly. A trained athlete with high mitochondrial density burns fat at dramatically higher rates — sustaining hours of effort while sparing carbohydrate.",
+                      },
+                      {
+                        icon: "🔄",
+                        title: "Lactate Clearance (Lactate Shuttle)",
+                        desc: <><GlossaryTerm termKey="lactateShuttle">The lactate shuttle</GlossaryTerm>: lactate produced by working muscles is transported into mitochondria and oxidized as fuel. Trained athletes don&apos;t produce less lactate — their mitochondria clear it faster. This is why training raises your lactate threshold: more mitochondria = more clearance capacity. Zone 2 directly trains this mechanism.<Cite id={12} /></>,
+                      },
+                      {
+                        icon: "🩺",
+                        title: "Insulin Sensitivity",
+                        desc: "Mitochondria-dense muscle cells have far more GLUT4 glucose transporters — the proteins that pull glucose out of blood. This makes mitochondria-rich muscle the primary driver of whole-body insulin sensitivity. Type 2 diabetes is fundamentally a disease of mitochondrial insufficiency in muscle. Zone 2 is among the most powerful anti-diabetic interventions known.",
+                      },
+                    ].map((item) => (
+                      <div key={item.title} className="glass rounded-xl p-3.5 border border-white/8">
+                        <div className="flex items-center gap-2 mb-1.5">
+                          <span className="text-base">{item.icon}</span>
+                          <p className="text-xs font-semibold text-green-300/80">{item.title}</p>
+                        </div>
+                        <p className="text-[10px] text-white/45 leading-relaxed">{item.desc}</p>
+                      </div>
+                    ))}
+                  </div>
+                  <div className="glass rounded-xl p-3.5 border border-green-500/20 bg-green-500/5">
+                    <p className="text-[10px] font-semibold text-green-400 mb-1.5">The Zone 2 Cascade</p>
+                    <div className="flex flex-wrap items-center gap-x-1.5 gap-y-1 text-[10px]">
+                      {[
+                        { text: "Zone 2 training", highlight: true },
+                        { text: "→" }, { text: "PGC-1α activation" },
+                        { text: "→" }, { text: "Mitochondrial biogenesis" },
+                        { text: "→" }, { text: "More mitochondria / cell" },
+                        { text: "→" }, { text: "Better fat oxidation" },
+                        { text: "→" }, { text: "Higher lactate threshold" },
+                        { text: "→" }, { text: "Improved VO2 max" },
+                        { text: "→" }, { text: "Better insulin sensitivity" },
+                      ].map((item, i) => (
+                        <span key={i} className={item.text === "→" ? "text-green-400/35" : item.highlight ? "text-green-300/80 font-semibold" : "text-white/45"}>
+                          {item.text}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+
+                {/* Zone 2 ↔ VO2 Max connection */}
+                <div className="glass rounded-xl p-4 border border-sky-500/20 mt-4">
+                  <p className="text-xs font-semibold text-sky-400 mb-2">
+                    Zone 2 and VO2 Max — How They Connect<Cite id={13} />
+                  </p>
+                  <p className="text-xs text-white/50 leading-relaxed mb-3">
+                    VO2 max is limited by two factors: <span className="text-white/70 font-medium">cardiac output</span> (how much blood your heart pumps per minute) and <span className="text-white/70 font-medium">peripheral extraction</span> (how efficiently your muscles extract oxygen from that blood). Mitochondrial density is the primary driver of peripheral extraction — and Zone 2 is what builds it.
+                  </p>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 mb-3">
+                    <div className="glass rounded-lg p-3 border border-green-500/20">
+                      <p className="text-[10px] font-semibold text-green-400 mb-1">Zone 2 → peripheral extraction</p>
+                      <p className="text-[10px] text-white/40 leading-relaxed">More mitochondria per muscle cell → muscles extract more O₂ per liter of blood delivered → raises the ceiling on VO2 max</p>
+                    </div>
+                    <div className="glass rounded-lg p-3 border border-sky-500/20">
+                      <p className="text-[10px] font-semibold text-sky-400 mb-1">HIIT → cardiac output<Cite id={14} /></p>
+                      <p className="text-[10px] text-white/40 leading-relaxed">4×4 intervals force the heart to pump near-maximally, enlarging stroke volume (blood per beat) — directly raising VO2 max</p>
+                    </div>
+                  </div>
+                  <div className="flex items-start gap-2">
+                    <Zap size={12} className="text-sky-400 shrink-0 mt-0.5" />
+                    <p className="text-[10px] text-white/40 leading-relaxed italic">
+                      Elite approach: 80% Zone 2 builds the mitochondrial base → 20% HIIT pushes cardiac output to the ceiling. Zone 2 without HIIT plateaus early. HIIT without a Zone 2 base produces rapid gains that stall — and injury follows. You need both, in that ratio.
+                    </p>
+                  </div>
+                </div>
               </div>
             </div>
           </Section>
@@ -1033,7 +1209,8 @@ export default function RunningClient() {
 
                 <div className="space-y-2">
                   {[
-                    { emoji: "⏱️", title: "Break sitting every 30–60 min", desc: "Even 2-minute walks interrupt the metabolic cascade of prolonged sitting. Set a timer. Stand, walk around, do calf raises — brief but consistent breaks matter." },
+                    { emoji: "⏱️", title: "Break sitting every 20 min", desc: "Lieberman's specific recommendation. The Hadza sit ~10 hours a day — as much as Westerners — but they break it constantly: tending fires, caring for children, shifting camp. It's not total sitting time that harms you, it's sustained sitting bouts. Set a timer. Even 2 minutes resets the metabolic clock." },
+                    { emoji: "🔙", title: "Back pain: the #1 medical complaint worldwide", desc: "Lieberman identifies back pain as the leading medical complaint globally — not because running causes it, but because chairs do. Sitting offloads all demand from back muscles, which lose endurance. Weak, fatigue-prone back muscles — not disc injury — are the strongest predictor of back pain episodes. The fix is back endurance, not comfort." },
                     { emoji: "🚶", title: "The 10-minute post-meal walk", desc: "A 10-minute walk after eating reduces glucose spike by ~30% by activating GLUT4 in leg muscles — one of the most practical blood sugar tools available." },
                     { emoji: "📱", title: "Track daily movement, not just workouts", desc: "Total daily steps matter independent of formal exercise. Hunter-gatherers accumulate 10,000–15,000+ steps on active days. The daily movement floor is as important as peak exercise." },
                   ].map((tip) => (
@@ -1045,6 +1222,21 @@ export default function RunningClient() {
                       </div>
                     </div>
                   ))}
+                </div>
+
+                <div className="glass rounded-xl p-4 border border-red-500/20 bg-red-500/5 mt-4">
+                  <div className="flex items-start gap-2">
+                    <AlertCircle size={13} className="text-red-400 shrink-0 mt-0.5" />
+                    <div>
+                      <p className="text-xs font-semibold text-red-400 mb-1">Dis-Evolution: Why Mismatch Diseases Keep Rising</p>
+                      <p className="text-xs text-white/50 leading-relaxed">
+                        Lieberman coined <span className="text-red-300 font-medium">dis-evolution</span> — when treating the symptoms of mismatch diseases removes the pressure to fix their cause.
+                        Pills for hypertension, statins for cholesterol, metformin for diabetes keep people alive without resolving the mismatch.
+                        Heart disease kills <span className="text-red-300 font-medium">~1 in 3</span> people in the Western world yet is essentially absent in active hunter-gatherer populations like the Tsimane of the Amazon.
+                        The treatment is not the pill. The treatment is movement.
+                      </p>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
