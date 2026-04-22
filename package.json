@@ -3,10 +3,11 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
-    "build": "next build",
-    "start": "next start",
-    "lint": "eslint"
+    "dev": "./scripts/with-nvm-node.sh node ./node_modules/next/dist/bin/next dev",
+    "build": "./scripts/with-nvm-node.sh node ./node_modules/next/dist/bin/next build",
+    "start": "./scripts/with-nvm-node.sh node ./node_modules/next/dist/bin/next start",
+    "lint": "./scripts/with-nvm-node.sh node ./node_modules/eslint/bin/eslint.js",
+    "postinstall": "node ./scripts/repair-next-install.mjs"
   },
   "dependencies": {
     "framer-motion": "^12.38.0",
