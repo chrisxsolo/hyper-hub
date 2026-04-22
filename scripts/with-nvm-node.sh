@@ -22,6 +22,10 @@ unset NPM_CONFIG_PREFIX
 unset PREFIX
 
 if [[ ! -s "$NVM_DIR/nvm.sh" ]]; then
+  if [[ -n "${CI:-}" || -n "${VERCEL:-}" ]]; then
+    exec "$@"
+  fi
+
   echo "nvm is required to run this repo with Node $requested_version. Run 'nvm use' first." >&2
   exit 1
 fi
