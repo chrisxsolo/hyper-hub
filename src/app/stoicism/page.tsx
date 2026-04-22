@@ -2,13 +2,16 @@
 
 import { motion } from "framer-motion";
 import Link from "next/link";
-import { ArrowLeft, Brain, Clock } from "lucide-react";
+import { ArrowLeft, ArrowRight, Brain, Clock } from "lucide-react";
 
 const comingSoon = [
   { title: "Core Principles", description: "The dichotomy of control, virtue ethics, and living according to nature.", icon: "⚖️" },
-  { title: "Marcus Aurelius", description: "Meditations — the private journal of a Roman Emperor who chose wisdom.", icon: "📜" },
   { title: "Daily Practice", description: "Morning reflection, negative visualization, and the evening review.", icon: "🌄" },
   { title: "Memento Mori", description: "Why contemplating death is the ultimate tool for living fully.", icon: "🕯️" },
+];
+
+const books = [
+  { title: "Meditations", href: "/stoicism/meditations", description: "Private journal of Marcus Aurelius — 12 books of cognitive training under empire-level pressure.", icon: "📜" },
 ];
 
 export default function StoicismPage() {
@@ -32,30 +35,53 @@ export default function StoicismPage() {
         </div>
       </motion.div>
 
-      {/* Coming Soon Banner */}
+      {/* Marcus Aurelius — active section */}
       <motion.div
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.2 }}
-        className="glass rounded-2xl p-6 border border-blue-500/20 bg-gradient-to-br from-blue-500/10 to-transparent mb-8"
+        transition={{ delay: 0.15 }}
+        className="mb-8"
       >
-        <div className="flex items-center gap-3">
-          <Clock size={18} className="text-blue-400" />
-          <div>
-            <p className="text-sm font-medium text-white/80">Content coming soon</p>
-            <p className="text-xs text-white/40 mt-0.5">Building out notes on Epictetus, Marcus Aurelius, and Seneca.</p>
-          </div>
+        <h2 className="text-xs font-semibold text-white/40 uppercase tracking-wider mb-3">Marcus Aurelius</h2>
+        <div className="space-y-3">
+          {books.map((book) => (
+            <Link
+              key={book.title}
+              href={book.href}
+              className="group flex items-center gap-4 glass rounded-xl p-5 border border-blue-500/20 hover:border-blue-500/40 bg-gradient-to-br from-blue-500/5 to-transparent transition-all duration-200 hover:-translate-y-0.5"
+            >
+              <div className="text-2xl">{book.icon}</div>
+              <div className="flex-1 min-w-0">
+                <h3 className="text-sm font-semibold text-white mb-0.5">{book.title}</h3>
+                <p className="text-xs text-white/50 leading-relaxed">{book.description}</p>
+              </div>
+              <ArrowRight size={16} className="text-blue-400/50 group-hover:text-blue-400 transition-colors shrink-0" />
+            </Link>
+          ))}
         </div>
       </motion.div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+      {/* Coming Soon */}
+      <motion.div
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.25 }}
+        className="glass rounded-2xl p-5 border border-blue-500/10 bg-gradient-to-br from-blue-500/5 to-transparent mb-6"
+      >
+        <div className="flex items-center gap-3">
+          <Clock size={16} className="text-blue-400/60" />
+          <p className="text-xs text-white/40">More content coming — Epictetus, Seneca, and daily Stoic practice.</p>
+        </div>
+      </motion.div>
+
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
         {comingSoon.map((item, i) => (
           <motion.div
             key={item.title}
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.3 + i * 0.08 }}
-            className="glass rounded-xl p-5 border border-blue-500/10 opacity-60"
+            transition={{ delay: 0.35 + i * 0.07 }}
+            className="glass rounded-xl p-5 border border-blue-500/10 opacity-50"
           >
             <div className="text-2xl mb-2">{item.icon}</div>
             <h3 className="text-sm font-semibold text-white/70 mb-1">{item.title}</h3>
