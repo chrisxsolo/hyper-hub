@@ -96,7 +96,7 @@ const glossaryData = {
   },
   cephalicPhase: {
     title: "Cephalic Phase Insulin Response",
-    body: "A reflex insulin secretion triggered by the sight, smell, or taste of food — before any glucose enters the bloodstream. The brain anticipates incoming food and pre-loads insulin. Sweet taste — even from zero-calorie artificial sweeteners — can trigger this response, explaining why 'calorie-free' doesn't always mean metabolically neutral.",
+    body: "A reflex insulin secretion triggered by the sight, smell, or taste of food — before any glucose enters the bloodstream. The brain anticipates incoming food and pre-loads insulin. Sweet taste may trigger this response in some individuals, which is why some researchers question whether 'calorie-free' automatically means metabolically neutral. Evidence on whether artificial sweeteners reliably trigger CPIR is mixed — some studies show a response, others do not. Response may vary by individual and sweetener type.",
   },
   glp1Drugs: {
     title: "GLP-1 Receptor Agonists (e.g., Ozempic, Wegovy)",
@@ -125,12 +125,12 @@ const glossaryData = {
   },
   creatineSupp: {
     title: "Creatine (Creatine Monohydrate)",
-    body: "One of the most researched sports supplements. For muscle: 5g/day improves strength and power output. For the brain: 10–15g/day has shown benefits in cognitive function, mood, and neuroprotection. The brain uses significant creatine as a rapid ATP buffer. Notably affordable and exceptionally well-tolerated.",
+    body: "One of the most researched sports supplements. For muscle: 5g/day improves strength and power output — robust evidence. For the brain: higher doses (10–15g/day) have been explored in small studies for cognitive function, mood, and neuroprotection. This is promising but preliminary — extrapolated from limited trials, not yet a mainstream clinical recommendation. Affordable and exceptionally well-tolerated at standard doses.",
     learnMore: "https://pubmed.ncbi.nlm.nih.gov/35882604/",
   },
   ashwagandha: {
     title: "Ashwagandha (Withania somnifera)",
-    body: "An adaptogenic herb with strong evidence for reducing cortisol levels. Elevated cortisol worsens insulin resistance and disrupts sleep — so cortisol reduction has downstream metabolic benefits. Also shown to improve testosterone in men and sleep quality. Typical dose: 300–600mg KSM-66 extract.",
+    body: "An adaptogenic herb with reasonable evidence for reducing cortisol levels. Elevated cortisol worsens insulin resistance and disrupts sleep — so cortisol reduction has downstream metabolic benefits. Also shown to improve testosterone in men and sleep quality. Typical dose: 300–600mg KSM-66 extract. ⚠️ Drug interactions: Ashwagandha may interact with thyroid medications (it can influence T3/T4 levels), sedatives, and immunosuppressants. If you have thyroid disease, check with your physician before use.",
     learnMore: "https://pubmed.ncbi.nlm.nih.gov/34914086/",
   },
   lipolysis: {
@@ -139,7 +139,7 @@ const glossaryData = {
   },
   warburg: {
     title: "Warburg Effect",
-    body: "The observation (by Nobel laureate Otto Warburg, 1931) that cancer cells preferentially ferment glucose via glycolysis even in the presence of oxygen — producing far less energy per glucose than normal mitochondrial respiration. Research by Dr. Thomas Seyfried and others frames cancer as a metabolic disease: tumors are poorly adapted to use ketones, making carbohydrate restriction a potential adjunct therapy.",
+    body: "The observation (by Nobel laureate Otto Warburg, 1931) that cancer cells preferentially ferment glucose via glycolysis even in the presence of oxygen — producing far less energy per glucose than normal mitochondrial respiration. Dr. Thomas Seyfried and others propose this frames cancer as partly a metabolic disease, with carbohydrate restriction as a potential adjunct therapy. Note: this metabolic theory of cancer remains controversial and is not part of mainstream oncology guidelines. It should not be used as a substitute for evidence-based cancer treatment.",
     learnMore: "https://pubmed.ncbi.nlm.nih.gov/21301570/",
   },
   betaHydroxybutyrate: {
@@ -169,7 +169,7 @@ const glossaryData = {
   },
   nattokinase: {
     title: "Nattokinase",
-    body: "An enzyme derived from natto (fermented soybeans) with fibrinolytic activity — meaning it helps dissolve blood clots and break down fibrin, the protein scaffold of clots. Metabolic syndrome increases clotting tendency (hypercoagulability), making nattokinase potentially valuable for cardiovascular risk management. Typical dose: 2,000–8,000 FU (fibrinolytic units) daily. Generally considered blood-thinning; avoid if on anticoagulants without physician oversight.",
+    body: "An enzyme derived from natto (fermented soybeans) with fibrinolytic activity — meaning it helps dissolve blood clots and break down fibrin, the protein scaffold of clots. Metabolic syndrome increases clotting tendency (hypercoagulability), making nattokinase potentially valuable for cardiovascular risk management. Typical dose: 2,000–8,000 FU (fibrinolytic units) daily. ⚠️ Drug interactions: Do NOT combine with warfarin, heparin, aspirin, or any anticoagulant without physician oversight — additive blood-thinning risk is significant. Clinical evidence for nattokinase is based on small trials; no large RCTs have confirmed cardiovascular outcomes in humans.",
   },
   mtorc1: {
     title: "mTORC1 (Mechanistic Target of Rapamycin Complex 1)",
@@ -214,7 +214,7 @@ function Cite({ id }: { id: number }) {
 
 // ─── Data ─────────────────────────────────────────────────────────────────────
 const quickStats = [
-  { value: "88%", label: "Adults lack full metabolic health", note: "Most are unaware", valueClass: "text-amber-400", gradientClass: "from-amber-500/10" },
+  { value: "88%", label: "Adults lack full metabolic health", note: "NHANES data, U.S. adults", valueClass: "text-amber-400", gradientClass: "from-amber-500/10" },
   { value: "3×", label: "Higher Alzheimer's risk", note: "With insulin resistance", valueClass: "text-orange-400", gradientClass: "from-orange-500/10" },
   { value: "25%", label: "Sensitivity drop", note: "After 1 bad night of sleep", valueClass: "text-violet-400", gradientClass: "from-violet-500/10" },
   { value: "#1", label: "Resistance training", note: "Most effective IR fix", valueClass: "text-emerald-400", gradientClass: "from-emerald-500/10" },
@@ -301,7 +301,7 @@ const surprisingTriggers: { emoji: string; title: string; desc: React.ReactNode 
   {
     emoji: "🚬",
     title: "Vaping & Nicotine",
-    desc: "Nicotine directly causes insulin resistance — vaping is not a safe metabolic alternative to smoking.",
+    desc: "Nicotine is associated with worsened insulin sensitivity — vaping is not a metabolically safe alternative to smoking. Evidence comes primarily from epidemiology and animal models; human mechanistic studies are limited.",
   },
   {
     emoji: "🚗",
@@ -331,22 +331,22 @@ const surprisingTriggers: { emoji: string; title: string; desc: React.ReactNode 
   {
     emoji: "🍊",
     title: "Fruit Juice & Smoothies",
-    desc: <>Removing fiber from fruit turns it into a liver burden. A glass of OJ has <span className="text-amber-300 font-medium">the same 25g of sugar as a can of Coca-Cola</span> — identical glucose and fructose molecules processed the same way. The WHO&apos;s daily sugar limit is 25g. One morning glass hits your entire daily budget before breakfast ends. &ldquo;No added sugars&rdquo; on the label? Technically true — the sugar was in the orange from the start, which is why the claim is legal and misleading.</>,
+    desc: <>Removing fiber from fruit concentrates its sugar load. A glass of OJ has <span className="text-amber-300 font-medium">~25g of sugar — comparable to a can of Coca-Cola</span>. OJ does contain vitamins and polyphenols absent from soda, but the liver fructose load and insulin response are similar when fiber is stripped away. The WHO&apos;s daily added sugar limit is 25g. One morning glass consumes that entire budget. &ldquo;No added sugars&rdquo; on the label? Technically true — the sugar was in the orange from the start, which is why the claim is legal and potentially misleading.</>,
   },
   {
     emoji: "🫙",
     title: "Calcium Supplements",
-    desc: "High-dose calcium supplements (especially >1,000mg/day from pills) may increase cardiovascular event risk. The real deficiency is D3 and K2 — D3 improves calcium absorption from food, K2 directs calcium to bones (not arteries). Many cardiologists now stop all calcium supplements and replace with D3+K2.",
+    desc: "High-dose calcium supplements (especially >1,000mg/day from pills) have been associated with cardiovascular events in some observational studies — though evidence is not definitive and the field remains debated. The rationale for pairing with D3 and K2: D3 improves calcium absorption from food, K2 directs calcium to bones (not arteries). Many cardiologists now prefer D3+K2 over standalone calcium supplementation.",
   },
   {
     emoji: "🧪",
     title: "Vegetable Seed Oils",
-    desc: "Canola, soybean, sunflower, and corn oils are exceedingly high in omega-6 fatty acids. The omega-6:omega-3 ratio in modern diets is 15–20:1 (optimal is ~4:1). Excess omega-6 promotes inflammation and is a primary driver of small, dense LDL formation. Use olive oil, butter, ghee, or coconut oil instead.",
+    desc: "Canola, soybean, sunflower, and corn oils are high in omega-6 fatty acids. The omega-6:omega-3 ratio in modern diets is 15–20:1 (optimal ~4:1). High omega-6 intake is hypothesized to promote inflammation and sdLDL formation. Note: RCT evidence on seed oils is mixed — some trials show cardiovascular benefit when replacing saturated fat. The oxidation and processing quality of these oils may matter more than omega-6 content alone. Olive oil, butter, and ghee remain lower-risk alternatives.",
   },
   {
     emoji: "🍄",
     title: "Household Mold",
-    desc: "~70% of homes have some form of mold toxicity from previous water damage. Mold triggers a chronic low-grade inflammatory response (elevated CRP, IL-6, complement levels) and can colonize the gut and sinuses — re-exposing you even after leaving the moldy environment. Linked to premature coronary artery disease.",
+    desc: "Mold exposure from water-damaged buildings can trigger a chronic low-grade inflammatory response (elevated CRP, IL-6) that worsens insulin sensitivity and overall metabolic health. Mycotoxins can colonize the gut and sinuses. Note: the oft-cited \"70% of homes\" statistic lacks a verified primary source — actual prevalence of clinically significant mold illness is unclear. If you have unexplained inflammation and live in a humid climate or older building, mold is worth evaluating.",
   },
 ];
 
@@ -677,6 +677,26 @@ export default function InsulinClient() {
             </div>
           </Section>
 
+          {/* Non-Lifestyle Causes of IR */}
+          <Section>
+            <div className="glass rounded-2xl p-4 border border-white/8">
+              <div className="flex items-start gap-2">
+                <AlertCircle size={13} className="text-amber-400 shrink-0 mt-0.5" />
+                <div>
+                  <p className="text-xs font-semibold text-white/70 mb-1">Not all insulin resistance is lifestyle-driven</p>
+                  <p className="text-xs text-white/40 leading-relaxed">
+                    Medical and genetic conditions can cause or worsen insulin resistance independent of diet and exercise:{" "}
+                    <span className="text-white/55">PCOS</span> (affects ~10% of women and is strongly associated with IR),{" "}
+                    <span className="text-white/55">lipodystrophy</span> (abnormal fat distribution),{" "}
+                    <span className="text-white/55">Cushing&apos;s syndrome</span> (cortisol excess),{" "}
+                    <span className="text-white/55">hypothyroidism</span>, and certain medications (corticosteroids, antipsychotics, some antiretrovirals).
+                    If you&apos;re doing everything right and still see insulin resistance markers, work with a physician to rule out an underlying cause.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </Section>
+
           {/* Hyperinsulinemia Direct Damage */}
           <Section>
             <div className="glass rounded-2xl p-6 border border-rose-500/20 relative overflow-hidden">
@@ -836,9 +856,10 @@ export default function InsulinClient() {
                 <p className="text-sm text-white/50 leading-relaxed mb-5">
                   The brain is the most energy-hungry organ per gram in the body. When it becomes insulin resistant, neurons
                   can&apos;t get enough fuel. <GlossaryTerm termKey="amyloidPlaques">Amyloid plaques</GlossaryTerm> accumulate, tau
-                  tangles form, and the brain literally shrinks. Researchers now refer to Alzheimer&apos;s as{" "}
-                  <span className="text-blue-300 font-medium">&quot;Type 3 Diabetes&quot;</span> based on evidence that
-                  impaired insulin signaling in brain tissue is central to its pathology.<Cite id={1} />
+                  tangles form, and the brain literally shrinks. Some researchers use the term{" "}
+                  <span className="text-blue-300 font-medium">&quot;Type 3 Diabetes&quot;</span> to describe Alzheimer&apos;s based on evidence that
+                  impaired insulin signaling in brain tissue contributes to its pathology.<Cite id={1} />{" "}
+                  <span className="text-white/35 text-xs italic">Note: this is a research hypothesis, not an official clinical diagnosis — Alzheimer&apos;s has multiple etiologies and metabolic dysfunction is one contributing factor, not the sole cause.</span>
                 </p>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 mb-5">
@@ -891,7 +912,8 @@ export default function InsulinClient() {
                     <span className="text-blue-300 font-medium">The ketone bypass:</span>{" "}
                     <GlossaryTerm termKey="ketones">Ketones</GlossaryTerm> don&apos;t require insulin to enter brain cells.
                     Fasting, low-carb diets, or <GlossaryTerm termKey="mctOil">MCT oil</GlossaryTerm> can produce ketones that
-                    directly fuel insulin-resistant neurons — potentially slowing cognitive decline when glucose can&apos;t get in.<Cite id={5} />
+                    may fuel insulin-resistant neurons — potentially slowing cognitive decline when glucose can&apos;t get in.<Cite id={5} />{" "}
+                    <span className="text-white/30 italic">Clinical evidence is promising but still limited — most studies are small or preclinical; larger RCTs are underway.</span>
                   </p>
                 </div>
               </div>
@@ -1246,7 +1268,7 @@ export default function InsulinClient() {
                 </table>
               </div>
               <p className="text-[10px] text-white/25 mt-3 italic">
-                * Artificial sweeteners vary — some studies show a <GlossaryTerm termKey="cephalicPhase">cephalic phase</GlossaryTerm> insulin release even with zero caloric content
+                * Artificial sweeteners vary — evidence on <GlossaryTerm termKey="cephalicPhase">cephalic phase</GlossaryTerm> insulin release is mixed; some studies show a response, others do not. Response likely varies by individual and sweetener type.
               </p>
             </div>
           </Section>
@@ -1288,9 +1310,9 @@ export default function InsulinClient() {
                   </span>
                 </div>
                 <p className="text-sm text-white/50 leading-relaxed mb-5">
-                  The standard model says obesity is about calories in vs. calories out. But this ignores insulin — the hormone
-                  that decides whether incoming energy is burned or stored. <span className="text-white/75 font-medium">Without insulin, you physically cannot store fat.</span>{" "}
-                  Insulin is the gatekeeper of fat storage.<Cite id={7} />
+                  The standard model says obesity is about calories in vs. calories out. The carbohydrate-insulin model adds a critical layer: insulin — the hormone
+                  that decides whether incoming energy is burned or stored — is not captured by calorie counting alone. <span className="text-white/75 font-medium">Insulin is the primary driver of fat storage.</span>{" "}
+                  Without insulin signaling, fat storage is severely impaired — which is why uncontrolled Type 1 diabetics wasting away despite eating is the clinical proof.<Cite id={7} /> Calories and hormonal signaling are complementary, not competing explanations.
                 </p>
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-5">
                   {[
@@ -1374,7 +1396,7 @@ export default function InsulinClient() {
                       emoji: "🦠",
                       title: "Cancer & The Warburg Effect",
                       border: "border-amber-500/20",
-                      body: <><GlossaryTerm termKey="warburg">Cancer cells (Warburg effect)</GlossaryTerm> are highly dependent on glucose fermentation and are poorly adapted to use ketones. Researchers like Dr. Thomas Seyfried propose carbohydrate restriction as a metabolic adjunct to cancer therapy — starving tumors of their preferred fuel.</>,
+                      body: <><GlossaryTerm termKey="warburg">Cancer cells (Warburg effect)</GlossaryTerm> are highly dependent on glucose fermentation and are poorly adapted to use ketones. Researchers like Dr. Thomas Seyfried propose carbohydrate restriction as a metabolic adjunct to cancer therapy. <span className="text-white/30 italic">Important: this remains a controversial hypothesis — not mainstream oncology. Clinical trials are early-stage and inconclusive. Never use as a substitute for established cancer treatment.</span></>,
                     },
                   ].map((card) => (
                     <div key={card.title} className={`glass rounded-xl p-4 border ${card.border} flex items-start gap-3`}>
@@ -1800,7 +1822,7 @@ export default function InsulinClient() {
                 <div className="flex items-start gap-2 mt-3">
                   <AlertCircle size={12} className="text-amber-400/60 shrink-0 mt-0.5" />
                   <p className="text-[10px] text-white/35 italic leading-relaxed">
-                    Extended fasts (36h+) should be supervised by a physician, especially if diabetic or on medications. Start with 12:12 and extend progressively as your body adapts.
+                    Extended fasts (36h+) require physician supervision — especially if you take insulin, sulfonylureas, or other glucose-lowering medications (hypoglycemia risk is real and serious). People with a history of eating disorders should avoid prolonged fasting without mental health support. Start with 12:12 and extend progressively as your body adapts.
                   </p>
                 </div>
               </div>
