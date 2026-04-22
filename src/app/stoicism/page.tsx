@@ -19,7 +19,7 @@ const introChips = [
   "Founded in Athens around 300 BCE",
   "Practical philosophy, not abstract theory",
   "Built for pressure, uncertainty, and loss",
-  "Still echoed in modern psychology",
+  "Still echoed in CBT and modern psychology",
 ];
 
 const principles = [
@@ -142,16 +142,47 @@ const responseLoop = [
   },
 ];
 
+const therapyParallels = [
+  {
+    stoic: "Impression",
+    therapy: "Automatic thought",
+    description:
+      "Both begin by noticing that a fast interpretation appears before you have really examined it. The skill is seeing the thought instead of instantly obeying it.",
+    accent: "border-sky-500/18",
+  },
+  {
+    stoic: "Examine the judgment",
+    therapy: "Cognitive restructuring",
+    description:
+      "The Stoic asks, 'Is this actually true, useful, and within my control?' Cognitive therapy asks whether the thought is distorted, exaggerated, or incomplete.",
+    accent: "border-amber-500/18",
+  },
+  {
+    stoic: "Premeditation of adversity",
+    therapy: "Coping rehearsal",
+    description:
+      "Both rehearse difficulty ahead of time so the nervous system is less shocked when life gets rough. Preparation softens panic.",
+    accent: "border-emerald-500/18",
+  },
+  {
+    stoic: "Evening review",
+    therapy: "Thought record",
+    description:
+      "Writing down the event, the judgment, and the response turns a vague mood into something visible, workable, and easier to improve tomorrow.",
+    accent: "border-rose-500/18",
+  },
+];
+
 const bridges = [
   {
     icon: Brain,
     title: "Stoicism and psychology",
     description:
-      "Stoicism is often compared with cognitive behavioral therapy because both care about interpretation. The Stoics noticed that distress is not just produced by events, but by the beliefs wrapped around them.",
+      "Stoicism stays useful because it treats attention, interpretation, and self-command as trainable. Modern psychology often reaches the same terrain through a clinical lens rather than a philosophical one.",
     points: [
-      "Cognitive reappraisal: changing the meaning changes the feeling.",
-      "Journaling and self-examination: catching distorted stories on paper.",
-      "Negative visualization: rehearsing loss so surprise loses some force.",
+      "Attention training: what you dwell on changes what grows louder in the mind.",
+      "Cognitive reappraisal: changing meaning often changes emotion.",
+      "Journaling and self-examination: naming a thought makes it easier to question.",
     ],
     accent: "border-sky-500/20",
     iconClass: "text-sky-300",
@@ -184,18 +215,33 @@ const bridges = [
   },
 ];
 
-const nextSteps = [
+const studyCards = [
   {
-    title: "Core Principles",
-    description: "The dichotomy of control, virtue, and the idea of living in agreement with nature.",
+    title: "Marcus Aurelius",
+    eyebrow: "Study card",
+    description: "Meet the Roman emperor who used Stoicism as daily mental training under pressure, war, illness, and power.",
+    href: "/stoicism/meditations",
+    icon: "👑",
+    accent: "border-amber-500/18 hover:border-amber-400/28",
+    glow: "from-amber-500/10 via-amber-500/4 to-transparent",
   },
   {
-    title: "Daily Practice",
-    description: "Morning reflection, evening review, journaling, and rehearsing adversity without becoming gloomy.",
+    title: "Meditations Summaries",
+    eyebrow: "Already in the project",
+    description: "Jump into the summaries and breakdowns we already built for Marcus's private journal and Stoic system.",
+    href: "/stoicism/meditations",
+    icon: "📜",
+    accent: "border-sky-500/18 hover:border-sky-400/28",
+    glow: "from-sky-500/10 via-sky-500/4 to-transparent",
   },
   {
-    title: "Memento Mori",
-    description: "Mortality as a focusing tool: not doom, but perspective, urgency, and gratitude.",
+    title: "Book I and II Breakdown",
+    eyebrow: "Quick review",
+    description: "Start with gratitude, modeled virtue, control, and mortality — the clearest summaries we have established so far.",
+    href: "/stoicism/meditations",
+    icon: "🧠",
+    accent: "border-emerald-500/18 hover:border-emerald-400/28",
+    glow: "from-emerald-500/10 via-emerald-500/4 to-transparent",
   },
 ];
 
@@ -457,6 +503,80 @@ export default function StoicismPage() {
 
       <motion.section {...fadeUp(0.24)} className="mb-8 md:mb-12">
         <div className="flex items-center gap-2 mb-4">
+          <Brain size={15} className="text-sky-300" />
+          <p className="text-xs font-semibold uppercase tracking-[0.22em] text-white/40">Stoicism and cognitive therapy</p>
+        </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-[0.96fr_1.04fr] gap-4">
+          <div className="glass rounded-[28px] border border-sky-500/15 p-6 sm:p-7 relative overflow-hidden">
+            <div
+              className="absolute inset-0 pointer-events-none"
+              style={{
+                background:
+                  "radial-gradient(circle at top left, rgba(56, 189, 248, 0.14), transparent 36%), linear-gradient(180deg, rgba(255,255,255,0.015), rgba(13,13,15,0.08))",
+              }}
+            />
+
+            <div className="relative z-10">
+              <h2 className="text-2xl font-semibold text-white mb-3">Why therapy keeps rediscovering the Stoics</h2>
+              <p className="text-sm text-white/52 leading-relaxed mb-4">
+                Modern cognitive therapy is not the same thing as Stoicism, but they share a deep structural insight:
+                <span className="text-white/78"> the mind's interpretation sits between the event and the feeling.</span>
+                The Stoics trained that insight as philosophy. Cognitive therapy trains it as a clinical method.
+              </p>
+              <p className="text-sm text-white/52 leading-relaxed mb-4">
+                Albert Ellis spoke openly about the influence of Epictetus when shaping rational emotive behavior therapy.
+                CBT later carried forward the same practical move: notice the thought, test it, and replace blind reaction with a more grounded response.
+              </p>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div className="rounded-2xl border border-white/8 bg-black/10 p-4">
+                  <p className="text-xs uppercase tracking-[0.18em] text-white/30 mb-2">Shared core</p>
+                  <p className="text-sm text-white/55 leading-relaxed">
+                    Thoughts are not commands. They can be examined, reframed, and practiced into better patterns.
+                  </p>
+                </div>
+                <div className="rounded-2xl border border-white/8 bg-black/10 p-4">
+                  <p className="text-xs uppercase tracking-[0.18em] text-white/30 mb-2">Important difference</p>
+                  <p className="text-sm text-white/55 leading-relaxed">
+                    CBT aims at symptom relief and functioning. Stoicism also asks what kind of person you are becoming while you suffer.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <motion.div
+            variants={stagger}
+            initial="hidden"
+            animate="show"
+            className="grid grid-cols-1 sm:grid-cols-2 gap-4"
+          >
+            {therapyParallels.map((parallel) => (
+              <motion.div
+                key={parallel.stoic}
+                variants={item}
+                className={`glass rounded-2xl border ${parallel.accent} p-5`}
+              >
+                <div className="flex items-center justify-between gap-3 mb-3">
+                  <div>
+                    <p className="text-[11px] uppercase tracking-[0.18em] text-amber-300/80 mb-1">Stoic move</p>
+                    <h3 className="text-sm font-semibold text-white">{parallel.stoic}</h3>
+                  </div>
+                  <div className="text-right">
+                    <p className="text-[11px] uppercase tracking-[0.18em] text-sky-300/80 mb-1">Therapy parallel</p>
+                    <p className="text-sm font-semibold text-white">{parallel.therapy}</p>
+                  </div>
+                </div>
+                <p className="text-sm text-white/46 leading-relaxed">{parallel.description}</p>
+              </motion.div>
+            ))}
+          </motion.div>
+        </div>
+      </motion.section>
+
+      <motion.section {...fadeUp(0.28)} className="mb-8 md:mb-12">
+        <div className="flex items-center gap-2 mb-4">
           <Activity size={15} className="text-emerald-300" />
           <p className="text-xs font-semibold uppercase tracking-[0.22em] text-white/40">Why it still feels modern</p>
         </div>
@@ -515,7 +635,7 @@ export default function StoicismPage() {
         </div>
       </motion.section>
 
-      <motion.section {...fadeUp(0.28)} className="grid grid-cols-1 lg:grid-cols-[0.95fr_1.05fr] gap-4">
+      <motion.section {...fadeUp(0.32)} className="grid grid-cols-1 lg:grid-cols-[0.95fr_1.05fr] gap-4">
         <Link
           href="/stoicism/meditations"
           className="group glass rounded-[28px] border border-amber-500/18 p-6 sm:p-7 bg-gradient-to-br from-amber-500/10 via-amber-500/4 to-transparent hover:border-amber-400/28 transition-all duration-300"
@@ -541,17 +661,30 @@ export default function StoicismPage() {
         </Link>
 
         <div className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-1 gap-4">
-          {nextSteps.map((step, index) => (
+          {studyCards.map((card, index) => (
             <motion.div
-              key={step.title}
+              key={card.title}
               initial={{ opacity: 0, y: reducedMotion ? 0 : 16 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.45, delay: 0.38 + index * 0.08, ease: easeOut }}
-              className="glass rounded-2xl border border-white/8 p-5"
             >
-              <p className="text-xs uppercase tracking-[0.18em] text-white/30 mb-2">Coming next</p>
-              <h3 className="text-sm font-semibold text-white mb-2">{step.title}</h3>
-              <p className="text-sm text-white/45 leading-relaxed">{step.description}</p>
+              <Link
+                href={card.href}
+                className={`group block glass rounded-2xl border ${card.accent} p-5 bg-gradient-to-br ${card.glow} transition-all duration-300 hover:-translate-y-0.5`}
+              >
+                <div className="flex items-start justify-between gap-3 mb-3">
+                  <div>
+                    <p className="text-xs uppercase tracking-[0.18em] text-white/30 mb-2">{card.eyebrow}</p>
+                    <h3 className="text-sm font-semibold text-white">{card.title}</h3>
+                  </div>
+                  <span className="text-xl shrink-0">{card.icon}</span>
+                </div>
+                <p className="text-sm text-white/45 leading-relaxed mb-3">{card.description}</p>
+                <div className="flex items-center gap-2 text-xs text-white/55 group-hover:text-white/75 transition-colors">
+                  Open study card
+                  <ArrowRight size={13} className="group-hover:translate-x-1 transition-transform" />
+                </div>
+              </Link>
             </motion.div>
           ))}
         </div>
