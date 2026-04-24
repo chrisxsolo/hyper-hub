@@ -36,7 +36,7 @@ export default function Navigation() {
                 className={`flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-lg text-sm font-medium transition-all duration-200 ${
                   active
                     ? "bg-amber-500/15 text-amber-300 border border-amber-500/20"
-                    : "text-white/50 hover:text-white/80 hover:bg-white/[0.05]"
+                    : "text-readable-soft hover:text-readable-strong hover:bg-white/[0.05]"
                 }`}
               >
                 <Icon size={14} />

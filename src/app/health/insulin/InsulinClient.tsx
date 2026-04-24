@@ -431,6 +431,102 @@ const studies = [
     url: "https://pubmed.ncbi.nlm.nih.gov/21054629/",
     summary: "sdLDL particle size — not total LDL — is the primary lipid driver of atherosclerosis; five key causes identified: glucose, omega-6, AGEs, toxins, LPS from leaky gut",
   },
+  {
+    id: 11,
+    title: "Glycemia and insulinemia in healthy subjects after lactose-equivalent meals of milk and other food proteins: the role of plasma amino acids and incretins",
+    journal: "American Journal of Clinical Nutrition",
+    year: 2004,
+    url: "https://pubmed.ncbi.nlm.nih.gov/15531672/",
+    summary: "Whey produced a 90% higher insulin AUC and 54% higher GIP AUC than bread while lowering postprandial glucose AUC by 57%.",
+  },
+  {
+    id: 12,
+    title: "Incretin, insulinotropic and glucose-lowering effects of whey protein pre-load in type 2 diabetes: a randomised clinical trial",
+    journal: "Diabetologia",
+    year: 2014,
+    url: "https://pubmed.ncbi.nlm.nih.gov/25005331/",
+    summary: "A 50 g whey preload before breakfast reduced postprandial glucose by 28% while increasing insulin and GLP-1 responses.",
+  },
+  {
+    id: 13,
+    title: "Physiologic hyperinsulinemia stimulates protein synthesis and enhances transport of selected amino acids in human skeletal muscle",
+    journal: "Journal of Clinical Investigation",
+    year: 1995,
+    url: "https://pubmed.ncbi.nlm.nih.gov/7860765/",
+    summary: "Local hyperinsulinemia increased muscle protein synthesis and boosted inward transport of leucine and lysine in human skeletal muscle.",
+  },
+  {
+    id: 14,
+    title: "Insulin does not stimulate muscle protein synthesis during increased plasma branched-chain amino acids alone but still decreases whole body proteolysis in humans",
+    journal: "American Journal of Physiology-Endocrinology and Metabolism",
+    year: 2016,
+    url: "https://pubmed.ncbi.nlm.nih.gov/27530230/",
+    summary: "Insulin did not raise muscle protein synthesis in that model, but it still decreased whole-body proteolysis in healthy humans.",
+  },
+  {
+    id: 15,
+    title: "A small dose of whey protein co-ingested with mixed-macronutrient breakfast and lunch meals improves postprandial glycemia and suppresses appetite in men with type 2 diabetes: a randomized controlled trial",
+    journal: "American Journal of Clinical Nutrition",
+    year: 2018,
+    url: "https://pubmed.ncbi.nlm.nih.gov/29635505/",
+    summary: "Fifteen grams of whey before mixed meals improved postprandial glycemia and increased satiety in men with type 2 diabetes.",
+  },
+  {
+    id: 16,
+    title: "Effect of the intake of dietary protein on insulin resistance in subjects with obesity: a randomized controlled clinical trial",
+    journal: "European Journal of Nutrition",
+    year: 2021,
+    url: "https://pubmed.ncbi.nlm.nih.gov/33145643/",
+    summary: "High-protein hypocaloric diets improved insulin sensitivity by 60-90% after one month in adults with obesity and insulin resistance.",
+  },
+  {
+    id: 17,
+    title: "Endothelial dysfunction in insulin resistance and type 2 diabetes",
+    journal: "Journal of Internal Medicine",
+    year: 2007,
+    url: "https://pubmed.ncbi.nlm.nih.gov/17645585/",
+    summary: "Reviews how insulin resistance impairs nitric-oxide signaling, promotes endothelial dysfunction, and links metabolic disease to coronary artery disease.",
+  },
+  {
+    id: 18,
+    title: "Association between the homeostasis model assessment of insulin resistance and coronary artery calcification: a meta-analysis of observational studies",
+    journal: "Diabetology & Metabolic Syndrome",
+    year: 2023,
+    url: "https://pubmed.ncbi.nlm.nih.gov/38089605/",
+    summary: "Across 15 studies and 60,649 subjects, higher HOMA-IR was associated with greater coronary artery calcification prevalence (OR 1.13, 95% CI 1.06-1.20).",
+  },
+  {
+    id: 19,
+    title: "PAI-1 and atherothrombosis",
+    journal: "Journal of Thrombosis and Haemostasis",
+    year: 2005,
+    url: "https://pubmed.ncbi.nlm.nih.gov/16102055/",
+    summary: "PAI-1, elevated in insulin-resistant states, is implicated in impaired fibrinolysis, atherothrombosis, and ischemic cardiovascular events.",
+  },
+  {
+    id: 20,
+    title: "Insulin resistance and atrial fibrillation: from disease onset to post-ablation outcomes: a systematic review and meta-analysis",
+    journal: "Frontiers in Cardiovascular Medicine",
+    year: 2026,
+    url: "https://pubmed.ncbi.nlm.nih.gov/41584292/",
+    summary: "Meta-analysis of 30 cohort studies found insulin resistance significantly increased new-onset AF risk (HR 1.34) and post-ablation recurrence risk (HR 1.57).",
+  },
+  {
+    id: 21,
+    title: "Meta-analysis of metabolic syndrome and its individual components with risk of atrial fibrillation in different populations",
+    journal: "BMC Cardiovascular Disorders",
+    year: 2021,
+    url: "https://pubmed.ncbi.nlm.nih.gov/33588759/",
+    summary: "Metabolic syndrome was associated with higher AF risk (HR 1.57), with abdominal obesity, elevated blood pressure, elevated fasting glucose, and low HDL all contributing.",
+  },
+  {
+    id: 22,
+    title: "Metabolic Syndrome and Atrial Fibrillation: Different Entities or Combined Disorders",
+    journal: "Journal of Personalized Medicine",
+    year: 2023,
+    url: "https://pubmed.ncbi.nlm.nih.gov/37763092/",
+    summary: "Review describing how metabolic syndrome drives atrial remodeling through inflammation, oxidative stress, fibrosis, and structural/electrical changes that support AF.",
+  },
 ];
 
 const contributors = [
@@ -478,11 +574,263 @@ const contributors = [
   },
 ];
 
+const damageMap = [
+  {
+    id: "arteries",
+    label: "Arteries",
+    icon: "🩸",
+    accent: "text-rose-400",
+    border: "border-rose-500/20",
+    gradient: "from-rose-500/8",
+    summary: "The vascular problem starts before the heart attack. Insulin resistance makes the artery wall less adaptive, more inflamed, and more likely to support plaque.",
+    metrics: [
+      { label: "Endothelial stress", value: 82, tone: "bg-rose-400" },
+      { label: "Plaque pressure", value: 76, tone: "bg-orange-400" },
+      { label: "Clotting tendency", value: 68, tone: "bg-amber-400" },
+    ],
+    bullets: [
+      "Nitric-oxide signaling drops, so arteries lose flexibility.",
+      "Small dense LDL and high triglycerides make plaque formation easier.",
+      "Higher PAI-1 means clots clear less efficiently once plaque ruptures.",
+    ],
+    cite: [17, 18, 19],
+  },
+  {
+    id: "rhythm",
+    label: "Heart Rhythm",
+    icon: "⚡",
+    accent: "text-violet-400",
+    border: "border-violet-500/20",
+    gradient: "from-violet-500/8",
+    summary: "AFib is not random chaos. Metabolic stress changes the atria structurally first, then electrical signaling starts to get sloppy.",
+    metrics: [
+      { label: "Inflammatory load", value: 80, tone: "bg-violet-400" },
+      { label: "Fibrosis risk", value: 72, tone: "bg-fuchsia-400" },
+      { label: "Electrical instability", value: 66, tone: "bg-sky-400" },
+    ],
+    bullets: [
+      "Inflammation and oxidative stress push the atria toward fibrosis.",
+      "Metabolic syndrome creates the substrate for AFib, not just a one-off trigger.",
+      "Insulin resistance tracks with both new-onset AF and recurrence after ablation.",
+    ],
+    cite: [20, 21, 22],
+  },
+  {
+    id: "brain",
+    label: "Brain",
+    icon: "🧠",
+    accent: "text-blue-400",
+    border: "border-blue-500/20",
+    gradient: "from-blue-500/8",
+    summary: "The brain is extremely energy-hungry. When insulin signaling degrades, cognition does not fail overnight, but fuel delivery and cleanup start to erode.",
+    metrics: [
+      { label: "Fuel mismatch", value: 77, tone: "bg-blue-400" },
+      { label: "Inflammatory spillover", value: 63, tone: "bg-cyan-400" },
+      { label: "Long-range neuro risk", value: 71, tone: "bg-indigo-400" },
+    ],
+    bullets: [
+      "Impaired insulin signaling can leave neurons under-fueled.",
+      "Metabolic dysfunction overlaps with amyloid and tau pathology pathways.",
+      "This is why Alzheimer’s sometimes gets framed as 'type 3 diabetes.'",
+    ],
+    cite: [1],
+  },
+  {
+    id: "storage",
+    label: "Fat & Liver",
+    icon: "🧱",
+    accent: "text-amber-400",
+    border: "border-amber-500/20",
+    gradient: "from-amber-500/8",
+    summary: "This is the trap most people feel first: insulin stays high, fat gets harder to mobilize, and the body compensates by storing more while feeling underpowered.",
+    metrics: [
+      { label: "Fat-storage signal", value: 86, tone: "bg-amber-400" },
+      { label: "Lipolysis lock", value: 78, tone: "bg-orange-400" },
+      { label: "Visceral-fat feedback", value: 73, tone: "bg-red-400" },
+    ],
+    bullets: [
+      "Insulin blocks lipolysis, so stored energy becomes less accessible.",
+      "Visceral fat feeds inflammation back into the system.",
+      "This is why people can feel hungry, tired, and metabolically stuck at the same time.",
+    ],
+    cite: [2, 7, 9],
+  },
+] as const;
+
+const progressionStages = [
+  {
+    id: "sensitive",
+    label: "Sensitive",
+    microLabel: "Pulsed insulin",
+    accent: "text-emerald-400",
+    border: "border-emerald-500/20",
+    glow: "from-emerald-500/8",
+    summary: "Insulin rises when needed, drops when the job is done, and tissues respond efficiently.",
+    bars: [
+      { label: "Fasting insulin load", value: 18, tone: "bg-emerald-400" },
+      { label: "Glucose drift", value: 16, tone: "bg-sky-400" },
+      { label: "Vascular damage pressure", value: 14, tone: "bg-rose-400" },
+      { label: "AFib substrate", value: 10, tone: "bg-violet-400" },
+    ],
+    caption: "This is what metabolic flexibility looks like: low baseline insulin, clean glucose disposal, low chronic inflammatory signal.",
+  },
+  {
+    id: "compensating",
+    label: "Compensating",
+    microLabel: "Silent phase",
+    accent: "text-amber-400",
+    border: "border-amber-500/20",
+    glow: "from-amber-500/8",
+    summary: "Glucose may still look 'normal,' but insulin is already rising to brute-force the same result.",
+    bars: [
+      { label: "Fasting insulin load", value: 46, tone: "bg-amber-400" },
+      { label: "Glucose drift", value: 28, tone: "bg-sky-400" },
+      { label: "Vascular damage pressure", value: 41, tone: "bg-rose-400" },
+      { label: "AFib substrate", value: 34, tone: "bg-violet-400" },
+    ],
+    caption: "This is why fasting insulin matters so much: damage can start while glucose still looks deceptively acceptable.",
+  },
+  {
+    id: "resistant",
+    label: "Resistant",
+    microLabel: "Damage compounds",
+    accent: "text-orange-400",
+    border: "border-orange-500/20",
+    glow: "from-orange-500/8",
+    summary: "Baseline insulin stays high, glucose control gets shakier, and vascular plus electrical risk starts stacking.",
+    bars: [
+      { label: "Fasting insulin load", value: 72, tone: "bg-orange-400" },
+      { label: "Glucose drift", value: 58, tone: "bg-sky-400" },
+      { label: "Vascular damage pressure", value: 68, tone: "bg-rose-400" },
+      { label: "AFib substrate", value: 63, tone: "bg-violet-400" },
+    ],
+    caption: "This is the stage where heart, liver, fat tissue, and brain stop looking like separate problems and start behaving like one network failure.",
+  },
+  {
+    id: "exhausted",
+    label: "Exhausted",
+    microLabel: "Beta-cell failure",
+    accent: "text-red-400",
+    border: "border-red-500/20",
+    glow: "from-red-500/8",
+    summary: "The pancreas cannot keep compensating. Glucose rises visibly, but the groundwork for disease was laid much earlier.",
+    bars: [
+      { label: "Fasting insulin load", value: 64, tone: "bg-red-400" },
+      { label: "Glucose drift", value: 84, tone: "bg-sky-400" },
+      { label: "Vascular damage pressure", value: 82, tone: "bg-rose-400" },
+      { label: "AFib substrate", value: 76, tone: "bg-violet-400" },
+    ],
+    caption: "This is where the labs finally become obvious, but the system has usually been deteriorating for years.",
+  },
+] as const;
+
+const consequenceWindows = [
+  {
+    id: "hours",
+    label: "Hours",
+    accent: "text-amber-400",
+    border: "border-amber-500/20",
+    glow: "from-amber-500/8",
+    summary: "In the short term, high insulin is mainly a traffic-director problem: fuel gets pushed into storage, fat access drops, and the next wave of hunger gets easier to trigger.",
+    cite: [7, 9],
+    tracks: [
+      { label: "Fat burning access", value: 18, tone: "bg-amber-400" },
+      { label: "Storage signal", value: 82, tone: "bg-orange-400" },
+      { label: "Reactive hunger pressure", value: 66, tone: "bg-red-400" },
+    ],
+    cards: [
+      {
+        title: "Lipolysis gets muted",
+        body: "Even moderate insulin levels push the body away from releasing stored fat. That is why high-insulin states can feel low-energy even when body fat is available.",
+      },
+      {
+        title: "The next meal matters more",
+        body: "When insulin stays elevated and glucose swings get steeper, appetite and cravings tend to feel louder than the calories alone would suggest.",
+      },
+    ],
+  },
+  {
+    id: "months",
+    label: "Months",
+    accent: "text-rose-400",
+    border: "border-rose-500/20",
+    glow: "from-rose-500/8",
+    summary: "Over months, the issue stops being just fuel partitioning. The vasculature gets more inflamed, lipids get more atherogenic, and the system starts laying down visible cardiovascular risk.",
+    cite: [17, 18, 19],
+    tracks: [
+      { label: "Endothelial strain", value: 74, tone: "bg-rose-400" },
+      { label: "Plaque-friendly lipid drift", value: 70, tone: "bg-orange-400" },
+      { label: "Clot persistence", value: 62, tone: "bg-violet-400" },
+    ],
+    cards: [
+      {
+        title: "Arteries lose flexibility",
+        body: "Insulin resistance and endothelial dysfunction travel together. Nitric-oxide signaling gets weaker, and vascular tissue becomes easier to injure.",
+      },
+      {
+        title: "The blood gets less forgiving",
+        body: "Higher PAI-1 and other pro-thrombotic signals mean a plaque event is more likely to become a clot problem instead of a near miss.",
+      },
+    ],
+  },
+  {
+    id: "years",
+    label: "Years",
+    accent: "text-violet-400",
+    border: "border-violet-500/20",
+    glow: "from-violet-500/8",
+    summary: "Over years, chronic metabolic stress becomes a systems disease: plaque burden rises, atrial tissue remodels, and brain, heart, and fat tissue stop behaving like separate stories.",
+    cite: [1, 20, 21, 22],
+    tracks: [
+      { label: "Coronary event setup", value: 80, tone: "bg-rose-400" },
+      { label: "AFib substrate", value: 72, tone: "bg-violet-400" },
+      { label: "Brain-energy mismatch", value: 68, tone: "bg-sky-400" },
+    ],
+    cards: [
+      {
+        title: "Rhythm risk stops being abstract",
+        body: "Inflammation, oxidative stress, and fibrosis create the structural substrate for atrial fibrillation rather than just a random electrical blip.",
+      },
+      {
+        title: "Different organs, same root problem",
+        body: "This is the big pattern: coronary disease, AFib, and neurodegenerative risk all start to look like different expressions of the same metabolic dysfunction.",
+      },
+    ],
+  },
+] as const;
+
 // ─── Page ─────────────────────────────────────────────────────────────────────
 export default function InsulinClient() {
   const [expandedPillar, setExpandedPillar] = useState<number | null>(null);
   const [activeGlossary, setActiveGlossary] = useState<GlossaryKey | null>(null);
+  const [activeDamageMap, setActiveDamageMap] = useState<(typeof damageMap)[number]["id"]>("arteries");
+  const [activeStage, setActiveStage] = useState<(typeof progressionStages)[number]["id"]>("compensating");
+  const [activeConsequenceWindow, setActiveConsequenceWindow] = useState<(typeof consequenceWindows)[number]["id"]>("months");
   const activeGlossaryEntry: GlossaryEntry | null = activeGlossary ? glossaryData[activeGlossary] : null;
+  const selectedDamageMap = damageMap.find((item) => item.id === activeDamageMap) ?? damageMap[0];
+  const selectedStage = progressionStages.find((item) => item.id === activeStage) ?? progressionStages[0];
+  const selectedConsequenceWindow =
+    consequenceWindows.find((item) => item.id === activeConsequenceWindow) ?? consequenceWindows[0];
+  const activeStageIndex = progressionStages.findIndex((item) => item.id === activeStage);
+  const chartWidth = 420;
+  const chartHeight = 210;
+  const chartPaddingX = 34;
+  const chartPaddingY = 20;
+  const chartStep = (chartWidth - chartPaddingX * 2) / (progressionStages.length - 1);
+  const progressionSeries = [
+    { key: "insulin", label: "Fasting insulin load", tone: "#f59e0b", values: progressionStages.map((stage) => stage.bars[0].value) },
+    { key: "glucose", label: "Glucose drift", tone: "#38bdf8", values: progressionStages.map((stage) => stage.bars[1].value) },
+    { key: "vascular", label: "Vascular pressure", tone: "#fb7185", values: progressionStages.map((stage) => stage.bars[2].value) },
+    { key: "rhythm", label: "AFib substrate", tone: "#a78bfa", values: progressionStages.map((stage) => stage.bars[3].value) },
+  ] as const;
+  const pointPath = (values: number[]) =>
+    values
+      .map((value, index) => {
+        const x = chartPaddingX + index * chartStep;
+        const y = chartHeight - chartPaddingY - (value / 100) * (chartHeight - chartPaddingY * 2);
+        return `${index === 0 ? "M" : "L"} ${x} ${y}`;
+      })
+      .join(" ");
 
   return (
     <GlossaryContext.Provider value={setActiveGlossary}>
@@ -492,7 +840,7 @@ export default function InsulinClient() {
         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.3 }}>
           <Link
             href="/health"
-            className="inline-flex items-center gap-1.5 text-sm text-white/40 hover:text-white/70 transition-colors mb-10"
+            className="inline-flex items-center gap-1.5 text-sm text-readable-soft hover:text-readable-strong transition-colors mb-10"
           >
             <ArrowLeft size={14} /> Back to Health
           </Link>
@@ -511,10 +859,10 @@ export default function InsulinClient() {
             </div>
             <div>
               <h1 className="text-3xl font-bold text-white tracking-tight">Insulin & Insulin Resistance</h1>
-              <p className="text-sm text-white/40 mt-1">Metabolic health · Endocrinology · Neuroscience</p>
+              <p className="text-sm text-readable-soft mt-1">Metabolic health · Endocrinology · Neuroscience</p>
             </div>
           </div>
-          <p className="text-white/50 text-sm leading-relaxed max-w-2xl">
+          <p className="text-readable-soft text-sm leading-relaxed max-w-2xl">
             <GlossaryTerm termKey="insulinResistance">Insulin resistance</GlossaryTerm> is the silent driver behind most chronic disease — Type 2 diabetes,{" "}
             <GlossaryTerm termKey="alzheimers">Alzheimer&apos;s</GlossaryTerm>, heart disease, PCOS, obesity, and more.
             Research across endocrinology, neuroscience, and metabolism increasingly identifies it as the root metabolic dysfunction underlying most modern chronic illness — <span className="text-amber-300/80">&quot;the disease beneath the diseases.&quot;</span>
@@ -525,7 +873,7 @@ export default function InsulinClient() {
         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.2 }} className="mb-10">
           <div className="inline-flex items-center gap-2 glass rounded-full px-3 py-1.5 border border-white/10">
             <span className="text-[10px] text-amber-400/70 font-semibold tracking-wide">TIP</span>
-            <span className="text-[10px] text-white/40">
+            <span className="text-[10px] text-readable-soft">
               Tap <span className="text-amber-300/70 underline decoration-dotted underline-offset-1">highlighted terms</span> for in-depth explanations
             </span>
           </div>
@@ -547,8 +895,8 @@ export default function InsulinClient() {
               <div className={`absolute inset-0 bg-gradient-to-br ${stat.gradientClass} to-transparent pointer-events-none`} />
               <div className="relative">
                 <p className={`text-2xl font-bold mb-0.5 ${stat.valueClass}`}>{stat.value}</p>
-                <p className="text-[11px] text-white/70 font-medium leading-tight mb-1">{stat.label}</p>
-                <p className="text-[10px] text-white/35">{stat.note}</p>
+                <p className="text-[11px] text-readable-strong font-medium leading-tight mb-1">{stat.label}</p>
+                <p className="text-[10px] text-readable-faint">{stat.note}</p>
               </div>
             </motion.div>
           ))}
@@ -568,7 +916,7 @@ export default function InsulinClient() {
                     Core Concept
                   </span>
                 </div>
-                <p className="text-sm text-white/55 leading-relaxed mb-5">
+                <p className="text-sm text-readable-muted leading-relaxed mb-5">
                   Think of insulin as a bouncer at a nightclub. The club (your cell) only opens its doors when the bouncer knocks.
                   Glucose waits outside. Under normal conditions, one knock and the door opens. But constant knocking wears the
                   club out — cells progressively stop responding to the signal.
@@ -594,19 +942,150 @@ export default function InsulinClient() {
                     <div key={s.stage} className="glass rounded-xl p-3.5 border border-white/8">
                       <div className="flex items-center gap-2 mb-2">
                         <div className={`w-2 h-2 rounded-full ${s.dot}`} />
-                        <span className="text-xs font-semibold text-white/80">{s.stage}</span>
+                        <span className="text-xs font-semibold text-readable-strong">{s.stage}</span>
                       </div>
-                      <p className="text-xs text-white/50 leading-relaxed">{s.desc}</p>
+                      <p className="text-xs text-readable-soft leading-relaxed">{s.desc}</p>
                     </div>
                   ))}
                 </div>
                 <div className="mt-4 glass rounded-xl p-3 border border-white/8 flex items-start gap-2">
                   <AlertCircle size={13} className="text-amber-400 shrink-0 mt-0.5" />
-                  <p className="text-xs text-white/50 leading-relaxed">
-                    <span className="text-white/70 font-medium">The silent phase:</span>{" "}
+                  <p className="text-xs text-readable-soft leading-relaxed">
+                    <span className="text-readable-strong font-medium">The silent phase:</span>{" "}
                     <GlossaryTerm termKey="hyperinsulinemia">Hyperinsulinemia</GlossaryTerm> precedes high blood sugar by years or decades.
                     Most standard panels test glucose only — not fasting insulin. By the time glucose is elevated, insulin resistance has already been present for a long time.
                   </p>
+                </div>
+              </div>
+            </div>
+          </Section>
+
+          {/* Damage Map */}
+          <Section>
+            <div className="glass rounded-2xl p-6 border border-amber-500/20 relative overflow-hidden">
+              <div className="absolute inset-0 bg-gradient-to-br from-amber-500/8 via-orange-500/5 to-transparent pointer-events-none" />
+              <div className="relative">
+                <div className="flex flex-wrap items-center gap-2 mb-4">
+                  <AlertCircle size={16} className="text-amber-400" />
+                  <h2 className="text-base font-semibold text-white">Where Insulin Resistance Lands First</h2>
+                  <span className="text-[10px] px-2 py-0.5 rounded-full border bg-amber-500/10 text-amber-300/80 border-amber-500/15">
+                    Interactive Map
+                  </span>
+                </div>
+                <p className="text-sm text-readable-soft leading-relaxed mb-5">
+                  Tap a system below. The point is not that insulin resistance is "about sugar" only. It is a network problem that
+                  shows up in vessels, rhythm, brain function, and energy storage at the same time.
+                </p>
+
+                <div className="flex flex-wrap gap-2 mb-4">
+                  {damageMap.map((item) => {
+                    const isActive = activeDamageMap === item.id;
+                    return (
+                      <button
+                        key={item.id}
+                        onClick={() => setActiveDamageMap(item.id)}
+                        className={`glass rounded-full border px-4 py-2 text-xs font-medium transition-all duration-200 ${
+                          isActive ? `${item.border} bg-white/[0.05] ${item.accent}` : "border-white/8 text-readable-soft hover:border-white/15"
+                        }`}
+                      >
+                        <span className="mr-2">{item.icon}</span>
+                        {item.label}
+                      </button>
+                    );
+                  })}
+                </div>
+
+                <div className="grid grid-cols-1 xl:grid-cols-[0.9fr_1.1fr] gap-4">
+                  <div className="glass rounded-3xl border border-white/8 p-4">
+                    <p className="text-[10px] uppercase tracking-[0.18em] text-readable-faint mb-3">System Overview</p>
+                    <div className="space-y-3">
+                      {damageMap.map((item) => {
+                        const isActive = activeDamageMap === item.id;
+                        return (
+                          <button
+                            key={item.id}
+                            onClick={() => setActiveDamageMap(item.id)}
+                            className={`w-full glass rounded-2xl border p-4 text-left transition-all duration-200 ${
+                              isActive ? `${item.border} bg-white/[0.05]` : "border-white/8 hover:border-white/15"
+                            }`}
+                          >
+                            <div className="flex items-start gap-3">
+                              <div className="pt-0.5 text-lg">{item.icon}</div>
+                              <div className="min-w-0 flex-1">
+                                <div className="flex items-center justify-between gap-3 mb-1">
+                                  <p className={`text-sm font-semibold ${isActive ? item.accent : "text-white"}`}>{item.label}</p>
+                                  <div className={`h-2 w-2 rounded-full ${isActive ? "bg-white" : "bg-white/20"}`} />
+                                </div>
+                                <p className="text-xs text-readable-soft leading-relaxed">{item.summary}</p>
+                              </div>
+                            </div>
+                          </button>
+                        );
+                      })}
+                    </div>
+                  </div>
+
+                  <div className={`glass rounded-3xl p-5 border ${selectedDamageMap.border} relative overflow-hidden`}>
+                    <div className={`absolute inset-0 bg-gradient-to-br ${selectedDamageMap.gradient} via-transparent to-transparent pointer-events-none`} />
+                    <AnimatePresence mode="wait">
+                      <motion.div
+                        key={selectedDamageMap.id}
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: -8 }}
+                        transition={{ duration: 0.22 }}
+                        className="relative"
+                      >
+                        <div className="flex items-center gap-3 mb-4">
+                          <div className="w-11 h-11 rounded-2xl glass border border-white/8 flex items-center justify-center text-xl">
+                            {selectedDamageMap.icon}
+                          </div>
+                          <div>
+                            <p className={`text-base font-semibold ${selectedDamageMap.accent}`}>{selectedDamageMap.label}</p>
+                            <p className="text-xs text-readable-faint">What gets hit, and how it tends to show up</p>
+                          </div>
+                        </div>
+
+                        <p className="text-sm text-readable-soft leading-relaxed mb-5">
+                          {selectedDamageMap.summary}
+                          {selectedDamageMap.cite.map((id) => (
+                            <Cite key={id} id={id} />
+                          ))}
+                        </p>
+
+                        <div className="space-y-3 mb-5">
+                          {selectedDamageMap.metrics.map((metric) => (
+                            <div key={metric.label} className="glass rounded-2xl p-4 border border-white/8">
+                              <div className="flex items-center justify-between mb-2">
+                                <span className="text-xs text-readable-soft">{metric.label}</span>
+                                <span className="text-xs font-semibold text-readable-strong">{metric.value}%</span>
+                              </div>
+                              <div className="h-2.5 rounded-full bg-white/8 overflow-hidden">
+                                <motion.div
+                                  className={`h-full ${metric.tone} rounded-full`}
+                                  initial={{ width: 0 }}
+                                  animate={{ width: `${metric.value}%` }}
+                                  transition={{ duration: 0.4 }}
+                                />
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+
+                        <div className="glass rounded-2xl p-4 border border-white/8">
+                          <p className="text-xs font-semibold text-readable-strong mb-3">What this usually means</p>
+                          <div className="space-y-2">
+                            {selectedDamageMap.bullets.map((bullet) => (
+                              <div key={bullet} className="flex items-start gap-2 text-xs text-readable-soft">
+                                <ChevronRight size={11} className={selectedDamageMap.accent.split(" ")[0]} />
+                                <span>{bullet}</span>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      </motion.div>
+                    </AnimatePresence>
+                  </div>
                 </div>
               </div>
             </div>
@@ -628,7 +1107,7 @@ export default function InsulinClient() {
                         ROAD 1 — FAST
                       </span>
                     </div>
-                    <p className="text-xs text-white/45 mb-3">Acute triggers that spike insulin rapidly:</p>
+                    <p className="text-xs text-readable-soft mb-3">Acute triggers that spike insulin rapidly:</p>
                     <ul className="space-y-2">
                       {([
                         "High-carb or high-sugar meals",
@@ -637,13 +1116,13 @@ export default function InsulinClient() {
                         "Alcohol binge",
                         "Fructose overload (juice, HFCS, agave)",
                       ] as React.ReactNode[]).map((item, i) => (
-                        <li key={i} className="flex items-start gap-2 text-xs text-white/60">
+                        <li key={i} className="flex items-start gap-2 text-xs text-readable-muted">
                           <ChevronRight size={11} className="text-orange-400 shrink-0 mt-0.5" />
                           {item}
                         </li>
                       ))}
                     </ul>
-                    <p className="text-[10px] text-white/30 mt-3 italic">Reversible quickly — but accumulates with repeated exposure</p>
+                    <p className="text-[10px] text-readable-faint mt-3 italic">Reversible quickly — but accumulates with repeated exposure</p>
                   </div>
                 </div>
 
@@ -655,7 +1134,7 @@ export default function InsulinClient() {
                         ROAD 2 — SLOW
                       </span>
                     </div>
-                    <p className="text-xs text-white/45 mb-3">Chronic conditions that erode sensitivity silently:</p>
+                    <p className="text-xs text-readable-soft mb-3">Chronic conditions that erode sensitivity silently:</p>
                     <ul className="space-y-2">
                       {([
                         <><GlossaryTerm termKey="visceralFat">Visceral fat</GlossaryTerm> and liver fat accumulation<Cite id={2} /></>,
@@ -664,14 +1143,350 @@ export default function InsulinClient() {
                         <>Environmental toxins (pollution, vaping, diesel)<Cite id={4} /></>,
                         <>Years of chronically elevated <GlossaryTerm termKey="cortisol">cortisol</GlossaryTerm></>,
                       ] as React.ReactNode[]).map((item, i) => (
-                        <li key={i} className="flex items-start gap-2 text-xs text-white/60">
+                        <li key={i} className="flex items-start gap-2 text-xs text-readable-muted">
                           <ChevronRight size={11} className="text-red-400 shrink-0 mt-0.5" />
                           {item}
                         </li>
                       ))}
                     </ul>
-                    <p className="text-[10px] text-white/30 mt-3 italic">Silent for years — damage occurs long before symptoms</p>
+                    <p className="text-[10px] text-readable-faint mt-3 italic">Silent for years — damage occurs long before symptoms</p>
                   </div>
+                </div>
+              </div>
+            </div>
+          </Section>
+
+          {/* Progression Simulator */}
+          <Section>
+            <div className="glass rounded-2xl p-6 border border-orange-500/20 relative overflow-hidden">
+              <div className="absolute inset-0 bg-gradient-to-br from-orange-500/8 via-rose-500/5 to-transparent pointer-events-none" />
+              <div className="relative">
+                <div className="flex flex-wrap items-center gap-2 mb-4">
+                  <FlaskConical size={16} className="text-orange-400" />
+                  <h2 className="text-base font-semibold text-white">The Silent Progression Simulator</h2>
+                  <span className="text-[10px] px-2 py-0.5 rounded-full border bg-orange-500/10 text-orange-300/80 border-orange-500/15">
+                    Tap Through
+                  </span>
+                </div>
+                <p className="text-sm text-readable-soft leading-relaxed mb-5">
+                  This is the part most people miss: insulin resistance usually looks quiet first and obvious later. Tap each stage
+                  to watch what changes before a diagnosis shows up on paper.
+                </p>
+
+                <div className="mb-5">
+                  <div className="relative grid grid-cols-2 lg:grid-cols-4 gap-2">
+                    <motion.div
+                      className="absolute top-1/2 -translate-y-1/2 h-[2px] bg-gradient-to-r from-emerald-400/30 via-amber-400/40 to-red-400/40 hidden lg:block"
+                      style={{
+                        left: "12.5%",
+                        width: "75%",
+                      }}
+                    />
+                    {progressionStages.map((stage, index) => {
+                      const isActive = activeStage === stage.id;
+                      const isPassed = index <= activeStageIndex;
+                      return (
+                        <button
+                          key={stage.id}
+                          onClick={() => setActiveStage(stage.id)}
+                          className={`relative glass rounded-2xl border px-4 py-4 text-left transition-all duration-200 ${
+                            isActive ? `${stage.border} bg-white/[0.05]` : "border-white/8 hover:border-white/15"
+                          }`}
+                        >
+                          <div className="flex items-center gap-3">
+                            <motion.div
+                              className={`w-7 h-7 rounded-full border flex items-center justify-center text-[10px] font-bold ${
+                                isActive ? `${stage.border} ${stage.accent}` : "border-white/12 text-readable-faint"
+                              }`}
+                              animate={{
+                                scale: isActive ? 1.06 : 1,
+                                boxShadow: isPassed ? "0 0 18px rgba(255,255,255,0.08)" : "0 0 0 rgba(0,0,0,0)",
+                              }}
+                            >
+                              {index + 1}
+                            </motion.div>
+                            <div>
+                              <p className={`text-xs font-semibold mb-0.5 ${isActive ? stage.accent : "text-readable-strong"}`}>{stage.label}</p>
+                              <p className="text-[10px] text-readable-faint">{stage.microLabel}</p>
+                            </div>
+                          </div>
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+
+                <div className={`glass rounded-[28px] p-5 border ${selectedStage.border} relative overflow-hidden`}>
+                  <div className={`absolute inset-0 bg-gradient-to-br ${selectedStage.glow} via-transparent to-transparent pointer-events-none`} />
+                  <div className="relative grid grid-cols-1 xl:grid-cols-[1.08fr_0.92fr] gap-5">
+                    <div className="glass rounded-2xl p-4 border border-white/8">
+                      <div className="flex items-start justify-between gap-3 mb-3">
+                        <div>
+                          <p className={`text-sm font-semibold ${selectedStage.accent} mb-1`}>{selectedStage.label}</p>
+                          <p className="text-[11px] uppercase tracking-[0.18em] text-readable-faint">{selectedStage.microLabel}</p>
+                        </div>
+                        <div className="text-right">
+                          <p className="text-[10px] text-readable-faint">Selected stage</p>
+                          <p className="text-sm font-semibold text-white">{activeStageIndex + 1}/4</p>
+                        </div>
+                      </div>
+
+                      <div className="relative overflow-hidden rounded-2xl border border-white/8 bg-[radial-gradient(circle_at_top,rgba(255,255,255,0.06),transparent_55%)] p-3">
+                        <svg viewBox={`0 0 ${chartWidth} ${chartHeight}`} className="w-full h-auto">
+                          <defs>
+                            <linearGradient id="stageBeam" x1="0" x2="0" y1="0" y2="1">
+                              <stop offset="0%" stopColor="rgba(255,255,255,0.22)" />
+                              <stop offset="100%" stopColor="rgba(255,255,255,0)" />
+                            </linearGradient>
+                          </defs>
+
+                          {[0, 25, 50, 75, 100].map((tick) => {
+                            const y = chartHeight - chartPaddingY - (tick / 100) * (chartHeight - chartPaddingY * 2);
+                            return (
+                              <g key={tick}>
+                                <line x1={chartPaddingX} x2={chartWidth - chartPaddingX} y1={y} y2={y} stroke="rgba(255,255,255,0.08)" strokeDasharray="4 5" />
+                                <text x={6} y={y + 4} fill="rgba(232,232,240,0.42)" fontSize="10">
+                                  {tick}
+                                </text>
+                              </g>
+                            );
+                          })}
+
+                          <motion.rect
+                            x={chartPaddingX + activeStageIndex * chartStep - 26}
+                            y={chartPaddingY - 4}
+                            width="52"
+                            height={chartHeight - chartPaddingY * 2 + 8}
+                            fill="url(#stageBeam)"
+                            initial={false}
+                            animate={{ x: chartPaddingX + activeStageIndex * chartStep - 26 }}
+                            transition={{ type: "spring", stiffness: 220, damping: 24 }}
+                          />
+
+                          {progressionSeries.map((series) => (
+                            <motion.path
+                              key={series.key}
+                              d={pointPath(series.values)}
+                              fill="none"
+                              stroke={series.tone}
+                              strokeWidth="3"
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              initial={{ pathLength: 0, opacity: 0.3 }}
+                              animate={{ pathLength: 1, opacity: 0.9 }}
+                              transition={{ duration: 0.7 }}
+                            />
+                          ))}
+
+                          {progressionSeries.map((series) =>
+                            series.values.map((value, index) => {
+                              const x = chartPaddingX + index * chartStep;
+                              const y = chartHeight - chartPaddingY - (value / 100) * (chartHeight - chartPaddingY * 2);
+                              const selected = index === activeStageIndex;
+                              return (
+                                <motion.circle
+                                  key={`${series.key}-${index}`}
+                                  cx={x}
+                                  cy={y}
+                                  r={selected ? 5 : 3.5}
+                                  fill={series.tone}
+                                  stroke="rgba(13,13,15,0.95)"
+                                  strokeWidth="2"
+                                  initial={{ scale: 0 }}
+                                  animate={{ scale: 1, opacity: selected ? 1 : 0.72 }}
+                                  transition={{ duration: 0.3 }}
+                                />
+                              );
+                            }),
+                          )}
+
+                          {progressionStages.map((stage, index) => (
+                            <text
+                              key={stage.id}
+                              x={chartPaddingX + index * chartStep}
+                              y={chartHeight - 2}
+                              textAnchor="middle"
+                              fill={index === activeStageIndex ? "rgba(248,248,252,0.94)" : "rgba(232,232,240,0.42)"}
+                              fontSize="10"
+                            >
+                              {stage.label}
+                            </text>
+                          ))}
+                        </svg>
+                      </div>
+
+                      <div className="grid grid-cols-2 gap-2 mt-3">
+                        {progressionSeries.map((series) => (
+                          <div key={series.key} className="glass rounded-xl border border-white/8 px-3 py-2">
+                            <div className="flex items-center gap-2">
+                              <span className="w-2 h-2 rounded-full" style={{ backgroundColor: series.tone }} />
+                              <span className="text-[10px] text-readable-soft">{series.label}</span>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+
+                    <AnimatePresence mode="wait">
+                      <motion.div
+                        key={selectedStage.id}
+                        initial={{ opacity: 0, x: 12, filter: "blur(8px)" }}
+                        animate={{ opacity: 1, x: 0, filter: "blur(0px)" }}
+                        exit={{ opacity: 0, x: -10, filter: "blur(8px)" }}
+                        transition={{ duration: 0.28 }}
+                        className="space-y-3"
+                      >
+                        <div className="glass rounded-2xl p-4 border border-white/8">
+                          <p className="text-xs font-semibold text-readable-strong mb-2">What changes at this stage</p>
+                          <p className="text-sm text-readable-soft leading-relaxed">
+                            {selectedStage.summary}
+                            <Cite id={9} />
+                            <Cite id={17} />
+                            <Cite id={20} />
+                          </p>
+                        </div>
+
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                          {selectedStage.bars.map((bar) => (
+                            <div key={bar.label} className="glass rounded-2xl p-4 border border-white/8 relative overflow-hidden">
+                              <div className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-white/[0.05] to-transparent pointer-events-none" />
+                              <div className="relative">
+                                <div className="flex items-center justify-between mb-2">
+                                  <span className="text-[10px] text-readable-soft">{bar.label}</span>
+                                  <span className="text-[10px] font-semibold text-readable-strong">{bar.value}%</span>
+                                </div>
+                                <div className="h-24 rounded-2xl bg-white/5 flex items-end overflow-hidden">
+                                  <motion.div
+                                    key={`${selectedStage.id}-${bar.label}`}
+                                    className={`w-full ${bar.tone} rounded-2xl`}
+                                    initial={{ height: 0 }}
+                                    animate={{ height: `${bar.value}%` }}
+                                    transition={{ duration: 0.42 }}
+                                  />
+                                </div>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+
+                        <div className="glass rounded-2xl p-4 border border-white/8">
+                          <p className="text-xs font-semibold text-readable-strong mb-1">How this tends to feel</p>
+                          <p className="text-xs text-readable-soft leading-relaxed">{selectedStage.caption}</p>
+                        </div>
+                      </motion.div>
+                    </AnimatePresence>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </Section>
+
+          {/* Consequence Timeline */}
+          <Section>
+            <div className="glass rounded-2xl p-6 border border-white/10 relative overflow-hidden">
+              <div className={`absolute inset-0 bg-gradient-to-br ${selectedConsequenceWindow.glow} via-transparent to-transparent pointer-events-none`} />
+              <div className="relative">
+                <div className="flex flex-wrap items-center gap-2 mb-4">
+                  <Brain size={16} className="text-amber-400" />
+                  <h2 className="text-base font-semibold text-white">What High Insulin Does Over Time</h2>
+                  <span className="text-[10px] px-2 py-0.5 rounded-full border bg-white/5 text-readable-soft border-white/10">
+                    Timeline View
+                  </span>
+                </div>
+                <p className="text-sm text-readable-soft leading-relaxed mb-5">
+                  Same signal, different timescale. Switch the window and the story changes from fuel partitioning, to vessel damage,
+                  to full systems disease.
+                </p>
+
+                <div className="flex flex-wrap gap-2 mb-5">
+                  {consequenceWindows.map((window) => {
+                    const isActive = activeConsequenceWindow === window.id;
+                    return (
+                      <button
+                        key={window.id}
+                        onClick={() => setActiveConsequenceWindow(window.id)}
+                        className={`glass rounded-full border px-4 py-2 text-xs font-medium transition-all duration-200 ${
+                          isActive ? `${window.border} bg-white/[0.05] ${window.accent}` : "border-white/8 text-readable-soft hover:border-white/15"
+                        }`}
+                      >
+                        {window.label}
+                      </button>
+                    );
+                  })}
+                </div>
+
+                <div className="glass rounded-3xl border border-white/8 p-5">
+                  <AnimatePresence mode="wait">
+                    <motion.div
+                      key={selectedConsequenceWindow.id}
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -8 }}
+                      transition={{ duration: 0.22 }}
+                      className="grid grid-cols-1 xl:grid-cols-[0.9fr_1.1fr] gap-5"
+                    >
+                      <div>
+                        <p className={`text-sm font-semibold ${selectedConsequenceWindow.accent} mb-1`}>
+                          {selectedConsequenceWindow.label}
+                        </p>
+                        <p className="text-[10px] uppercase tracking-[0.18em] text-readable-faint mb-3">
+                          Negative effects by timescale
+                        </p>
+                        <p className="text-sm text-readable-soft leading-relaxed mb-4">
+                          {selectedConsequenceWindow.summary}
+                          {selectedConsequenceWindow.cite.map((id) => (
+                            <Cite key={id} id={id} />
+                          ))}
+                        </p>
+
+                        <div className="glass rounded-2xl border border-white/8 p-4">
+                          <p className="text-xs font-semibold text-readable-strong mb-3">Signal shift</p>
+                          <div className="space-y-3">
+                            {selectedConsequenceWindow.tracks.map((track) => (
+                              <div key={track.label}>
+                                <div className="flex items-center justify-between mb-1.5">
+                                  <span className="text-xs text-readable-soft">{track.label}</span>
+                                  <span className="text-[10px] font-semibold text-readable-strong">{track.value}%</span>
+                                </div>
+                                <div className="h-2.5 rounded-full bg-white/8 overflow-hidden">
+                                  <motion.div
+                                    className={`h-full ${track.tone} rounded-full`}
+                                    initial={{ width: 0 }}
+                                    animate={{ width: `${track.value}%` }}
+                                    transition={{ duration: 0.45 }}
+                                  />
+                                </div>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      </div>
+
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                        {selectedConsequenceWindow.cards.map((card, index) => (
+                          <motion.div
+                            key={card.title}
+                            initial={{ opacity: 0, y: 12 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ duration: 0.25, delay: index * 0.04 }}
+                            className="glass rounded-2xl border border-white/8 p-4 relative overflow-hidden"
+                          >
+                            <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/20 to-transparent" />
+                            <p className="text-xs font-semibold text-white mb-2">{card.title}</p>
+                            <p className="text-xs text-readable-soft leading-relaxed">{card.body}</p>
+                          </motion.div>
+                        ))}
+
+                        <div className="glass rounded-2xl border border-white/8 p-4 md:col-span-2">
+                          <p className="text-xs font-semibold text-readable-strong mb-2">Simple reading of the model</p>
+                          <p className="text-xs text-readable-soft leading-relaxed">
+                            Short-term: fuel gets misdirected. Mid-term: vessels get damaged. Long-term: the whole system starts
+                            expressing risk in the heart, rhythm, brain, and fat tissue at once.
+                          </p>
+                        </div>
+                      </div>
+                    </motion.div>
+                  </AnimatePresence>
                 </div>
               </div>
             </div>
@@ -683,13 +1498,13 @@ export default function InsulinClient() {
               <div className="flex items-start gap-2">
                 <AlertCircle size={13} className="text-amber-400 shrink-0 mt-0.5" />
                 <div>
-                  <p className="text-xs font-semibold text-white/70 mb-1">Not all insulin resistance is lifestyle-driven</p>
-                  <p className="text-xs text-white/40 leading-relaxed">
+                  <p className="text-xs font-semibold text-readable-strong mb-1">Not all insulin resistance is lifestyle-driven</p>
+                  <p className="text-xs text-readable-soft leading-relaxed">
                     Medical and genetic conditions can cause or worsen insulin resistance independent of diet and exercise:{" "}
-                    <span className="text-white/55">PCOS</span> (affects ~10% of women and is strongly associated with IR),{" "}
-                    <span className="text-white/55">lipodystrophy</span> (abnormal fat distribution),{" "}
-                    <span className="text-white/55">Cushing&apos;s syndrome</span> (cortisol excess),{" "}
-                    <span className="text-white/55">hypothyroidism</span>, and certain medications (corticosteroids, antipsychotics, some antiretrovirals).
+                    <span className="text-readable-muted">PCOS</span> (affects ~10% of women and is strongly associated with IR),{" "}
+                    <span className="text-readable-muted">lipodystrophy</span> (abnormal fat distribution),{" "}
+                    <span className="text-readable-muted">Cushing&apos;s syndrome</span> (cortisol excess),{" "}
+                    <span className="text-readable-muted">hypothyroidism</span>, and certain medications (corticosteroids, antipsychotics, some antiretrovirals).
                     If you&apos;re doing everything right and still see insulin resistance markers, work with a physician to rule out an underlying cause.
                   </p>
                 </div>
@@ -709,7 +1524,7 @@ export default function InsulinClient() {
                     Molecular Biology
                   </span>
                 </div>
-                <p className="text-sm text-white/50 leading-relaxed mb-5">
+                <p className="text-sm text-readable-soft leading-relaxed mb-5">
                   Most people understand that insulin resistance causes problems over time. What&apos;s less understood is that{" "}
                   <span className="text-white/75 font-medium">high insulin itself directly damages tissue</span> through six mechanistically distinct pathways that operate in parallel — not in sequence. These processes don&apos;t wait for insulin resistance to fully develop first.<Cite id={9} />
                 </p>
@@ -723,7 +1538,7 @@ export default function InsulinClient() {
                       color: "text-rose-400",
                       border: "border-rose-500/20",
                       bg: "bg-rose-500/10",
-                      body: <><GlossaryTerm termKey="hyperinsulinemia">Hyperinsulinemia</GlossaryTerm> promotes endothelial dysfunction through increased oxidative stress and reduced nitric oxide bioavailability. This is <span className="text-white/65 font-medium">mechanistically separate from insulin resistance</span> — the insulin itself damages vessel walls, independent of whether cells are responding to it or not.</>,
+                      body: <><GlossaryTerm termKey="hyperinsulinemia">Hyperinsulinemia</GlossaryTerm> promotes endothelial dysfunction through increased oxidative stress and reduced nitric oxide bioavailability. This is <span className="text-readable-muted font-medium">mechanistically separate from insulin resistance</span> — the insulin itself damages vessel walls, independent of whether cells are responding to it or not.</>,
                     },
                     {
                       num: "2",
@@ -781,7 +1596,7 @@ export default function InsulinClient() {
                             <span className="text-base leading-none">{item.emoji}</span>
                             <p className={`text-xs font-semibold ${item.color}`}>{item.title}</p>
                           </div>
-                          <p className="text-xs text-white/45 leading-relaxed">{item.body}</p>
+                          <p className="text-xs text-readable-soft leading-relaxed">{item.body}</p>
                         </div>
                       </div>
                     </div>
@@ -791,7 +1606,7 @@ export default function InsulinClient() {
                 {/* Critical insight */}
                 <div className="glass rounded-xl p-4 border border-rose-500/20 bg-rose-500/5">
                   <p className="text-xs font-semibold text-rose-400 mb-2">⚠️ The Parallel Problem — Not a Linear Chain</p>
-                  <p className="text-xs text-white/55 leading-relaxed">
+                  <p className="text-xs text-readable-muted leading-relaxed">
                     <span className="text-white/75 font-medium">Insulin resistance is both a cause AND a consequence</span> of these processes — all six pathways run in parallel, not sequence.
                     It&apos;s not &ldquo;spikes → resistance → bad.&rdquo; It&apos;s &ldquo;spikes → resistance <em>plus</em> direct vascular damage <em>plus</em> metabolic inflexibility <em>plus</em> chronic inflammation&rdquo; simultaneously, each reinforcing the others.
                     This is why treating only blood glucose (the downstream symptom) while ignoring chronically elevated insulin misses most of the actual disease process.
@@ -808,7 +1623,7 @@ export default function InsulinClient() {
                 <span className="text-base">🔬</span>
                 <h2 className="text-base font-semibold text-white">Fat Cell Size vs. Fat Cell Mass</h2>
               </div>
-              <p className="text-sm text-white/50 leading-relaxed mb-6">
+              <p className="text-sm text-readable-soft leading-relaxed mb-6">
                 The number of fat cells you have is largely set in childhood. What drives insulin resistance is{" "}
                 <span className="text-white/75 font-medium">how big those cells get.</span> Enlarged fat cells become
                 dysfunctional — they leak fatty acids, trigger chronic inflammation, and stop responding to insulin signals.<Cite id={2} />
@@ -826,15 +1641,15 @@ export default function InsulinClient() {
                       <span className="text-white/20 text-xs">💧</span>
                     </div>
                     <p className={`text-xs font-medium ${cell.textClass}`}>{cell.label}</p>
-                    <p className="text-[10px] text-white/35 text-center leading-tight">{cell.sublabel}</p>
+                    <p className="text-[10px] text-readable-faint text-center leading-tight">{cell.sublabel}</p>
                   </div>
                 ))}
               </div>
 
               <div className="glass rounded-xl p-3 border border-amber-500/15 flex items-start gap-2">
                 <AlertCircle size={13} className="text-amber-400 shrink-0 mt-0.5" />
-                <p className="text-xs text-white/50 leading-relaxed">
-                  <span className="text-white/70 font-medium">Ethnicity matters:</span> People of Asian descent develop insulin
+                <p className="text-xs text-readable-soft leading-relaxed">
+                  <span className="text-readable-strong font-medium">Ethnicity matters:</span> People of Asian descent develop insulin
                   resistance at much lower BMI because fat cells become hypertrophic at lower total body fat. &quot;Normal
                   weight&quot; on a scale does not mean metabolically healthy.
                 </p>
@@ -853,13 +1668,13 @@ export default function InsulinClient() {
                     &ldquo;Type 3 Diabetes&rdquo; — The <GlossaryTerm termKey="alzheimers">Alzheimer&apos;s</GlossaryTerm> Connection
                   </h2>
                 </div>
-                <p className="text-sm text-white/50 leading-relaxed mb-5">
+                <p className="text-sm text-readable-soft leading-relaxed mb-5">
                   The brain is the most energy-hungry organ per gram in the body. When it becomes insulin resistant, neurons
                   can&apos;t get enough fuel. <GlossaryTerm termKey="amyloidPlaques">Amyloid plaques</GlossaryTerm> accumulate, tau
                   tangles form, and the brain literally shrinks. Some researchers use the term{" "}
                   <span className="text-blue-300 font-medium">&quot;Type 3 Diabetes&quot;</span> to describe Alzheimer&apos;s based on evidence that
                   impaired insulin signaling in brain tissue contributes to its pathology.<Cite id={1} />{" "}
-                  <span className="text-white/35 text-xs italic">Note: this is a research hypothesis, not an official clinical diagnosis — Alzheimer&apos;s has multiple etiologies and metabolic dysfunction is one contributing factor, not the sole cause.</span>
+                  <span className="text-readable-faint text-xs italic">Note: this is a research hypothesis, not an official clinical diagnosis — Alzheimer&apos;s has multiple etiologies and metabolic dysfunction is one contributing factor, not the sole cause.</span>
                 </p>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 mb-5">
@@ -874,7 +1689,7 @@ export default function InsulinClient() {
                       { label: "Amyloid clearance", pct: 18 },
                     ].map((item) => (
                       <div key={item.label} className="mb-2.5">
-                        <div className="flex justify-between text-[10px] text-white/35 mb-1">
+                        <div className="flex justify-between text-[10px] text-readable-faint mb-1">
                           <span>{item.label}</span>
                           <span className="text-red-400/70">↓ impaired</span>
                         </div>
@@ -895,7 +1710,7 @@ export default function InsulinClient() {
                       { label: "Neuroinflammation (inverse)", pct: 60 },
                     ].map((item) => (
                       <div key={item.label} className="mb-2.5">
-                        <div className="flex justify-between text-[10px] text-white/35 mb-1">
+                        <div className="flex justify-between text-[10px] text-readable-faint mb-1">
                           <span>{item.label}</span>
                           <span className="text-emerald-400/70">↑ improved</span>
                         </div>
@@ -908,12 +1723,12 @@ export default function InsulinClient() {
                 </div>
 
                 <div className="glass rounded-xl p-3 border border-blue-500/15">
-                  <p className="text-xs text-white/50 leading-relaxed">
+                  <p className="text-xs text-readable-soft leading-relaxed">
                     <span className="text-blue-300 font-medium">The ketone bypass:</span>{" "}
                     <GlossaryTerm termKey="ketones">Ketones</GlossaryTerm> don&apos;t require insulin to enter brain cells.
                     Fasting, low-carb diets, or <GlossaryTerm termKey="mctOil">MCT oil</GlossaryTerm> can produce ketones that
                     may fuel insulin-resistant neurons — potentially slowing cognitive decline when glucose can&apos;t get in.<Cite id={5} />{" "}
-                    <span className="text-white/30 italic">Clinical evidence is promising but still limited — most studies are small or preclinical; larger RCTs are underway.</span>
+                    <span className="text-readable-faint italic">Clinical evidence is promising but still limited — most studies are small or preclinical; larger RCTs are underway.</span>
                   </p>
                 </div>
               </div>
@@ -932,7 +1747,7 @@ export default function InsulinClient() {
                     Behavior Science
                   </span>
                 </div>
-                <p className="text-sm text-white/50 leading-relaxed mb-5">
+                <p className="text-sm text-readable-soft leading-relaxed mb-5">
                   Blood sugar isn&apos;t just a metabolic number — it directly controls mood, willpower, and decision-making.
                   Glucose crashes don&apos;t just make you hungry; they impair your brain&apos;s capacity to resist anything.
                 </p>
@@ -943,7 +1758,7 @@ export default function InsulinClient() {
                     <span className="text-2xl shrink-0">🪆</span>
                     <div>
                       <p className="text-xs font-semibold text-violet-400 mb-1">The Voodoo Doll Study</p>
-                      <p className="text-xs text-white/50 leading-relaxed">
+                      <p className="text-xs text-readable-soft leading-relaxed">
                         Researchers gave married couples a voodoo doll representing their spouse and asked them to insert a pin every time their partner annoyed them.
                         After two weeks, participants with the <span className="text-violet-300">lowest glucose levels</span> had inserted the most pins.
                         Scientists confirmed through glucose monitoring that unsteady glucose disrupts the neurotransmitter <span className="text-violet-300">tyrosine</span>, which governs mood stability — making you significantly more reactive and irritable toward the people closest to you.
@@ -953,7 +1768,7 @@ export default function InsulinClient() {
                 </div>
 
                 {/* Three mechanisms */}
-                <p className="text-xs font-semibold text-white/40 mb-3 uppercase tracking-wider">Why Glucose Crashes Rob Your Willpower</p>
+                <p className="text-xs font-semibold text-readable-soft mb-3 uppercase tracking-wider">Why Glucose Crashes Rob Your Willpower</p>
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-5">
                   {[
                     {
@@ -983,7 +1798,7 @@ export default function InsulinClient() {
                         <span>{card.icon}</span>
                         <span className={`text-xs font-semibold ${card.color}`}>{card.title}</span>
                       </div>
-                      <p className="text-xs text-white/50 leading-relaxed">{card.body}</p>
+                      <p className="text-xs text-readable-soft leading-relaxed">{card.body}</p>
                     </div>
                   ))}
                 </div>
@@ -994,24 +1809,24 @@ export default function InsulinClient() {
                     <div className="absolute inset-0 bg-gradient-to-br from-red-500/5 to-transparent pointer-events-none" />
                     <div className="relative">
                       <p className="text-xs font-semibold text-red-400 mb-2">🚨 The Addiction Voice</p>
-                      <p className="text-xs text-white/50 leading-relaxed italic mb-2">&ldquo;I need sugar right now. Whatever&apos;s in the kitchen. I can&apos;t feel good without it.&rdquo;</p>
-                      <p className="text-xs text-white/40 leading-relaxed">This is a <span className="text-red-300">biological crash signal</span> — not a lack of willpower. A glucose crash triggers a near-irresistible craving mechanism that cannot be overridden by telling yourself to eat less sugar. You have to fix the underlying crash first.</p>
+                      <p className="text-xs text-readable-soft leading-relaxed italic mb-2">&ldquo;I need sugar right now. Whatever&apos;s in the kitchen. I can&apos;t feel good without it.&rdquo;</p>
+                      <p className="text-xs text-readable-soft leading-relaxed">This is a <span className="text-red-300">biological crash signal</span> — not a lack of willpower. A glucose crash triggers a near-irresistible craving mechanism that cannot be overridden by telling yourself to eat less sugar. You have to fix the underlying crash first.</p>
                     </div>
                   </div>
                   <div className="glass rounded-xl p-4 border border-emerald-500/20 relative overflow-hidden">
                     <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/5 to-transparent pointer-events-none" />
                     <div className="relative">
                       <p className="text-xs font-semibold text-emerald-400 mb-2">✓ The Enjoyment Voice</p>
-                      <p className="text-xs text-white/50 leading-relaxed italic mb-2">&ldquo;That cookie looks great. I&apos;ll do some calf raises after.&rdquo;</p>
-                      <p className="text-xs text-white/40 leading-relaxed">This is what <span className="text-emerald-300">stable glucose</span> sounds like. The goal isn&apos;t to never eat sugar — it&apos;s to reach a state where sugar is a <span className="text-emerald-300">choice, not a compulsion</span>. Reduce the crashes and the addiction voice goes quiet on its own.</p>
+                      <p className="text-xs text-readable-soft leading-relaxed italic mb-2">&ldquo;That cookie looks great. I&apos;ll do some calf raises after.&rdquo;</p>
+                      <p className="text-xs text-readable-soft leading-relaxed">This is what <span className="text-emerald-300">stable glucose</span> sounds like. The goal isn&apos;t to never eat sugar — it&apos;s to reach a state where sugar is a <span className="text-emerald-300">choice, not a compulsion</span>. Reduce the crashes and the addiction voice goes quiet on its own.</p>
                     </div>
                   </div>
                 </div>
 
                 <div className="glass rounded-xl p-3 border border-amber-500/15 flex items-start gap-2">
                   <AlertCircle size={13} className="text-amber-400 shrink-0 mt-0.5" />
-                  <p className="text-xs text-white/50 leading-relaxed">
-                    <span className="text-white/70 font-medium">The Protein Leverage Hypothesis:</span>{" "}
+                  <p className="text-xs text-readable-soft leading-relaxed">
+                    <span className="text-readable-strong font-medium">The Protein Leverage Hypothesis:</span>{" "}
                     Your body will keep you hungry and seeking food until you&apos;ve consumed enough protein. A breakfast of oats and toast fires hunger signals all morning — no matter how many calories it contained.
                     40g of protein at breakfast shuts down the cascade. Your body got what it actually needed and stops signaling for more.
                   </p>
@@ -1029,7 +1844,7 @@ export default function InsulinClient() {
                   <Dumbbell size={16} className="text-emerald-400" />
                   <h2 className="text-base font-semibold text-white">Muscle: Your Metabolic Organ</h2>
                 </div>
-                <p className="text-sm text-white/50 leading-relaxed mb-5">
+                <p className="text-sm text-readable-soft leading-relaxed mb-5">
                   Skeletal muscle is the largest consumer of glucose in the body. When you contract a muscle,{" "}
                   <GlossaryTerm termKey="glut4">GLUT4 transporters</GlossaryTerm> move to the cell surface without insulin —
                   glucose enters regardless of insulin resistance. This is the core mechanism behind why resistance training is the
@@ -1042,7 +1857,7 @@ export default function InsulinClient() {
                     { label: "Post-training", barPct: 60, sub: "Elevated for 24–48h" },
                   ].map((s) => (
                     <div key={s.label} className="text-center">
-                      <p className="text-[10px] text-white/40 mb-2">{s.label}</p>
+                      <p className="text-[10px] text-readable-soft mb-2">{s.label}</p>
                       <div className="h-20 bg-white/5 rounded-lg flex items-end overflow-hidden">
                         <div
                           className="w-full bg-gradient-to-t from-emerald-600 to-emerald-400 rounded-lg"
@@ -1069,7 +1884,7 @@ export default function InsulinClient() {
                     Practical
                   </span>
                 </div>
-                <p className="text-sm text-white/50 leading-relaxed mb-5">
+                <p className="text-sm text-readable-soft leading-relaxed mb-5">
                   You have roughly <span className="text-white/75 font-medium">90 minutes</span> after eating before a glucose spike peaks.
                   During this window, muscle contractions pull glucose from your bloodstream independently of insulin.
                   You don&apos;t need a gym — you need movement.
@@ -1090,7 +1905,7 @@ export default function InsulinClient() {
                       </div>
                     </div>
                   </div>
-                  <p className="text-xs text-white/40 leading-relaxed">
+                  <p className="text-xs text-readable-soft leading-relaxed">
                     Move within this window to channel incoming glucose into muscles instead of blood.
                     The earlier you move after eating, the more of the spike you intercept.
                   </p>
@@ -1161,8 +1976,8 @@ export default function InsulinClient() {
                           <p className="text-xs font-semibold text-white/75">{hack.title}</p>
                           <span className={`text-[9px] font-semibold ${hack.effectClass}`}>{hack.effectiveness}</span>
                         </div>
-                        <p className="text-[10px] text-white/35 mb-1.5">{hack.subtitle}</p>
-                        <p className="text-xs text-white/45 leading-relaxed">{hack.body}</p>
+                        <p className="text-[10px] text-readable-faint mb-1.5">{hack.subtitle}</p>
+                        <p className="text-xs text-readable-soft leading-relaxed">{hack.body}</p>
                       </div>
                     </div>
                   ))}
@@ -1170,10 +1985,10 @@ export default function InsulinClient() {
 
                 <div className="glass rounded-xl p-3 border border-white/8 flex items-start gap-2">
                   <AlertCircle size={13} className="text-teal-400 shrink-0 mt-0.5" />
-                  <p className="text-xs text-white/50 leading-relaxed">
-                    <span className="text-white/70 font-medium">Individual variability:</span>{" "}
+                  <p className="text-xs text-readable-soft leading-relaxed">
+                    <span className="text-readable-strong font-medium">Individual variability:</span>{" "}
                     Two people eating identical meals will get different absolute glucose spikes — based on microbiome, muscle mass, hydration, stress, and sleep.
-                    But hacks work for <span className="text-white/65">everyone in relative terms</span> — protein before a meal will produce a smaller spike for you regardless of your baseline, and the same is true for walking, calf raises, and fiber-first meal order.
+                    But hacks work for <span className="text-readable-muted">everyone in relative terms</span> — protein before a meal will produce a smaller spike for you regardless of your baseline, and the same is true for walking, calf raises, and fiber-first meal order.
                   </p>
                 </div>
               </div>
@@ -1187,7 +2002,7 @@ export default function InsulinClient() {
                 <Shield size={16} className="text-amber-400" />
                 <h2 className="text-base font-semibold text-white">Four Pillars to Fix Insulin Resistance</h2>
               </div>
-              <p className="text-xs text-white/40 mb-4">Tap a pillar to expand details.</p>
+              <p className="text-xs text-readable-soft mb-4">Tap a pillar to expand details.</p>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 {fourPillars.map((pillar, i) => {
                   const Icon = pillar.icon;
@@ -1208,21 +2023,21 @@ export default function InsulinClient() {
                         </div>
                         <ChevronDown
                           size={13}
-                          className={`text-white/30 transition-transform duration-300 ${isOpen ? "rotate-180" : ""}`}
+                          className={`text-readable-faint transition-transform duration-300 ${isOpen ? "rotate-180" : ""}`}
                         />
                       </button>
                       <div className="relative px-4 pb-4">
                         {isOpen ? (
                           <ul className="space-y-1.5">
                             {pillar.points.map((point, pi) => (
-                              <li key={pi} className="flex items-start gap-2 text-xs text-white/55">
+                              <li key={pi} className="flex items-start gap-2 text-xs text-readable-muted">
                                 <ChevronRight size={10} className={`${pillar.chevronClass} shrink-0 mt-0.5`} />
                                 <span>{point}</span>
                               </li>
                             ))}
                           </ul>
                         ) : (
-                          <p className="text-xs text-white/40 -mt-1">{pillar.preview}</p>
+                          <p className="text-xs text-readable-soft -mt-1">{pillar.preview}</p>
                         )}
                       </div>
                     </div>
@@ -1239,7 +2054,7 @@ export default function InsulinClient() {
                 <FlaskConical size={16} className="text-amber-400" />
                 <h2 className="text-base font-semibold text-white">Not All Sweeteners Are Equal</h2>
               </div>
-              <p className="text-sm text-white/50 leading-relaxed mb-4">
+              <p className="text-sm text-readable-soft leading-relaxed mb-4">
                 The type of sugar matters as much as the amount. Fructose is processed entirely by the liver and doesn&apos;t directly
                 spike insulin — but it creates liver fat, leading to hepatic insulin resistance. Artificial sweeteners can still trigger
                 insulin via the <GlossaryTerm termKey="cephalicPhase">cephalic phase response</GlossaryTerm> — the brain anticipates sweetness and pre-loads insulin before any calories arrive.
@@ -1249,7 +2064,7 @@ export default function InsulinClient() {
                   <thead>
                     <tr className="border-b border-white/8">
                       {["Sweetener", "Insulin Spike", "Liver Load", "Verdict"].map((h) => (
-                        <th key={h} className="text-left text-white/35 font-medium pb-2.5 pr-4 last:pr-0">
+                        <th key={h} className="text-left text-readable-faint font-medium pb-2.5 pr-4 last:pr-0">
                           {h}
                         </th>
                       ))}
@@ -1258,18 +2073,142 @@ export default function InsulinClient() {
                   <tbody>
                     {sweeteners.map((row, i) => (
                       <tr key={row.name} className={`border-b border-white/5 ${i % 2 === 0 ? "" : "bg-white/[0.015]"}`}>
-                        <td className="py-2.5 pr-4 text-white/65 font-medium">{row.name}</td>
-                        <td className="py-2.5 pr-4 text-white/45">{row.insulinSpike}</td>
-                        <td className="py-2.5 pr-4 text-white/45">{row.liverLoad}</td>
+                        <td className="py-2.5 pr-4 text-readable-muted font-medium">{row.name}</td>
+                        <td className="py-2.5 pr-4 text-readable-soft">{row.insulinSpike}</td>
+                        <td className="py-2.5 pr-4 text-readable-soft">{row.liverLoad}</td>
                         <td className={`py-2.5 font-medium ${row.verdictClass}`}>{row.verdict}</td>
                       </tr>
                     ))}
                   </tbody>
                 </table>
               </div>
-              <p className="text-[10px] text-white/25 mt-3 italic">
+              <p className="text-[10px] text-readable-faint mt-3 italic">
                 * Artificial sweeteners vary — evidence on <GlossaryTerm termKey="cephalicPhase">cephalic phase</GlossaryTerm> insulin release is mixed; some studies show a response, others do not. Response likely varies by individual and sweetener type.
               </p>
+            </div>
+          </Section>
+
+          {/* Context Matters */}
+          <Section>
+            <div className="glass rounded-2xl p-6 border border-teal-500/20 relative overflow-hidden">
+              <div className="absolute inset-0 bg-gradient-to-br from-teal-500/8 to-transparent pointer-events-none" />
+              <div className="relative">
+                <div className="flex flex-wrap items-center gap-2 mb-4">
+                  <Dumbbell size={16} className="text-teal-400" />
+                  <h2 className="text-base font-semibold text-white">Not Every Insulin Rise Means Insulin Resistance</h2>
+                  <span className="text-[10px] px-2 py-0.5 rounded-full border bg-teal-500/10 text-teal-300/80 border-teal-500/15">
+                    Context Matters
+                  </span>
+                </div>
+                <p className="text-sm text-readable-soft leading-relaxed mb-5">
+                  Most of this page is about <span className="text-white/75 font-medium">chronically elevated baseline insulin</span>:
+                  the all-day metabolic pattern tied to visceral fat, inactivity, poor sleep, and progressive loss of sensitivity.
+                  That is different from a brief protein-linked insulin rise. In whey studies, insulin went up because amino acids and
+                  incretins went up, while post-meal glucose exposure went down.<Cite id={11} /><Cite id={12} />
+                </p>
+
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-5">
+                  <div className="glass rounded-xl p-4 border border-teal-500/20">
+                    <p className="text-xs font-semibold text-teal-400 mb-3">Transient protein-linked signal</p>
+                    <div className="space-y-3">
+                      {[
+                        { label: "Amino acids", value: 88, tone: "bg-teal-400", note: "up quickly" },
+                        { label: "Insulin pulse", value: 72, tone: "bg-sky-400", note: "short-lived" },
+                        { label: "Glucose burden", value: 28, tone: "bg-emerald-400", note: "often lower" },
+                      ].map((item) => (
+                        <div key={item.label}>
+                          <div className="flex items-center justify-between mb-1">
+                            <span className="text-[10px] text-readable-soft">{item.label}</span>
+                            <span className="text-[10px] text-readable-faint">{item.note}</span>
+                          </div>
+                          <div className="h-2.5 rounded-full bg-white/8 overflow-hidden">
+                            <div className={`h-full ${item.tone} rounded-full`} style={{ width: `${item.value}%` }} />
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                    <p className="text-[10px] text-readable-faint leading-relaxed mt-3">
+                      Inference from the whey studies: this is a nutrient-handling and recovery signal, not the same pattern as all-day
+                      hyperinsulinemia.<Cite id={11} /><Cite id={12} />
+                    </p>
+                  </div>
+
+                  <div className="glass rounded-xl p-4 border border-rose-500/20">
+                    <p className="text-xs font-semibold text-rose-400 mb-3">Chronic hyperinsulinemia pattern</p>
+                    <div className="space-y-3">
+                      {[
+                        { label: "Baseline insulin", value: 84, tone: "bg-rose-400", note: "stays elevated" },
+                        { label: "Glucose exposure", value: 78, tone: "bg-orange-400", note: "repeatedly high" },
+                        { label: "Lipolysis access", value: 18, tone: "bg-white/35", note: "suppressed" },
+                      ].map((item) => (
+                        <div key={item.label}>
+                          <div className="flex items-center justify-between mb-1">
+                            <span className="text-[10px] text-readable-soft">{item.label}</span>
+                            <span className="text-[10px] text-readable-faint">{item.note}</span>
+                          </div>
+                          <div className="h-2.5 rounded-full bg-white/8 overflow-hidden">
+                            <div className={`h-full ${item.tone} rounded-full`} style={{ width: `${item.value}%` }} />
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                    <p className="text-[10px] text-readable-faint leading-relaxed mt-3">
+                      This page&apos;s main warning is about this chronic state: the persistent, high-baseline pattern associated with
+                      insulin resistance and tissue damage over time.<Cite id={9} />
+                    </p>
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-1 lg:grid-cols-[1.05fr_0.95fr] gap-4">
+                  <div className="glass rounded-xl p-4 border border-teal-500/15">
+                    <p className="text-xs font-semibold text-teal-400 mb-3">What the protein studies suggest</p>
+                    <div className="grid grid-cols-3 gap-3 mb-3">
+                      {[
+                        { label: "Post-meal glucose", value: "-28%", tone: "text-sky-400" },
+                        { label: "Insulin response", value: "+105%", tone: "text-teal-400" },
+                        { label: "GLP-1 response", value: "+141%", tone: "text-emerald-400" },
+                      ].map((item) => (
+                        <div key={item.label} className="glass rounded-lg p-3 border border-white/8">
+                          <p className={`text-sm font-bold ${item.tone} mb-1`}>{item.value}</p>
+                          <p className="text-[10px] text-readable-soft leading-tight">{item.label}</p>
+                        </div>
+                      ))}
+                    </div>
+                    <p className="text-xs text-readable-soft leading-relaxed">
+                      A whey preload before breakfast raised insulin and GLP-1 but lowered total postprandial glucose. In separate
+                      muscle data, insulin increased amino acid transport and protein synthesis, and in another human study it also
+                      reduced whole-body proteolysis.<Cite id={12} /><Cite id={13} /><Cite id={14} />
+                    </p>
+                  </div>
+
+                  <div className="glass rounded-xl p-4 border border-teal-500/15">
+                    <p className="text-xs font-semibold text-white mb-2">What to do with that</p>
+                    <ul className="space-y-2 mb-4">
+                      {[
+                        "Keep worrying about chronic high fasting insulin, not every short post-protein pulse.",
+                        "Use protein to preserve or build lean mass, which improves glucose disposal capacity.",
+                        "For active people in a cut, whey or protein-forward meals can support satiety and recovery instead of creating metabolic chaos.",
+                      ].map((point) => (
+                        <li key={point} className="flex items-start gap-2 text-xs text-readable-soft">
+                          <ChevronRight size={11} className="text-teal-400 shrink-0 mt-0.5" />
+                          <span>{point}</span>
+                        </li>
+                      ))}
+                    </ul>
+                    <p className="text-xs text-readable-soft leading-relaxed mb-4">
+                      A randomized trial in adults with obesity and insulin resistance also found that high-protein hypocaloric diets
+                      improved insulin sensitivity over one month. That does not prove every high-protein pattern is ideal, but it does
+                      argue against the simplistic idea that protein-induced insulin is inherently harmful.<Cite id={16} />
+                    </p>
+                    <Link
+                      href="/health/diet"
+                      className="group inline-flex items-center gap-1.5 text-xs font-medium text-teal-300 hover:text-teal-200 transition-colors"
+                    >
+                      Go deeper on diet architecture <ChevronRight size={12} className="group-hover:translate-x-0.5 transition-transform" />
+                    </Link>
+                  </div>
+                </div>
+              </div>
             </div>
           </Section>
 
@@ -1289,7 +2228,7 @@ export default function InsulinClient() {
                     <span className="text-xl shrink-0">{t.emoji}</span>
                     <div>
                       <p className="text-xs font-semibold text-white/75 mb-1">{t.title}</p>
-                      <p className="text-xs text-white/45 leading-relaxed">{t.desc}</p>
+                      <p className="text-xs text-readable-soft leading-relaxed">{t.desc}</p>
                     </div>
                   </div>
                 ))}
@@ -1309,7 +2248,7 @@ export default function InsulinClient() {
                     Rethink
                   </span>
                 </div>
-                <p className="text-sm text-white/50 leading-relaxed mb-5">
+                <p className="text-sm text-readable-soft leading-relaxed mb-5">
                   The standard model says obesity is about calories in vs. calories out. The carbohydrate-insulin model adds a critical layer: insulin — the hormone
                   that decides whether incoming energy is burned or stored — is not captured by calorie counting alone. <span className="text-white/75 font-medium">Insulin is the primary driver of fat storage.</span>{" "}
                   Without insulin signaling, fat storage is severely impaired — which is why uncontrolled Type 1 diabetics wasting away despite eating is the clinical proof.<Cite id={7} /> Calories and hormonal signaling are complementary, not competing explanations.
@@ -1343,14 +2282,14 @@ export default function InsulinClient() {
                         <span>{card.icon}</span>
                         <span className={`text-xs font-semibold ${card.color}`}>{card.title}</span>
                       </div>
-                      <p className="text-xs text-white/50 leading-relaxed">{card.body}</p>
+                      <p className="text-xs text-readable-soft leading-relaxed">{card.body}</p>
                     </div>
                   ))}
                 </div>
                 <div className="glass rounded-xl p-3 border border-orange-500/15 flex items-start gap-2">
                   <AlertCircle size={13} className="text-orange-400 shrink-0 mt-0.5" />
-                  <p className="text-xs text-white/50 leading-relaxed">
-                    <span className="text-white/70 font-medium">Key insight:</span>{" "}
+                  <p className="text-xs text-readable-soft leading-relaxed">
+                    <span className="text-readable-strong font-medium">Key insight:</span>{" "}
                     <GlossaryTerm termKey="lipolysis">Lipolysis</GlossaryTerm> — fat breakdown — is almost completely inhibited by insulin.
                     Even moderate insulin levels keep fat locked in adipose tissue. The goal of any fat-loss strategy should be lowering insulin first, not just cutting calories.
                   </p>
@@ -1368,7 +2307,7 @@ export default function InsulinClient() {
                   <Zap size={16} className="text-violet-400" />
                   <h2 className="text-base font-semibold text-white">Ketones: Fuel, Signal & Therapy</h2>
                 </div>
-                <p className="text-sm text-white/50 leading-relaxed mb-5">
+                <p className="text-sm text-readable-soft leading-relaxed mb-5">
                   Ketones are far more than a backup fuel. <GlossaryTerm termKey="betaHydroxybutyrate">Beta-hydroxybutyrate (BHB)</GlossaryTerm> acts
                   as a signaling molecule — reducing inflammation, supporting the heart, and enabling metabolic flexibility across multiple organ systems.
                 </p>
@@ -1396,14 +2335,14 @@ export default function InsulinClient() {
                       emoji: "🦠",
                       title: "Cancer & The Warburg Effect",
                       border: "border-amber-500/20",
-                      body: <><GlossaryTerm termKey="warburg">Cancer cells (Warburg effect)</GlossaryTerm> are highly dependent on glucose fermentation and are poorly adapted to use ketones. Researchers like Dr. Thomas Seyfried propose carbohydrate restriction as a metabolic adjunct to cancer therapy. <span className="text-white/30 italic">Important: this remains a controversial hypothesis — not mainstream oncology. Clinical trials are early-stage and inconclusive. Never use as a substitute for established cancer treatment.</span></>,
+                      body: <><GlossaryTerm termKey="warburg">Cancer cells (Warburg effect)</GlossaryTerm> are highly dependent on glucose fermentation and are poorly adapted to use ketones. Researchers like Dr. Thomas Seyfried propose carbohydrate restriction as a metabolic adjunct to cancer therapy. <span className="text-readable-faint italic">Important: this remains a controversial hypothesis — not mainstream oncology. Clinical trials are early-stage and inconclusive. Never use as a substitute for established cancer treatment.</span></>,
                     },
                   ].map((card) => (
                     <div key={card.title} className={`glass rounded-xl p-4 border ${card.border} flex items-start gap-3`}>
                       <span className="text-lg shrink-0">{card.emoji}</span>
                       <div>
                         <p className="text-xs font-semibold text-white/75 mb-1">{card.title}</p>
-                        <p className="text-xs text-white/45 leading-relaxed">{card.body}</p>
+                        <p className="text-xs text-readable-soft leading-relaxed">{card.body}</p>
                       </div>
                     </div>
                   ))}
@@ -1421,7 +2360,7 @@ export default function InsulinClient() {
                   <Users size={16} className="text-pink-400" />
                   <h2 className="text-base font-semibold text-white">Sex Differences in Ketogenic Adaptation</h2>
                 </div>
-                <p className="text-sm text-white/50 leading-relaxed mb-4">
+                <p className="text-sm text-readable-soft leading-relaxed mb-4">
                   Women don&apos;t respond identically to men on low-carb or ketogenic diets — hormonal fluctuations across
                   the menstrual cycle significantly affect metabolic fuel preferences and ketone production.
                 </p>
@@ -1435,7 +2374,7 @@ export default function InsulinClient() {
                         "Best window for introducing dietary changes or extended fasting",
                         "Insulin sensitivity is higher in this phase",
                       ].map((item) => (
-                        <li key={item} className="flex items-start gap-2 text-xs text-white/50">
+                        <li key={item} className="flex items-start gap-2 text-xs text-readable-soft">
                           <ChevronRight size={10} className="text-emerald-400 shrink-0 mt-0.5" />
                           {item}
                         </li>
@@ -1451,7 +2390,7 @@ export default function InsulinClient() {
                         "Cortisol response to fasting is amplified",
                         "Dr. Isabella Cooper: cortisol spikes more steeply in this phase during carb restriction",
                       ].map((item) => (
-                        <li key={item} className="flex items-start gap-2 text-xs text-white/50">
+                        <li key={item} className="flex items-start gap-2 text-xs text-readable-soft">
                           <ChevronRight size={10} className="text-amber-400 shrink-0 mt-0.5" />
                           {item}
                         </li>
@@ -1461,7 +2400,7 @@ export default function InsulinClient() {
                 </div>
                 <div className="mt-3 glass rounded-xl p-3 border border-white/8 flex items-start gap-2">
                   <AlertCircle size={13} className="text-pink-400 shrink-0 mt-0.5" />
-                  <p className="text-xs text-white/50 leading-relaxed">
+                  <p className="text-xs text-readable-soft leading-relaxed">
                     Women who feel worse on keto during the luteal phase are not failing — they may be fighting their own hormonal biology.
                     Cycling carbohydrate intake to match the menstrual phase is a practical adaptation worth exploring.
                   </p>
@@ -1482,7 +2421,7 @@ export default function InsulinClient() {
                     Practical
                   </span>
                 </div>
-                <p className="text-xs text-white/40 mb-4">Evidence-based daily protocol — adapt to your context and goals.</p>
+                <p className="text-xs text-readable-soft mb-4">Evidence-based daily protocol — adapt to your context and goals.</p>
                 <div className="space-y-2">
                   {[
                     { time: "Morning", icon: "🌅", color: "text-amber-400", border: "border-amber-500/20", actions: ["Skip carbs at breakfast — protein + fat only (eggs, meat, avocado)", "Coffee or tea without sugar is fine; black coffee may slightly raise insulin acutely but context matters", "Morning is the best time to exercise — leverages overnight fasting state"] },
@@ -1497,8 +2436,8 @@ export default function InsulinClient() {
                       </div>
                       <ul className="space-y-1">
                         {block.actions.map((a) => (
-                          <li key={a} className="flex items-start gap-2 text-xs text-white/50">
-                            <ChevronRight size={10} className="text-white/25 shrink-0 mt-0.5" />
+                          <li key={a} className="flex items-start gap-2 text-xs text-readable-soft">
+                            <ChevronRight size={10} className="text-readable-faint shrink-0 mt-0.5" />
                             {a}
                           </li>
                         ))}
@@ -1520,7 +2459,7 @@ export default function InsulinClient() {
                   Lab Tests
                 </span>
               </div>
-              <p className="text-sm text-white/50 leading-relaxed mb-5">
+              <p className="text-sm text-readable-soft leading-relaxed mb-5">
                 Standard blood panels often miss insulin resistance entirely — they measure glucose, not insulin.
                 These are the markers that actually reveal your metabolic status.
               </p>
@@ -1538,11 +2477,11 @@ export default function InsulinClient() {
                     <div className="flex items-start justify-between gap-3 mb-2">
                       <p className={`text-xs font-semibold ${row.color}`}>{row.marker}</p>
                       <div className="text-right shrink-0">
-                        <p className="text-[10px] text-white/40">Target: <span className="text-white/65">{row.target}</span></p>
+                        <p className="text-[10px] text-readable-soft">Target: <span className="text-readable-muted">{row.target}</span></p>
                         <p className="text-[10px] text-emerald-400/70">Optimal: {row.optimal}</p>
                       </div>
                     </div>
-                    <p className="text-xs text-white/40 leading-relaxed">{row.note}</p>
+                    <p className="text-xs text-readable-soft leading-relaxed">{row.note}</p>
                   </div>
                 ))}
               </div>
@@ -1559,7 +2498,7 @@ export default function InsulinClient() {
                   Evidence-Based
                 </span>
               </div>
-              <p className="text-xs text-white/35 mb-4 italic">Not medical advice. Review with your physician, especially if on medications.</p>
+              <p className="text-xs text-readable-faint mb-4 italic">Not medical advice. Review with your physician, especially if on medications.</p>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 {[
                   { emoji: "💪", name: "Creatine Monohydrate", dose: "5g (muscle) · 10–15g (brain)", evidence: "High", color: "text-amber-400", border: "border-amber-500/20", body: <><GlossaryTerm termKey="creatineSupp">Creatine</GlossaryTerm> is one of the most researched supplements in existence. Strong evidence for muscle strength, power, and recovery. Emerging evidence for brain function, depression, and neuroprotection. Affordable and exceptionally safe.</> },
@@ -1578,10 +2517,10 @@ export default function InsulinClient() {
                     <div className="flex-1">
                       <div className="flex items-start justify-between gap-2 mb-1">
                         <p className={`text-xs font-semibold ${supp.color}`}>{supp.name}</p>
-                        <span className="text-[9px] text-white/30 shrink-0">{supp.evidence}</span>
+                        <span className="text-[9px] text-readable-faint shrink-0">{supp.evidence}</span>
                       </div>
-                      <p className="text-[10px] text-white/35 mb-1.5">{supp.dose}</p>
-                      <p className="text-xs text-white/45 leading-relaxed">{supp.body}</p>
+                      <p className="text-[10px] text-readable-faint mb-1.5">{supp.dose}</p>
+                      <p className="text-xs text-readable-soft leading-relaxed">{supp.body}</p>
                     </div>
                   </div>
                 ))}
@@ -1596,52 +2535,161 @@ export default function InsulinClient() {
               <div className="relative">
                 <div className="flex flex-wrap items-center gap-2 mb-4">
                   <span className="text-base">❤️</span>
-                  <h2 className="text-base font-semibold text-white">The Heart–Insulin Connection</h2>
+                  <h2 className="text-base font-semibold text-white">How Insulin Resistance Loads the Gun for Heart Attack and AFib</h2>
                   <span className="text-[10px] px-2 py-0.5 rounded-full border bg-rose-500/10 text-rose-300/80 border-rose-500/15">
                     Cardiology
                   </span>
                 </div>
-                <p className="text-sm text-white/50 leading-relaxed mb-5">
-                  Interventional cardiologist Dr. Praep Nadas has performed over 30,000 cardiac procedures. His observation:
-                  heart disease is not primarily a cholesterol problem — it is a{" "}
-                  <GlossaryTerm termKey="hyperinsulinemia">hyperinsulinemia</GlossaryTerm> and inflammation problem.
-                  Elevated insulin makes LDL particles smaller and denser, damages arterial walls, and drives the
-                  inflammatory cascade that ruptures plaque and causes heart attacks.
+                <p className="text-sm text-readable-soft leading-relaxed mb-5">
+                  Insulin resistance is not a single-switch cause of a heart attack or atrial fibrillation. It is an upstream
+                  metabolic state that increases the odds of both by damaging the endothelium, shifting lipids in an
+                  atherogenic direction, impairing clot breakdown, and remodeling atrial tissue over time.<Cite id={17} /><Cite id={18} /><Cite id={19} /><Cite id={20} /><Cite id={22} />
                 </p>
 
-                <p className="text-xs font-semibold text-white/40 mb-3 uppercase tracking-wider">How a Heart Attack Actually Happens</p>
-                <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-6">
-                  {[
-                    { step: "1", emoji: "🧱", label: "Plaque Formation", desc: "sdLDL particles penetrate arterial walls, oxidize, and trigger macrophages to form 'foam cells' — early plaque", color: "text-rose-400", border: "border-rose-500/25", bg: "bg-rose-500/10" },
-                    { step: "2", emoji: "🔥", label: "Inflammation", desc: "Chronic insulin elevation keeps the immune system inflamed. Plaque grows and becomes unstable as inflammatory cells accumulate", color: "text-orange-400", border: "border-orange-500/25", bg: "bg-orange-500/10" },
-                    { step: "3", emoji: "💥", label: "Plaque Rupture", desc: "Unstable, inflamed plaque ruptures — exposing the arterial interior to blood. The trigger is often a cortisol or adrenaline spike", color: "text-amber-400", border: "border-amber-500/25", bg: "bg-amber-500/10" },
-                    { step: "4", emoji: "🩸", label: "Blood Clot", desc: "The body responds to rupture by forming a blood clot. If it fully blocks the artery, heart muscle is starved of oxygen — heart attack", color: "text-red-400", border: "border-red-500/25", bg: "bg-red-500/10" },
-                  ].map((s) => (
-                    <div key={s.step} className={`glass rounded-xl p-4 border ${s.border} text-center`}>
-                      <div className={`w-6 h-6 rounded-full ${s.bg} flex items-center justify-center mx-auto mb-2`}>
-                        <span className={`text-[10px] font-bold ${s.color}`}>{s.step}</span>
-                      </div>
-                      <div className="text-xl mb-2">{s.emoji}</div>
-                      <p className={`text-[10px] font-bold ${s.color} mb-1.5`}>{s.label}</p>
-                      <p className="text-[10px] text-white/40 leading-relaxed">{s.desc}</p>
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-5">
+                  <div className="glass rounded-xl p-4 border border-rose-500/20">
+                    <p className="text-xs font-semibold text-rose-400 mb-3 uppercase tracking-wider">Heart attack pipeline</p>
+                    <div className="space-y-3">
+                      {[
+                        {
+                          step: "1",
+                          title: "Endothelial dysfunction",
+                          body: "Insulin resistance weakens nitric-oxide signaling and makes arteries less able to dilate, less resilient, and more prone to inflammatory injury.",
+                          cite: [17],
+                        },
+                        {
+                          step: "2",
+                          title: "Plaque-friendly lipid pattern",
+                          body: "High triglycerides, lower HDL, and small dense LDL make plaque formation easier. Higher HOMA-IR is also associated with more coronary calcium in pooled data.",
+                          cite: [10, 18],
+                        },
+                        {
+                          step: "3",
+                          title: "Pro-thrombotic blood state",
+                          body: "Insulin-resistant states are associated with impaired fibrinolysis, including higher PAI-1 activity, so clots are broken down less efficiently once plaque destabilizes.",
+                          cite: [19],
+                        },
+                        {
+                          step: "4",
+                          title: "Plaque rupture to infarction",
+                          body: "When an inflamed plaque ruptures, the clotting system can convert a narrowed coronary artery into a blocked one. That is the immediate setup for a myocardial infarction.",
+                          cite: [17, 19],
+                        },
+                      ].map((item) => (
+                        <div key={item.step} className="glass rounded-lg p-3.5 border border-white/8">
+                          <div className="flex items-start gap-3">
+                            <div className="w-6 h-6 rounded-full bg-rose-500/10 border border-rose-500/20 flex items-center justify-center shrink-0">
+                              <span className="text-[10px] font-bold text-rose-400">{item.step}</span>
+                            </div>
+                            <div>
+                              <p className="text-xs font-semibold text-white mb-1">{item.title}</p>
+                              <p className="text-xs text-readable-soft leading-relaxed">
+                                {item.body}
+                                {item.cite.map((id) => (
+                                  <Cite key={id} id={id} />
+                                ))}
+                              </p>
+                            </div>
+                          </div>
+                        </div>
+                      ))}
                     </div>
-                  ))}
+                  </div>
+
+                  <div className="glass rounded-xl p-4 border border-violet-500/20">
+                    <p className="text-xs font-semibold text-violet-400 mb-3 uppercase tracking-wider">AFib pipeline</p>
+                    <div className="space-y-3">
+                      {[
+                        {
+                          step: "1",
+                          title: "Inflammation and oxidative stress",
+                          body: "Insulin resistance raises inflammatory tone and oxidative stress, which push the atria toward fibrosis rather than healthy flexible tissue.",
+                          cite: [20, 22],
+                        },
+                        {
+                          step: "2",
+                          title: "Atrial remodeling",
+                          body: "Metabolic syndrome affects the left atrium structurally, creating the substrate for atrial fibrillation instead of just a one-off trigger.",
+                          cite: [21, 22],
+                        },
+                        {
+                          step: "3",
+                          title: "Electrical instability",
+                          body: "Once fibrosis and metabolic stress alter conduction and calcium handling, the atria become more likely to conduct unevenly and re-enter abnormal rhythms.",
+                          cite: [20, 22],
+                        },
+                        {
+                          step: "4",
+                          title: "Clinical AFib risk rises",
+                          body: "In pooled cohort data, insulin resistance was associated with higher new-onset AF risk, and metabolic syndrome also tracked with meaningfully higher AF incidence.",
+                          cite: [20, 21],
+                        },
+                      ].map((item) => (
+                        <div key={item.step} className="glass rounded-lg p-3.5 border border-white/8">
+                          <div className="flex items-start gap-3">
+                            <div className="w-6 h-6 rounded-full bg-violet-500/10 border border-violet-500/20 flex items-center justify-center shrink-0">
+                              <span className="text-[10px] font-bold text-violet-400">{item.step}</span>
+                            </div>
+                            <div>
+                              <p className="text-xs font-semibold text-white mb-1">{item.title}</p>
+                              <p className="text-xs text-readable-soft leading-relaxed">
+                                {item.body}
+                                {item.cite.map((id) => (
+                                  <Cite key={id} id={id} />
+                                ))}
+                              </p>
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
                 </div>
 
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-4">
                   {[
-                    { value: "50%", label: "of cardiac patients are now under 65 — a demographic shift driven by metabolic disease", icon: "📉", color: "text-rose-400" },
-                    { value: "28", label: "year-old patients presenting with heart attacks — increasingly common in metabolically sick young adults", icon: "⚡", color: "text-orange-400" },
-                    { value: "3×", label: "higher heart disease risk with hyperinsulinemia — independent of LDL cholesterol levels", icon: "📊", color: "text-amber-400" },
+                    {
+                      value: "OR 1.13",
+                      label: "Higher HOMA-IR tracked with more coronary artery calcification in pooled observational data.",
+                      icon: "🧱",
+                      color: "text-rose-400",
+                      cite: 18,
+                    },
+                    {
+                      value: "HR 1.34",
+                      label: "Insulin resistance increased the risk of new-onset atrial fibrillation in a recent meta-analysis.",
+                      icon: "⚡",
+                      color: "text-violet-400",
+                      cite: 20,
+                    },
+                    {
+                      value: "HR 1.57",
+                      label: "Metabolic syndrome was associated with higher atrial fibrillation risk across cohort studies.",
+                      icon: "📊",
+                      color: "text-amber-400",
+                      cite: 21,
+                    },
                   ].map((stat) => (
                     <div key={stat.value} className="glass rounded-xl p-4 border border-white/8 flex items-center gap-3">
                       <span className="text-2xl shrink-0">{stat.icon}</span>
                       <div>
                         <p className={`text-2xl font-bold ${stat.color} leading-none mb-1`}>{stat.value}</p>
-                        <p className="text-[10px] text-white/40 leading-relaxed">{stat.label}</p>
+                        <p className="text-[10px] text-readable-soft leading-relaxed">
+                          {stat.label}
+                          <Cite id={stat.cite} />
+                        </p>
                       </div>
                     </div>
                   ))}
+                </div>
+
+                <div className="glass rounded-xl p-3 border border-rose-500/15 flex items-start gap-2">
+                  <AlertCircle size={13} className="text-rose-400 shrink-0 mt-0.5" />
+                  <p className="text-xs text-readable-soft leading-relaxed">
+                    <span className="text-readable-strong font-medium">The practical framing:</span> insulin resistance usually does not cause an event in a neat, binary way.
+                    It is the long upstream condition that makes plaque, clotting, atrial fibrosis, and electrical instability more likely over years. That is why improving
+                    metabolic health lowers the odds of coronary disease, stroke, heart failure, and AFib together.
+                  </p>
                 </div>
               </div>
             </div>
@@ -1659,7 +2707,7 @@ export default function InsulinClient() {
                     Fasting Timeline
                   </span>
                 </div>
-                <p className="text-sm text-white/50 leading-relaxed mb-5">
+                <p className="text-sm text-readable-soft leading-relaxed mb-5">
                   Fasting isn&apos;t just calorie restriction — it triggers a cascade of metabolic and regenerative processes
                   that calorie restriction alone cannot replicate. Here&apos;s what actually happens at each stage:
                 </p>
@@ -1745,7 +2793,7 @@ export default function InsulinClient() {
                             {phase.events.map((ev, i) => (
                               <li key={i} className="flex items-start gap-2">
                                 <div className={`w-1.5 h-1.5 rounded-full ${phase.dot} mt-1.5 shrink-0 opacity-60`} />
-                                <p className="text-xs text-white/45 leading-relaxed">{ev}</p>
+                                <p className="text-xs text-readable-soft leading-relaxed">{ev}</p>
                               </li>
                             ))}
                           </ul>
@@ -1757,8 +2805,8 @@ export default function InsulinClient() {
 
                 <div className="glass rounded-xl p-3.5 border border-emerald-500/15 flex items-start gap-2 mt-4">
                   <AlertCircle size={13} className="text-emerald-400 shrink-0 mt-0.5" />
-                  <p className="text-xs text-white/50 leading-relaxed">
-                    <span className="text-white/70 font-medium">Key distinction:</span>{" "}
+                  <p className="text-xs text-readable-soft leading-relaxed">
+                    <span className="text-readable-strong font-medium">Key distinction:</span>{" "}
                     Calorie restriction with frequent eating keeps insulin elevated throughout the day — preventing autophagy and visceral fat mobilization even when calories are low.
                     Fasting uniquely lowers insulin long enough to unlock these deeper repair processes.
                   </p>
@@ -1779,7 +2827,7 @@ export default function InsulinClient() {
                     Comparison
                   </span>
                 </div>
-                <p className="text-sm text-white/50 leading-relaxed mb-5">
+                <p className="text-sm text-readable-soft leading-relaxed mb-5">
                   Not all fasting protocols activate the same processes. Duration determines which metabolic benefits you unlock.
                   Choose based on your goal and current metabolic health.
                 </p>
@@ -1787,11 +2835,11 @@ export default function InsulinClient() {
                   <table className="w-full text-xs border-collapse min-w-[520px]">
                     <thead>
                       <tr className="border-b border-white/10 bg-white/[0.03]">
-                        <th className="text-left p-3 text-white/50 font-semibold">Protocol</th>
-                        <th className="text-left p-3 text-white/50 font-semibold">Fast Duration</th>
-                        <th className="text-left p-3 text-white/50 font-semibold">Eating Window</th>
-                        <th className="text-left p-3 text-white/50 font-semibold">Best For</th>
-                        <th className="text-left p-3 text-white/50 font-semibold">Key Benefit Unlocked</th>
+                        <th className="text-left p-3 text-readable-soft font-semibold">Protocol</th>
+                        <th className="text-left p-3 text-readable-soft font-semibold">Fast Duration</th>
+                        <th className="text-left p-3 text-readable-soft font-semibold">Eating Window</th>
+                        <th className="text-left p-3 text-readable-soft font-semibold">Best For</th>
+                        <th className="text-left p-3 text-readable-soft font-semibold">Key Benefit Unlocked</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -1810,10 +2858,10 @@ export default function InsulinClient() {
                               <span className={`font-bold ${row.color}`}>{row.protocol}</span>
                             </div>
                           </td>
-                          <td className="p-3 text-white/60">{row.fast}</td>
-                          <td className="p-3 text-white/60">{row.window}</td>
-                          <td className="p-3 text-white/50">{row.bestFor}</td>
-                          <td className="p-3 text-white/40">{row.benefit}</td>
+                          <td className="p-3 text-readable-muted">{row.fast}</td>
+                          <td className="p-3 text-readable-muted">{row.window}</td>
+                          <td className="p-3 text-readable-soft">{row.bestFor}</td>
+                          <td className="p-3 text-readable-soft">{row.benefit}</td>
                         </tr>
                       ))}
                     </tbody>
@@ -1821,7 +2869,7 @@ export default function InsulinClient() {
                 </div>
                 <div className="flex items-start gap-2 mt-3">
                   <AlertCircle size={12} className="text-amber-400/60 shrink-0 mt-0.5" />
-                  <p className="text-[10px] text-white/35 italic leading-relaxed">
+                  <p className="text-[10px] text-readable-faint italic leading-relaxed">
                     Extended fasts (36h+) require physician supervision — especially if you take insulin, sulfonylureas, or other glucose-lowering medications (hypoglycemia risk is real and serious). People with a history of eating disorders should avoid prolonged fasting without mental health support. Start with 12:12 and extend progressively as your body adapts.
                   </p>
                 </div>
@@ -1841,7 +2889,7 @@ export default function InsulinClient() {
                     Gut–Cardiac Axis
                   </span>
                 </div>
-                <p className="text-sm text-white/50 leading-relaxed mb-5">
+                <p className="text-sm text-readable-soft leading-relaxed mb-5">
                   The gut is the body&apos;s second immune system. A dysfunctional gut microbiome doesn&apos;t just cause digestive
                   problems — it directly drives cardiovascular disease through an inflammatory cascade that most
                   cardiologists aren&apos;t testing for.
@@ -1856,24 +2904,24 @@ export default function InsulinClient() {
                     ].map((d) => (
                       <div key={d.gender}>
                         <div className="flex items-baseline justify-between mb-1.5">
-                          <span className="text-xs text-white/50">{d.gender}</span>
+                          <span className="text-xs text-readable-soft">{d.gender}</span>
                           <span className={`text-lg font-bold ${d.color}`}>{d.deficit}</span>
                         </div>
                         <div className="h-2 rounded-full bg-white/8 overflow-hidden">
                           <div className={`h-full ${d.barColor} rounded-full opacity-60`} style={{ width: `${d.fill}%` }} />
                         </div>
-                        <p className="text-[10px] text-white/35 mt-1">{d.label}</p>
+                        <p className="text-[10px] text-readable-faint mt-1">{d.label}</p>
                       </div>
                     ))}
                   </div>
-                  <p className="text-xs text-white/40 leading-relaxed">
+                  <p className="text-xs text-readable-soft leading-relaxed">
                     The recommended intake is 25–38g fiber/day. Most people consume under 15g.{" "}
                     <GlossaryTerm termKey="resistantStarch">Resistant starch</GlossaryTerm> from cooled rice and
                     potatoes dramatically reduces the glucose and insulin response from these foods.
                   </p>
                 </div>
 
-                <p className="text-xs font-semibold text-white/40 mb-3 uppercase tracking-wider">The Leaky Gut → Heart Disease Cascade</p>
+                <p className="text-xs font-semibold text-readable-soft mb-3 uppercase tracking-wider">The Leaky Gut → Heart Disease Cascade</p>
                 <div className="space-y-2 mb-5">
                   {[
                     { icon: "🦠", step: "Low fiber → microbiome imbalance", desc: "Without fiber, beneficial bacteria starve. Pathogenic bacteria overgrow. The gut lining loses its protective mucus layer." },
@@ -1889,8 +2937,8 @@ export default function InsulinClient() {
                         {i < 3 && <div className="w-px h-3 bg-white/10 mt-1" />}
                       </div>
                       <div className="pt-1">
-                        <p className="text-xs font-semibold text-white/65 mb-0.5">{item.step}</p>
-                        <p className="text-xs text-white/40 leading-relaxed">{item.desc}</p>
+                        <p className="text-xs font-semibold text-readable-muted mb-0.5">{item.step}</p>
+                        <p className="text-xs text-readable-soft leading-relaxed">{item.desc}</p>
                       </div>
                     </div>
                   ))}
@@ -1910,7 +2958,7 @@ export default function InsulinClient() {
                       <div key={hack.name} className="glass rounded-lg p-3 border border-white/8 text-center">
                         <div className="text-2xl mb-1.5">{hack.emoji}</div>
                         <p className="text-[10px] font-semibold text-teal-300/80 mb-1">{hack.name}</p>
-                        <p className="text-[10px] text-white/35 leading-relaxed">{hack.desc}</p>
+                        <p className="text-[10px] text-readable-faint leading-relaxed">{hack.desc}</p>
                       </div>
                     ))}
                   </div>
@@ -1931,7 +2979,7 @@ export default function InsulinClient() {
                     Lipid Science
                   </span>
                 </div>
-                <p className="text-sm text-white/50 leading-relaxed mb-5">
+                <p className="text-sm text-readable-soft leading-relaxed mb-5">
                   Total LDL is a poor predictor of heart attack risk. What matters is LDL{" "}
                   <em>particle type</em>. The same total LDL reading can mean very different cardiovascular risk
                   depending on whether your particles are large and fluffy or small and dense.
@@ -1945,7 +2993,7 @@ export default function InsulinClient() {
                       </div>
                       <div>
                         <p className="text-xs font-bold text-emerald-400">Large, Fluffy LDL</p>
-                        <p className="text-[10px] text-white/40">Pattern A — Low Risk</p>
+                        <p className="text-[10px] text-readable-soft">Pattern A — Low Risk</p>
                       </div>
                     </div>
                     <ul className="space-y-1.5">
@@ -1957,7 +3005,7 @@ export default function InsulinClient() {
                       ].map((pt) => (
                         <li key={pt} className="flex items-start gap-2">
                           <span className="text-emerald-400 text-xs mt-0.5">✓</span>
-                          <span className="text-xs text-white/45">{pt}</span>
+                          <span className="text-xs text-readable-soft">{pt}</span>
                         </li>
                       ))}
                     </ul>
@@ -1969,7 +3017,7 @@ export default function InsulinClient() {
                       </div>
                       <div>
                         <p className="text-xs font-bold text-rose-400">Small, Dense LDL</p>
-                        <p className="text-[10px] text-white/40">Pattern B — High Risk</p>
+                        <p className="text-[10px] text-readable-soft">Pattern B — High Risk</p>
                       </div>
                     </div>
                     <ul className="space-y-1.5">
@@ -1981,14 +3029,14 @@ export default function InsulinClient() {
                       ].map((pt) => (
                         <li key={pt} className="flex items-start gap-2">
                           <span className="text-rose-400 text-xs mt-0.5">✗</span>
-                          <span className="text-xs text-white/45">{pt}</span>
+                          <span className="text-xs text-readable-soft">{pt}</span>
                         </li>
                       ))}
                     </ul>
                   </div>
                 </div>
 
-                <p className="text-xs font-semibold text-white/40 mb-3 uppercase tracking-wider">5 Root Causes of Small Dense LDL</p>
+                <p className="text-xs font-semibold text-readable-soft mb-3 uppercase tracking-wider">5 Root Causes of Small Dense LDL</p>
                 <div className="grid grid-cols-2 sm:grid-cols-5 gap-2 mb-5">
                   {[
                     { num: "1", cause: "Glucose Spikes", emoji: "🍬", desc: "Glycation modifies LDL particles, making them smaller and more atherogenic", color: "text-amber-400", border: "border-amber-500/20" },
@@ -2000,15 +3048,15 @@ export default function InsulinClient() {
                     <div key={c.num} className={`glass rounded-xl p-3 border ${c.border} text-center`}>
                       <div className="text-xl mb-1.5">{c.emoji}</div>
                       <p className={`text-[10px] font-bold ${c.color} mb-1`}>{c.cause}</p>
-                      <p className="text-[10px] text-white/35 leading-relaxed">{c.desc}</p>
+                      <p className="text-[10px] text-readable-faint leading-relaxed">{c.desc}</p>
                     </div>
                   ))}
                 </div>
 
                 <div className="glass rounded-xl p-3.5 border border-blue-500/15 flex items-start gap-2">
                   <AlertCircle size={13} className="text-blue-400 shrink-0 mt-0.5" />
-                  <p className="text-xs text-white/50 leading-relaxed">
-                    <span className="text-white/70 font-medium">Ask your doctor for this instead:</span>{" "}
+                  <p className="text-xs text-readable-soft leading-relaxed">
+                    <span className="text-readable-strong font-medium">Ask your doctor for this instead:</span>{" "}
                     Request an <GlossaryTerm termKey="smallDenseLdl">NMR LipoProfile or LDL particle size test</GlossaryTerm> instead of a standard lipid panel.
                     Cleveland Heart Labs and Boston Heart Diagnostics offer comprehensive panels that include sdLDL, oxidized LDL, and lipoprotein(a) — the markers that actually predict risk.
                   </p>
@@ -2039,7 +3087,7 @@ export default function InsulinClient() {
                         [{study.id}]
                       </span>
                       <div className="flex-1 flex items-start justify-between gap-2">
-                        <p className="text-xs font-medium text-white/70 leading-snug group-hover:text-white/90 transition-colors">
+                        <p className="text-xs font-medium text-readable-strong leading-snug group-hover:text-white/90 transition-colors">
                           {study.title}
                         </p>
                         <ExternalLink size={11} className="text-white/20 group-hover:text-amber-400 transition-colors shrink-0 mt-0.5" />
@@ -2048,15 +3096,15 @@ export default function InsulinClient() {
                     <p className="text-[10px] text-amber-400/60 mb-1.5 pl-8">
                       {study.journal} · {study.year}
                     </p>
-                    <p className="text-[10px] text-white/40 leading-relaxed pl-8">{study.summary}</p>
+                    <p className="text-[10px] text-readable-soft leading-relaxed pl-8">{study.summary}</p>
                   </a>
                 ))}
               </div>
 
               <div className="border-t border-white/8 pt-5">
                 <div className="flex items-center gap-2 mb-3">
-                  <Users size={13} className="text-white/40" />
-                  <p className="text-xs font-semibold text-white/50">Expert Contributors</p>
+                  <Users size={13} className="text-readable-soft" />
+                  <p className="text-xs font-semibold text-readable-soft">Expert Contributors</p>
                 </div>
                 <div className="space-y-2">
                   {contributors.map((c) => (
@@ -2065,13 +3113,13 @@ export default function InsulinClient() {
                         <span className="text-[10px] font-bold text-amber-400/70">{c.initials}</span>
                       </div>
                       <div>
-                        <p className="text-xs font-semibold text-white/70">{c.name}</p>
+                        <p className="text-xs font-semibold text-readable-strong">{c.name}</p>
                         <p className="text-[10px] text-amber-400/60">{c.credentials} · {c.affiliation}</p>
-                        <p className="text-[10px] text-white/35 mt-0.5">{c.focus}</p>
+                        <p className="text-[10px] text-readable-faint mt-0.5">{c.focus}</p>
                       </div>
                     </div>
                   ))}
-                  <p className="text-[10px] text-white/25 italic pl-1">Additional experts and sources will be cited as content expands.</p>
+                  <p className="text-[10px] text-readable-faint italic pl-1">Additional experts and sources will be cited as content expands.</p>
                 </div>
               </div>
             </div>
@@ -2112,10 +3160,10 @@ export default function InsulinClient() {
                     onClick={() => setActiveGlossary(null)}
                     className="w-8 h-8 rounded-full bg-white/8 hover:bg-white/15 transition-colors flex items-center justify-center shrink-0 mt-1"
                   >
-                    <X size={14} className="text-white/60" />
+                    <X size={14} className="text-readable-muted" />
                   </button>
                 </div>
-                <p className="text-sm text-white/60 leading-relaxed mb-4">
+                <p className="text-sm text-readable-muted leading-relaxed mb-4">
                   {activeGlossaryEntry.body}
                 </p>
                 {activeGlossaryEntry.learnMore && (

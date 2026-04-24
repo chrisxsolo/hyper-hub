@@ -26,12 +26,12 @@ export default function StudyCard({ study }: { study: Study }) {
           <p className="text-sm font-medium text-white/90 group-hover:text-white leading-snug mb-1 line-clamp-2">
             {study.title}
           </p>
-          <p className="text-xs text-white/40 mb-2">{study.summary}</p>
+          <p className="text-xs text-readable-soft mb-2">{study.summary}</p>
           <div className="flex items-center gap-2">
             <span className="text-xs text-amber-400/70 font-medium">{study.journal}</span>
             <span className="text-white/20">·</span>
-            <span className="text-xs text-white/40">{study.year}</span>
-            <ExternalLink size={10} className="ml-auto text-white/25 group-hover:text-amber-400/60 transition-colors" />
+            <span className="text-xs text-readable-soft">{study.year}</span>
+            <ExternalLink size={10} className="ml-auto text-readable-faint group-hover:text-amber-400/60 transition-colors" />
           </div>
         </div>
       </div>

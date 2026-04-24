@@ -40,7 +40,7 @@ export default function MeditationsPage() {
       <motion.div {...fadeUp(0)}>
         <Link
           href="/stoicism"
-          className="inline-flex items-center gap-1.5 text-sm text-white/40 hover:text-white/70 transition-colors mb-10"
+          className="inline-flex items-center gap-1.5 text-sm text-readable-soft hover:text-readable-strong transition-colors mb-10"
         >
           <ArrowLeft size={14} /> Back to Stoicism
         </Link>
@@ -59,13 +59,13 @@ export default function MeditationsPage() {
                 Marcus Aurelius
               </span>
             </div>
-            <p className="text-sm text-white/35">161–180 AD · Written in Greek · Never meant for publication</p>
+            <p className="text-sm text-readable-faint">161–180 AD · Written in Greek · Never meant for publication</p>
           </div>
         </div>
 
         <div className="flex flex-wrap gap-2">
           {["12 Books", "Private journal", "Stoic practice", "Dichotomy of Control", "Cognitive sovereignty"].map((tag) => (
-            <span key={tag} className="text-xs px-3 py-1 rounded-full glass border border-white/8 text-white/40">
+            <span key={tag} className="text-xs px-3 py-1 rounded-full glass border border-white/8 text-readable-soft">
               {tag}
             </span>
           ))}
@@ -78,12 +78,12 @@ export default function MeditationsPage() {
         className="glass rounded-2xl p-6 border border-blue-500/15 bg-gradient-to-br from-blue-500/8 to-transparent mb-5"
       >
         <p className="text-xs font-semibold text-blue-400 uppercase tracking-wider mb-3">What is Meditations?</p>
-        <p className="text-sm text-white/65 leading-relaxed mb-3">
+        <p className="text-sm text-readable-muted leading-relaxed mb-3">
           Not a philosophy textbook. Not written to persuade. Meditations is the private journal of a Roman Emperor —
           <span className="text-white/85 font-medium"> cognitive training exercises</span> recorded under extreme pressure:
           managing an empire, commanding armies, navigating plague and corrupt power.
         </p>
-        <p className="text-sm text-white/45 leading-relaxed">
+        <p className="text-sm text-readable-soft leading-relaxed">
           Each entry is less a "chapter" and more a daily rep for the mind. Marcus wrote in Greek — his private language,
           away from official Latin culture. His goal was not wisdom for others. It was maintaining psychological sovereignty for himself.
         </p>
@@ -97,7 +97,7 @@ export default function MeditationsPage() {
             <span className="text-xs font-bold px-2 py-0.5 rounded-md bg-amber-500/15 border border-amber-500/25 text-amber-400 uppercase tracking-wide">
               Book I
             </span>
-            <span className="text-xs text-white/25">of 12</span>
+            <span className="text-xs text-readable-faint">of 12</span>
           </div>
           <h2 className="text-base font-bold text-white">Moral Genealogy as Ethical Construction</h2>
           <p className="text-xs text-amber-300/40 mt-1 italic">Character is built through modeled influence, not abstract reasoning.</p>
@@ -108,7 +108,7 @@ export default function MeditationsPage() {
           {/* Core insight callout */}
           <div className="rounded-xl bg-amber-500/8 border border-amber-500/15 p-4">
             <p className="text-xs font-semibold text-amber-400 mb-2">Core Insight</p>
-            <p className="text-sm text-white/60 leading-relaxed">
+            <p className="text-sm text-readable-muted leading-relaxed">
               Book I is a catalog of gratitude — Marcus lists 17 mentors and extracts specific virtues from each.
               He doesn't begin with metaphysics or logic. He begins with <span className="text-white/85 font-medium">example-based ethics</span>:
               virtue is learned through imitation. You become the statistical average of your influences.
@@ -117,7 +117,7 @@ export default function MeditationsPage() {
 
           {/* Virtue chips */}
           <div>
-            <p className="text-xs text-white/25 uppercase tracking-wider mb-3">
+            <p className="text-xs text-readable-faint uppercase tracking-wider mb-3">
               Virtues he catalogued — not "goodness" in the abstract, but specific trainable traits
             </p>
             <div className="flex flex-wrap gap-2">
@@ -138,17 +138,17 @@ export default function MeditationsPage() {
           {/* Two columns */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div className="rounded-xl bg-white/3 border border-white/8 p-4">
-              <p className="text-xs font-semibold text-white/55 mb-2">Privilege Awareness</p>
-              <p className="text-xs text-white/35 leading-relaxed">
+              <p className="text-xs font-semibold text-readable-muted mb-2">Privilege Awareness</p>
+              <p className="text-xs text-readable-faint leading-relaxed">
                 Marcus openly acknowledges good family, good teachers, stable upbringing. Rare for a ruler.
                 The Stoic position: external fortune is morally irrelevant — but it shapes your starting conditions.
                 He doesn't pretend otherwise.
               </p>
             </div>
             <div className="rounded-xl bg-white/3 border border-white/8 p-4">
-              <p className="text-xs font-semibold text-white/55 mb-2">Identity Construction</p>
-              <p className="text-xs text-white/35 leading-relaxed">
-                Book I isn't just gratitude — it's <span className="text-white/65">cognitive programming</span>.
+              <p className="text-xs font-semibold text-readable-muted mb-2">Identity Construction</p>
+              <p className="text-xs text-readable-faint leading-relaxed">
+                Book I isn't just gratitude — it's <span className="text-readable-muted">cognitive programming</span>.
                 Marcus selects traits, reinforces them, internalizes a moral blueprint.
                 He decides who he will be by choosing what to remember and honor.
               </p>
@@ -166,7 +166,7 @@ export default function MeditationsPage() {
             <span className="text-xs font-bold px-2 py-0.5 rounded-md bg-blue-500/15 border border-blue-500/25 text-blue-400 uppercase tracking-wide">
               Book II
             </span>
-            <span className="text-xs text-white/25">of 12</span>
+            <span className="text-xs text-readable-faint">of 12</span>
           </div>
           <h2 className="text-base font-bold text-white">Ontology of Control and Mortality</h2>
           <p className="text-xs text-blue-300/40 mt-1 italic">You control your mind. Everything else is transient, chaotic, and indifferent.</p>
@@ -176,7 +176,7 @@ export default function MeditationsPage() {
 
           {/* Dichotomy of Control — split visual */}
           <div>
-            <p className="text-xs text-white/25 uppercase tracking-wider mb-3">The Dichotomy of Control — Stoicism's central doctrine</p>
+            <p className="text-xs text-readable-faint uppercase tracking-wider mb-3">The Dichotomy of Control — Stoicism's central doctrine</p>
             <div className="grid grid-cols-2 gap-3">
               <motion.div
                 initial={{ opacity: 0, x: -20 }}
@@ -207,14 +207,14 @@ export default function MeditationsPage() {
                 className="rounded-xl bg-white/3 border border-white/8 p-4"
               >
                 <div className="flex items-center gap-2 mb-3">
-                  <div className="w-5 h-5 rounded-full bg-white/8 border border-white/12 flex items-center justify-center text-xs text-white/30 font-bold">
+                  <div className="w-5 h-5 rounded-full bg-white/8 border border-white/12 flex items-center justify-center text-xs text-readable-faint font-bold">
                     ✗
                   </div>
-                  <p className="text-xs font-bold text-white/30 uppercase tracking-wide">Not Yours</p>
+                  <p className="text-xs font-bold text-readable-faint uppercase tracking-wide">Not Yours</p>
                 </div>
                 <div className="space-y-2">
                   {outOfControl.map((item) => (
-                    <p key={item} className="text-xs text-white/28 flex items-center gap-2">
+                    <p key={item} className="text-xs text-readable-faint flex items-center gap-2">
                       <span className="w-1 h-1 rounded-full bg-white/15 shrink-0" />
                       {item}
                     </p>
@@ -239,9 +239,9 @@ export default function MeditationsPage() {
               >
                 <div className="flex items-center gap-2 mb-2">
                   <span className="text-lg">{c.icon}</span>
-                  <p className="text-xs font-semibold text-white/65">{c.title}</p>
+                  <p className="text-xs font-semibold text-readable-muted">{c.title}</p>
                 </div>
-                <p className="text-xs text-white/35 leading-relaxed">{c.body}</p>
+                <p className="text-xs text-readable-faint leading-relaxed">{c.body}</p>
               </motion.div>
             ))}
           </div>
@@ -253,7 +253,7 @@ export default function MeditationsPage() {
       <motion.div {...fadeUp(0.25)} className="glass rounded-2xl border border-white/8 overflow-hidden mb-5">
 
         <div className="px-6 pt-6 pb-4 border-b border-white/5">
-          <p className="text-xs font-semibold text-white/35 uppercase tracking-wider mb-1">Synthesis</p>
+          <p className="text-xs font-semibold text-readable-faint uppercase tracking-wider mb-1">Synthesis</p>
           <h2 className="text-base font-bold text-white">The Stoic System Emerging</h2>
         </div>
 
@@ -261,7 +261,7 @@ export default function MeditationsPage() {
 
           {/* Ontological layers — stacked */}
           <div>
-            <p className="text-xs text-white/25 uppercase tracking-wider mb-3">
+            <p className="text-xs text-readable-faint uppercase tracking-wider mb-3">
               Marcus' view of reality — layer by layer
             </p>
             <div className="space-y-2">
@@ -276,7 +276,7 @@ export default function MeditationsPage() {
                   <span className={`text-xs font-bold uppercase tracking-wider ${layer.text} w-24 shrink-0`}>
                     {layer.label}
                   </span>
-                  <span className="text-xs text-white/45">{layer.desc}</span>
+                  <span className="text-xs text-readable-soft">{layer.desc}</span>
                 </motion.div>
               ))}
             </div>
@@ -284,7 +284,7 @@ export default function MeditationsPage() {
 
           {/* 3-step system */}
           <div className="rounded-xl bg-white/3 border border-white/8 p-4">
-            <p className="text-xs font-semibold text-white/45 mb-3">The Three-Layer Stoic System</p>
+            <p className="text-xs font-semibold text-readable-soft mb-3">The Three-Layer Stoic System</p>
             <div className="space-y-3">
               {[
                 { n: "1", premise: "You are shaped by others", action: "choose your influences deliberately" },
@@ -295,9 +295,9 @@ export default function MeditationsPage() {
                   <span className="w-5 h-5 rounded-full bg-blue-500/15 border border-blue-500/20 text-xs text-blue-400 font-bold flex items-center justify-center shrink-0 mt-0.5">
                     {s.n}
                   </span>
-                  <p className="text-xs text-white/45 leading-relaxed">
+                  <p className="text-xs text-readable-soft leading-relaxed">
                     {s.premise}
-                    <span className="text-white/25"> → </span>
+                    <span className="text-readable-faint"> → </span>
                     <span className="text-blue-400/60 italic">{s.action}</span>
                   </p>
                 </div>
@@ -307,7 +307,7 @@ export default function MeditationsPage() {
 
           {/* Core statement */}
           <div className="rounded-xl bg-gradient-to-br from-blue-500/10 to-indigo-500/5 border border-blue-500/20 p-6 text-center">
-            <p className="text-sm text-white/55 leading-loose italic">
+            <p className="text-sm text-readable-muted leading-loose italic">
               "Everything outside your mind is unstable.{" "}
               People will disappoint you. You will die.
             </p>
@@ -329,10 +329,10 @@ export default function MeditationsPage() {
         className="glass rounded-xl border border-white/5 p-5 flex items-center gap-4"
       >
         <div className="w-8 h-8 rounded-lg bg-white/4 border border-white/8 flex items-center justify-center shrink-0">
-          <BookOpen size={14} className="text-white/25" />
+          <BookOpen size={14} className="text-readable-faint" />
         </div>
         <div className="flex-1">
-          <p className="text-sm font-medium text-white/35">Books III–XII</p>
+          <p className="text-sm font-medium text-readable-faint">Books III–XII</p>
           <p className="text-xs text-white/22 mt-0.5">
             Breakdowns coming as the reading continues — time, reason in society, self and cosmos, acting rightly without the world's cooperation.
           </p>
@@ -341,7 +341,7 @@ export default function MeditationsPage() {
           href="https://www.gutenberg.org/ebooks/2680"
           target="_blank"
           rel="noopener noreferrer"
-          className="inline-flex items-center gap-1.5 text-xs text-white/25 hover:text-white/55 transition-colors shrink-0"
+          className="inline-flex items-center gap-1.5 text-xs text-readable-faint hover:text-readable-muted transition-colors shrink-0"
         >
           Read free <ExternalLink size={11} />
         </a>

@@ -15,7 +15,7 @@ export default function PhotographyPage() {
   return (
     <div className="max-w-5xl mx-auto px-6 py-12">
       <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
-        <Link href="/" className="inline-flex items-center gap-1.5 text-sm text-white/40 hover:text-white/70 transition-colors mb-10">
+        <Link href="/" className="inline-flex items-center gap-1.5 text-sm text-readable-soft hover:text-readable-strong transition-colors mb-10">
           <ArrowLeft size={14} /> Back to Hub
         </Link>
       </motion.div>
@@ -27,7 +27,7 @@ export default function PhotographyPage() {
           </div>
           <div>
             <h1 className="text-3xl font-bold text-white tracking-tight">Photography</h1>
-            <p className="text-sm text-white/40">Craft, light, and the art of seeing</p>
+            <p className="text-sm text-readable-soft">Craft, light, and the art of seeing</p>
           </div>
         </div>
       </motion.div>
@@ -42,8 +42,8 @@ export default function PhotographyPage() {
         <div className="flex items-center gap-3">
           <Clock size={18} className="text-violet-400" />
           <div>
-            <p className="text-sm font-medium text-white/80">Content coming soon</p>
-            <p className="text-xs text-white/40 mt-0.5">I'm building out these notes — check back soon.</p>
+            <p className="text-sm font-medium text-readable-strong">Content coming soon</p>
+            <p className="text-xs text-readable-soft mt-0.5">I'm building out these notes — check back soon.</p>
           </div>
         </div>
       </motion.div>
@@ -58,8 +58,8 @@ export default function PhotographyPage() {
             className="glass rounded-xl p-5 border border-violet-500/10 opacity-60"
           >
             <div className="text-2xl mb-2">{item.icon}</div>
-            <h3 className="text-sm font-semibold text-white/70 mb-1">{item.title}</h3>
-            <p className="text-xs text-white/40 leading-relaxed">{item.description}</p>
+            <h3 className="text-sm font-semibold text-readable-strong mb-1">{item.title}</h3>
+            <p className="text-xs text-readable-soft leading-relaxed">{item.description}</p>
           </motion.div>
         ))}
       </div>

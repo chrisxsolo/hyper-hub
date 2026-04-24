@@ -23,7 +23,7 @@ function renderContent(text: string) {
       const content = line.slice(1).trim();
       const rendered = content.replace(/\*\*(.*?)\*\*/g, "<strong class='text-white/90'>$1</strong>");
       return (
-        <li key={i} className="flex gap-2 text-white/65 text-sm leading-relaxed">
+        <li key={i} className="flex gap-2 text-readable-muted text-sm leading-relaxed">
           <span className="mt-1.5 w-1 h-1 rounded-full bg-white/30 shrink-0" />
           <span dangerouslySetInnerHTML={{ __html: rendered }} />
         </li>
@@ -32,7 +32,7 @@ function renderContent(text: string) {
     if (line.trim() === "") return <div key={i} className="h-2" />;
     const rendered = line.replace(/\*\*(.*?)\*\*/g, "<strong class='text-white/90'>$1</strong>");
     return (
-      <p key={i} className="text-white/65 text-sm leading-relaxed" dangerouslySetInnerHTML={{ __html: rendered }} />
+      <p key={i} className="text-readable-muted text-sm leading-relaxed" dangerouslySetInnerHTML={{ __html: rendered }} />
     );
   });
 }

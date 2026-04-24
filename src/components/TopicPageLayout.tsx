@@ -50,7 +50,7 @@ export default function TopicPageLayout({
       <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
         <Link
           href={backHref}
-          className="inline-flex items-center gap-1.5 text-sm text-white/40 hover:text-white/70 transition-colors mb-10"
+          className="inline-flex items-center gap-1.5 text-sm text-readable-soft hover:text-readable-strong transition-colors mb-10"
         >
           <ArrowLeft size={14} /> Back to {backLabel}
         </Link>
@@ -69,7 +69,7 @@ export default function TopicPageLayout({
           </div>
           <div>
             <h1 className="text-3xl font-bold text-white tracking-tight">{data.title}</h1>
-            <p className="text-sm text-white/40 mt-0.5">{data.subtitle}</p>
+            <p className="text-sm text-readable-soft mt-0.5">{data.subtitle}</p>
           </div>
         </div>
       </motion.div>
@@ -102,7 +102,7 @@ export default function TopicPageLayout({
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: 0.3, duration: 0.4 }}
           >
-            <h2 className="text-xs font-semibold text-white/40 uppercase tracking-wider mb-3">
+            <h2 className="text-xs font-semibold text-readable-soft uppercase tracking-wider mb-3">
               Research & Studies
             </h2>
             <div className="space-y-3">

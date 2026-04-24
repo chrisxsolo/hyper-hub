@@ -25,8 +25,8 @@ export default function StatCard({ stat, color, index }: { stat: Stat; color: st
       className="glass rounded-xl p-4 text-center"
     >
       <div className={`text-2xl font-bold ${accent} mb-0.5`}>{stat.value}</div>
-      <div className="text-xs text-white/40 leading-tight">{stat.note}</div>
-      <div className="text-xs text-white/60 mt-1 font-medium">{stat.label}</div>
+      <div className="text-xs text-readable-soft leading-tight">{stat.note}</div>
+      <div className="text-xs text-readable-muted mt-1 font-medium">{stat.label}</div>
     </motion.div>
   );
 }

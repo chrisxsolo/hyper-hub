@@ -14,7 +14,23 @@ body {
   background-color: #0d0d0f;
   color: #e8e8f0;
   overflow-x: hidden;
+  font-weight: 470;
 }
+
+.text-readable-faint { color: rgba(232, 232, 240, 0.7); }
+.text-readable-soft { color: rgba(232, 232, 240, 0.8); }
+.text-readable-muted { color: rgba(242, 242, 248, 0.88); }
+.text-readable-strong { color: rgba(248, 248, 252, 0.94); }
+
+.hover\:text-readable-faint:hover { color: rgba(232, 232, 240, 0.7); }
+.hover\:text-readable-soft:hover { color: rgba(232, 232, 240, 0.8); }
+.hover\:text-readable-muted:hover { color: rgba(242, 242, 248, 0.88); }
+.hover\:text-readable-strong:hover { color: rgba(248, 248, 252, 0.94); }
+
+.group:hover .group-hover\:text-readable-faint { color: rgba(232, 232, 240, 0.7); }
+.group:hover .group-hover\:text-readable-soft { color: rgba(232, 232, 240, 0.8); }
+.group:hover .group-hover\:text-readable-muted { color: rgba(242, 242, 248, 0.88); }
+.group:hover .group-hover\:text-readable-strong { color: rgba(248, 248, 252, 0.94); }
 
 .bg-orb {
   position: fixed;

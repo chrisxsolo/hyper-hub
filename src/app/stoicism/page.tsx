@@ -275,7 +275,7 @@ export default function StoicismPage() {
       <motion.div {...fadeUp(0)}>
         <Link
           href="/"
-          className="inline-flex items-center gap-1.5 text-sm text-white/45 hover:text-white/75 transition-colors mb-10"
+          className="inline-flex items-center gap-1.5 text-sm text-readable-muted hover:text-white/85 transition-colors mb-10"
         >
           <ArrowLeft size={14} /> Back to Hub
         </Link>
@@ -285,7 +285,7 @@ export default function StoicismPage() {
         <motion.div {...fadeUp(0.05)} className="space-y-6">
           <div className="inline-flex items-center gap-2 glass rounded-full px-4 py-1.5 border border-amber-500/15">
             <Sparkles size={12} className="text-amber-300" />
-            <span className="text-xs font-medium tracking-wide text-white/60">Ancient philosophy for modern pressure</span>
+            <span className="text-xs font-medium tracking-wide text-readable-strong">Ancient philosophy for modern pressure</span>
           </div>
 
           <div>
@@ -295,18 +295,18 @@ export default function StoicismPage() {
               </div>
               <div>
                 <h1 className="text-4xl sm:text-5xl font-semibold tracking-tight text-white">Stoicism</h1>
-                <p className="text-sm text-white/45 mt-1">A practical philosophy for attention, resilience, and character.</p>
+                <p className="text-sm text-readable-muted mt-1">A practical philosophy for attention, resilience, and character.</p>
               </div>
             </div>
 
-            <p className="text-base sm:text-lg text-white/72 leading-relaxed max-w-2xl mb-4">
+            <p className="text-base sm:text-lg text-readable-strong leading-relaxed max-w-2xl mb-4">
               Stoicism is a school of philosophy that asks a simple question: <span className="text-white font-medium">what kind
               of person should you be when life gets hard?</span> It began in ancient Greece, but it still feels current because it
               focuses on judgment, self-command, mortality, uncertainty, and how to act well when the world does not cooperate.
             </p>
 
-            <p className="text-sm text-white/50 leading-relaxed max-w-2xl">
-              The name comes from the <span className="text-white/80">Stoa Poikile</span>, the painted porch in Athens where Zeno
+            <p className="text-sm text-readable-muted leading-relaxed max-w-2xl">
+              The name comes from the <span className="text-readable-strong">Stoa Poikile</span>, the painted porch in Athens where Zeno
               taught. At its best, Stoicism is not emotional numbness and it is not passivity. It is training: learning to see clearly,
               regulate reaction, and choose a steady response that matches your values.
             </p>
@@ -316,7 +316,7 @@ export default function StoicismPage() {
             {introChips.map((chip) => (
               <span
                 key={chip}
-                className="text-xs px-3 py-1 rounded-full border border-white/10 bg-white/4 text-white/45"
+                className="text-xs px-3 py-1 rounded-full border border-white/10 bg-white/4 text-readable-muted"
               >
                 {chip}
               </span>
@@ -358,10 +358,10 @@ export default function StoicismPage() {
           <div className="relative z-10">
             <div className="flex items-center gap-2 mb-3">
               <Brain size={16} className="text-sky-300" />
-              <p className="text-xs font-semibold uppercase tracking-[0.22em] text-white/45">Stoic response loop</p>
+              <p className="text-xs font-semibold uppercase tracking-[0.22em] text-readable-muted">Stoic response loop</p>
             </div>
             <h2 className="text-xl font-semibold text-white mb-2">Where Stoicism meets psychology and biology</h2>
-            <p className="text-sm text-white/52 leading-relaxed max-w-lg mb-5">
+            <p className="text-sm text-readable-muted leading-relaxed max-w-lg mb-5">
               The philosophy becomes useful in the gap between stimulus and reaction. It does not erase the body. It trains the meaning
               you add to an event so your next action is less hijacked by panic, ego, or habit.
             </p>
@@ -376,7 +376,7 @@ export default function StoicismPage() {
                   className="rounded-2xl border border-white/8 bg-black/10 px-4 py-3"
                 >
                   <div className="flex items-center justify-between gap-4 mb-2">
-                    <p className="text-[11px] uppercase tracking-[0.18em] text-white/35">{entry.step}</p>
+                    <p className="text-[11px] uppercase tracking-[0.18em] text-readable-soft">{entry.step}</p>
                     <div className="w-24 h-1.5 rounded-full bg-white/8 overflow-hidden">
                       <motion.div
                         className={`h-full rounded-full ${entry.bar}`}
@@ -388,7 +388,7 @@ export default function StoicismPage() {
                     </div>
                   </div>
                   <p className="text-sm font-medium text-white mb-1">{entry.title}</p>
-                  <p className="text-xs text-white/42 leading-relaxed">{entry.body}</p>
+                  <p className="text-xs text-readable-muted leading-relaxed">{entry.body}</p>
                 </motion.div>
               ))}
             </div>
@@ -399,7 +399,7 @@ export default function StoicismPage() {
       <motion.section {...fadeUp(0.16)} className="mb-8 md:mb-12">
         <div className="flex items-center gap-2 mb-4">
           <Shield size={15} className="text-amber-300" />
-          <p className="text-xs font-semibold uppercase tracking-[0.22em] text-white/40">What Stoicism is</p>
+          <p className="text-xs font-semibold uppercase tracking-[0.22em] text-readable-muted">What Stoicism is</p>
         </div>
 
         <motion.div
@@ -420,7 +420,7 @@ export default function StoicismPage() {
                   <Icon size={18} className={principle.iconClass} />
                 </div>
                 <h3 className="text-base font-semibold text-white mb-2">{principle.title}</h3>
-                <p className="text-sm text-white/48 leading-relaxed">{principle.description}</p>
+                <p className="text-sm text-readable-muted leading-relaxed">{principle.description}</p>
               </motion.div>
             );
           })}
@@ -430,7 +430,7 @@ export default function StoicismPage() {
       <motion.section {...fadeUp(0.2)} className="mb-8 md:mb-12">
         <div className="flex items-center gap-2 mb-4">
           <Compass size={15} className="text-orange-300" />
-          <p className="text-xs font-semibold uppercase tracking-[0.22em] text-white/40">Founders and lineage</p>
+          <p className="text-xs font-semibold uppercase tracking-[0.22em] text-readable-muted">Founders and lineage</p>
         </div>
 
         <div className="glass rounded-[28px] border border-white/8 p-6 sm:p-7 overflow-hidden relative">
@@ -441,7 +441,7 @@ export default function StoicismPage() {
 
           <div className="mb-6 max-w-3xl">
             <h2 className="text-2xl font-semibold text-white mb-2">Built in Athens, carried into Rome</h2>
-            <p className="text-sm text-white/50 leading-relaxed">
+            <p className="text-sm text-readable-muted leading-relaxed">
               Stoicism starts with three Greek founders, then gets translated into Roman letters, lectures, and journals. The core
               question stays the same: how do you become difficult to break without becoming hard, cold, or unjust?
             </p>
@@ -461,15 +461,15 @@ export default function StoicismPage() {
               >
                 <div className="flex items-start justify-between gap-3 mb-4">
                   <div>
-                    <p className="text-[11px] uppercase tracking-[0.18em] text-white/38 mb-1">{founder.role}</p>
+                    <p className="text-[11px] uppercase tracking-[0.18em] text-readable-soft mb-1">{founder.role}</p>
                     <h3 className="text-lg font-semibold text-white">{founder.name}</h3>
-                    <p className="text-xs text-white/40 mt-1">{founder.years}</p>
+                    <p className="text-xs text-readable-muted mt-1">{founder.years}</p>
                   </div>
-                  <div className="w-10 h-10 rounded-2xl border border-white/10 bg-black/12 flex items-center justify-center text-sm font-medium text-white/70">
+                  <div className="w-10 h-10 rounded-2xl border border-white/10 bg-black/12 flex items-center justify-center text-sm font-medium text-readable-strong">
                     {founder.marker}
                   </div>
                 </div>
-                <p className="text-sm text-white/50 leading-relaxed">{founder.description}</p>
+                <p className="text-sm text-readable-muted leading-relaxed">{founder.description}</p>
               </motion.div>
             ))}
           </motion.div>
@@ -477,7 +477,7 @@ export default function StoicismPage() {
           <div className="rounded-2xl border border-white/8 bg-white/3 p-5">
             <div className="flex items-center gap-2 mb-4">
               <BookOpen size={15} className="text-sky-300" />
-              <p className="text-xs font-semibold uppercase tracking-[0.2em] text-white/38">Roman Stoics who made it personal</p>
+              <p className="text-xs font-semibold uppercase tracking-[0.2em] text-readable-soft">Roman Stoics who made it personal</p>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -491,9 +491,9 @@ export default function StoicismPage() {
                 >
                   <div className="flex items-center justify-between gap-3 mb-2">
                     <h3 className="text-sm font-semibold text-white">{teacher.name}</h3>
-                    <span className="text-[11px] text-white/30">{teacher.years}</span>
+                    <span className="text-[11px] text-readable-soft">{teacher.years}</span>
                   </div>
-                  <p className="text-sm text-white/45 leading-relaxed">{teacher.description}</p>
+                  <p className="text-sm text-readable-muted leading-relaxed">{teacher.description}</p>
                 </motion.div>
               ))}
             </div>
@@ -504,7 +504,7 @@ export default function StoicismPage() {
       <motion.section {...fadeUp(0.24)} className="mb-8 md:mb-12">
         <div className="flex items-center gap-2 mb-4">
           <Brain size={15} className="text-sky-300" />
-          <p className="text-xs font-semibold uppercase tracking-[0.22em] text-white/40">Stoicism and cognitive therapy</p>
+          <p className="text-xs font-semibold uppercase tracking-[0.22em] text-readable-muted">Stoicism and cognitive therapy</p>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-[0.96fr_1.04fr] gap-4">
@@ -519,26 +519,26 @@ export default function StoicismPage() {
 
             <div className="relative z-10">
               <h2 className="text-2xl font-semibold text-white mb-3">Why therapy keeps rediscovering the Stoics</h2>
-              <p className="text-sm text-white/52 leading-relaxed mb-4">
+              <p className="text-sm text-readable-muted leading-relaxed mb-4">
                 Modern cognitive therapy is not the same thing as Stoicism, but they share a deep structural insight:
-                <span className="text-white/78"> the mind's interpretation sits between the event and the feeling.</span>
+                <span className="text-white/88"> the mind's interpretation sits between the event and the feeling.</span>
                 The Stoics trained that insight as philosophy. Cognitive therapy trains it as a clinical method.
               </p>
-              <p className="text-sm text-white/52 leading-relaxed mb-4">
+              <p className="text-sm text-readable-muted leading-relaxed mb-4">
                 Albert Ellis spoke openly about the influence of Epictetus when shaping rational emotive behavior therapy.
                 CBT later carried forward the same practical move: notice the thought, test it, and replace blind reaction with a more grounded response.
               </p>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div className="rounded-2xl border border-white/8 bg-black/10 p-4">
-                  <p className="text-xs uppercase tracking-[0.18em] text-white/30 mb-2">Shared core</p>
-                  <p className="text-sm text-white/55 leading-relaxed">
+                  <p className="text-xs uppercase tracking-[0.18em] text-readable-soft mb-2">Shared core</p>
+                  <p className="text-sm text-readable-muted leading-relaxed">
                     Thoughts are not commands. They can be examined, reframed, and practiced into better patterns.
                   </p>
                 </div>
                 <div className="rounded-2xl border border-white/8 bg-black/10 p-4">
-                  <p className="text-xs uppercase tracking-[0.18em] text-white/30 mb-2">Important difference</p>
-                  <p className="text-sm text-white/55 leading-relaxed">
+                  <p className="text-xs uppercase tracking-[0.18em] text-readable-soft mb-2">Important difference</p>
+                  <p className="text-sm text-readable-muted leading-relaxed">
                     CBT aims at symptom relief and functioning. Stoicism also asks what kind of person you are becoming while you suffer.
                   </p>
                 </div>
@@ -568,7 +568,7 @@ export default function StoicismPage() {
                     <p className="text-sm font-semibold text-white">{parallel.therapy}</p>
                   </div>
                 </div>
-                <p className="text-sm text-white/46 leading-relaxed">{parallel.description}</p>
+                <p className="text-sm text-readable-muted leading-relaxed">{parallel.description}</p>
               </motion.div>
             ))}
           </motion.div>
@@ -578,18 +578,18 @@ export default function StoicismPage() {
       <motion.section {...fadeUp(0.28)} className="mb-8 md:mb-12">
         <div className="flex items-center gap-2 mb-4">
           <Activity size={15} className="text-emerald-300" />
-          <p className="text-xs font-semibold uppercase tracking-[0.22em] text-white/40">Why it still feels modern</p>
+          <p className="text-xs font-semibold uppercase tracking-[0.22em] text-readable-muted">Why it still feels modern</p>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-[0.95fr_1.05fr] gap-4">
           <div className="glass rounded-[28px] border border-emerald-500/15 p-6 sm:p-7">
             <h2 className="text-2xl font-semibold text-white mb-3">A philosophy that survives contact with real life</h2>
-            <p className="text-sm text-white/52 leading-relaxed mb-4">
+            <p className="text-sm text-readable-muted leading-relaxed mb-4">
               Stoicism stays relevant because it does not depend on perfect circumstances. It assumes grief, ego, envy, uncertainty,
               bodily stress, and social pressure are normal features of human life. The question is not whether you feel those forces.
               The question is whether they get the final vote.
             </p>
-            <p className="text-sm text-white/52 leading-relaxed">
+            <p className="text-sm text-readable-muted leading-relaxed">
               That is why the philosophy overlaps so naturally with current conversations about mental resilience, emotional regulation,
               stress physiology, and deliberate practice. It gives a language for agency without denying that humans are vulnerable,
               finite, and deeply embodied.
@@ -616,13 +616,13 @@ export default function StoicismPage() {
                     </div>
                     <div>
                       <h3 className="text-base font-semibold text-white">{bridge.title}</h3>
-                      <p className="text-sm text-white/48 leading-relaxed mt-1">{bridge.description}</p>
+                      <p className="text-sm text-readable-muted leading-relaxed mt-1">{bridge.description}</p>
                     </div>
                   </div>
 
                   <div className="space-y-2">
                     {bridge.points.map((point) => (
-                      <div key={point} className="flex items-start gap-2 text-sm text-white/42">
+                      <div key={point} className="flex items-start gap-2 text-sm text-readable-muted">
                         <span className="mt-1.5 w-1.5 h-1.5 rounded-full bg-white/22 shrink-0" />
                         <span>{point}</span>
                       </div>
@@ -644,7 +644,7 @@ export default function StoicismPage() {
             <div>
               <p className="text-xs font-semibold uppercase tracking-[0.2em] text-amber-300/80 mb-2">Read next</p>
               <h2 className="text-2xl font-semibold text-white mb-2">Meditations</h2>
-              <p className="text-sm text-white/50 leading-relaxed max-w-lg">
+              <p className="text-sm text-readable-muted leading-relaxed max-w-lg">
                 Marcus Aurelius is the easiest place to feel Stoicism as a lived practice: self-correction, mortality, discipline,
                 attention, and keeping a clear head while the world stays messy.
               </p>
@@ -654,7 +654,7 @@ export default function StoicismPage() {
             </div>
           </div>
 
-          <div className="flex items-center gap-2 text-sm text-white/60 group-hover:text-white/78 transition-colors">
+          <div className="flex items-center gap-2 text-sm text-readable-strong group-hover:text-white/88 transition-colors">
             Explore Marcus Aurelius
             <ArrowRight size={15} className="group-hover:translate-x-1 transition-transform" />
           </div>
@@ -674,13 +674,13 @@ export default function StoicismPage() {
               >
                 <div className="flex items-start justify-between gap-3 mb-3">
                   <div>
-                    <p className="text-xs uppercase tracking-[0.18em] text-white/30 mb-2">{card.eyebrow}</p>
+                    <p className="text-xs uppercase tracking-[0.18em] text-readable-soft mb-2">{card.eyebrow}</p>
                     <h3 className="text-sm font-semibold text-white">{card.title}</h3>
                   </div>
                   <span className="text-xl shrink-0">{card.icon}</span>
                 </div>
-                <p className="text-sm text-white/45 leading-relaxed mb-3">{card.description}</p>
-                <div className="flex items-center gap-2 text-xs text-white/55 group-hover:text-white/75 transition-colors">
+                <p className="text-sm text-readable-muted leading-relaxed mb-3">{card.description}</p>
+                <div className="flex items-center gap-2 text-xs text-readable-muted group-hover:text-white/85 transition-colors">
                   Open study card
                   <ArrowRight size={13} className="group-hover:translate-x-1 transition-transform" />
                 </div>

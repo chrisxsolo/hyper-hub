@@ -2,7 +2,7 @@
 
 import { motion } from "framer-motion";
 import Link from "next/link";
-import { ArrowLeft, ArrowRight, Droplets, Zap, Activity, Scale } from "lucide-react";
+import { ArrowLeft, ArrowRight, Droplets, Zap, Activity, Scale, Apple } from "lucide-react";
 
 const topics = [
   {
@@ -57,6 +57,19 @@ const topics = [
     tagColor: "bg-blue-500/10 text-blue-300/80 border-blue-500/15",
     readTime: "6 min read",
   },
+  {
+    href: "/health/diet",
+    icon: Apple,
+    title: "Diet & Metabolic Health",
+    description: "Protein, processed foods, food order, and how to eat for muscle, stable glucose, and long-range metabolic health.",
+    tags: ["Protein", "Food Quality", "Glucose", "Satiety"],
+    gradient: "from-teal-500/20 to-cyan-500/10",
+    border: "border-teal-500/20 hover:border-teal-500/40",
+    iconBg: "bg-teal-500/15 border-teal-500/25",
+    iconColor: "text-teal-400",
+    tagColor: "bg-teal-500/10 text-teal-300/80 border-teal-500/15",
+    readTime: "9 min read",
+  },
 ];
 
 const container = { hidden: {}, show: { transition: { staggerChildren: 0.1 } } };
@@ -72,7 +85,7 @@ export default function HealthPage() {
       <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.3 }}>
         <Link
           href="/"
-          className="inline-flex items-center gap-1.5 text-sm text-white/40 hover:text-white/70 transition-colors mb-10"
+          className="inline-flex items-center gap-1.5 text-sm text-readable-soft hover:text-readable-strong transition-colors mb-10"
         >
           <ArrowLeft size={14} /> Back to Hub
         </Link>
@@ -91,10 +104,10 @@ export default function HealthPage() {
           </div>
           <div>
             <h1 className="text-3xl font-bold text-white tracking-tight">Health</h1>
-            <p className="text-sm text-white/40">Body, metabolism, and longevity</p>
+            <p className="text-sm text-readable-soft">Body, metabolism, and longevity</p>
           </div>
         </div>
-        <p className="text-white/50 max-w-xl mt-4 text-sm leading-relaxed">
+        <p className="text-readable-soft max-w-xl mt-4 text-sm leading-relaxed">
           Deep dives into the topics I've obsessed over — backed by research, explained clearly,
           and organized so I can actually reference them.
         </p>
@@ -121,10 +134,10 @@ export default function HealthPage() {
                       <div className={`p-2 rounded-xl border ${topic.iconBg}`}>
                         <Icon size={18} className={topic.iconColor} />
                       </div>
-                      <span className="text-[10px] text-white/30 font-medium">{topic.readTime}</span>
+                      <span className="text-[10px] text-readable-faint font-medium">{topic.readTime}</span>
                     </div>
                     <h3 className="text-base font-semibold text-white mb-2">{topic.title}</h3>
-                    <p className="text-sm text-white/50 leading-relaxed mb-4">{topic.description}</p>
+                    <p className="text-sm text-readable-soft leading-relaxed mb-4">{topic.description}</p>
                     <div className="flex flex-wrap gap-1.5 mb-4">
                       {topic.tags.map((tag) => (
                         <span key={tag} className={`text-[10px] px-2 py-0.5 rounded-full border ${topic.tagColor}`}>
@@ -132,7 +145,7 @@ export default function HealthPage() {
                         </span>
                       ))}
                     </div>
-                    <div className="flex items-center gap-1 text-xs font-medium text-white/35 group-hover:text-white/65 transition-colors">
+                    <div className="flex items-center gap-1 text-xs font-medium text-readable-faint group-hover:text-readable-muted transition-colors">
                       Read more <ArrowRight size={12} className="group-hover:translate-x-1 transition-transform" />
                     </div>
                   </div>

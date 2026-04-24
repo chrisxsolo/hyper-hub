@@ -71,7 +71,7 @@ export default function HomePage() {
           className="inline-flex items-center gap-2 glass rounded-full px-4 py-1.5 mb-8 border-white/10"
         >
           <Sparkles size={12} className="text-amber-400" />
-          <span className="text-xs text-white/60 font-medium tracking-wide">Personal Knowledge Hub</span>
+          <span className="text-xs text-readable-muted font-medium tracking-wide">Personal Knowledge Hub</span>
         </motion.div>
 
         <motion.h1
@@ -92,7 +92,7 @@ export default function HomePage() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.25, duration: 0.5 }}
-          className="text-white/45 text-lg max-w-xl leading-relaxed mb-14"
+          className="text-readable-soft text-lg max-w-xl leading-relaxed mb-14"
         >
           A living knowledge base for my hyper fixations — health science, photography, and stoic philosophy.
           Built to study from, reference, and share.
@@ -121,13 +121,13 @@ export default function HomePage() {
                         <div className={`p-2.5 rounded-xl border ${cat.iconBg}`}>
                           <Icon size={20} className={cat.iconColor} />
                         </div>
-                        <span className="text-[10px] font-medium text-white/35 glass px-2.5 py-1 rounded-full border-white/10">
+                        <span className="text-[10px] font-medium text-readable-faint glass px-2.5 py-1 rounded-full border-white/10">
                           {cat.badge}
                         </span>
                       </div>
 
                       <h2 className="text-xl font-semibold text-white mb-2">{cat.title}</h2>
-                      <p className="text-sm text-white/50 leading-relaxed mb-5">{cat.description}</p>
+                      <p className="text-sm text-readable-soft leading-relaxed mb-5">{cat.description}</p>
 
                       <div className="flex flex-wrap gap-1.5 mb-5">
                         {cat.topics.map((topic) => (
@@ -137,7 +137,7 @@ export default function HomePage() {
                         ))}
                       </div>
 
-                      <div className="flex items-center gap-1.5 text-xs font-medium text-white/40 group-hover:text-white/70 transition-colors">
+                      <div className="flex items-center gap-1.5 text-xs font-medium text-readable-soft group-hover:text-readable-strong transition-colors">
                         Explore
                         <ArrowRight size={13} className="group-hover:translate-x-1 transition-transform" />
                       </div>

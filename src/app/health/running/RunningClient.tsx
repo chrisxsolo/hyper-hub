@@ -441,7 +441,7 @@ export default function RunningClient() {
         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.3 }}>
           <Link
             href="/health"
-            className="inline-flex items-center gap-1.5 text-sm text-white/40 hover:text-white/70 transition-colors mb-10"
+            className="inline-flex items-center gap-1.5 text-sm text-readable-soft hover:text-readable-strong transition-colors mb-10"
           >
             <ArrowLeft size={14} /> Back to Health
           </Link>
@@ -460,10 +460,10 @@ export default function RunningClient() {
             </div>
             <div>
               <h1 className="text-3xl font-bold text-white tracking-tight">Running & Aerobic Training</h1>
-              <p className="text-sm text-white/40 mt-1">Evolutionary biology · Sports science · Longevity</p>
+              <p className="text-sm text-readable-soft mt-1">Evolutionary biology · Sports science · Longevity</p>
             </div>
           </div>
-          <p className="text-white/50 text-sm leading-relaxed max-w-2xl">
+          <p className="text-readable-soft text-sm leading-relaxed max-w-2xl">
             Humans are the premier endurance athletes of the animal kingdom. We evolved to run —
             and the science is clear: running doesn&apos;t wear you down. Inactivity does.{" "}
             <span className="text-emerald-300/80">Every major chronic disease of modernity is a <GlossaryTerm termKey="mismatchDisease">mismatch disease</GlossaryTerm> — a consequence of not doing what our bodies evolved to do.</span>
@@ -474,7 +474,7 @@ export default function RunningClient() {
         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.2 }} className="mb-10">
           <div className="inline-flex items-center gap-2 glass rounded-full px-3 py-1.5 border border-white/10">
             <span className="text-[10px] text-emerald-400/70 font-semibold tracking-wide">TIP</span>
-            <span className="text-[10px] text-white/40">
+            <span className="text-[10px] text-readable-soft">
               Tap <span className="text-emerald-300/70 underline decoration-dotted underline-offset-1">highlighted terms</span> for in-depth explanations
             </span>
           </div>
@@ -496,8 +496,8 @@ export default function RunningClient() {
               <div className={`absolute inset-0 bg-gradient-to-br ${stat.gradientClass} to-transparent pointer-events-none`} />
               <div className="relative">
                 <p className={`text-2xl font-bold mb-0.5 ${stat.valueClass}`}>{stat.value}</p>
-                <p className="text-[11px] text-white/60 leading-snug mb-1">{stat.label}</p>
-                <p className="text-[10px] text-white/30">{stat.note}</p>
+                <p className="text-[11px] text-readable-muted leading-snug mb-1">{stat.label}</p>
+                <p className="text-[10px] text-readable-faint">{stat.note}</p>
               </div>
             </motion.div>
           ))}
@@ -519,7 +519,7 @@ export default function RunningClient() {
                   </span>
                 </div>
 
-                <p className="text-sm text-white/55 leading-relaxed mb-5">
+                <p className="text-sm text-readable-muted leading-relaxed mb-5">
                   Humans are the best long-distance runners on the planet. We can outrun a horse in sustained heat.<Cite id={1} />{" "}
                   Not because we&apos;re fast — we&apos;re not. But because we can run for hours without overheating.
                   This is the product of{" "}
@@ -527,7 +527,7 @@ export default function RunningClient() {
                 </p>
 
                 {/* Evolutionary adaptations grid */}
-                <p className="text-xs font-semibold text-white/40 uppercase tracking-wider mb-3">
+                <p className="text-xs font-semibold text-readable-soft uppercase tracking-wider mb-3">
                   26 Anatomical Features Evolved for Running<Cite id={1} />
                 </p>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-5">
@@ -567,7 +567,7 @@ export default function RunningClient() {
                       <span className="text-xl shrink-0 mt-0.5">{item.emoji}</span>
                       <div>
                         <p className="text-xs font-semibold text-emerald-300/80 mb-1">{item.title}</p>
-                        <p className="text-xs text-white/45 leading-relaxed">{item.desc}</p>
+                        <p className="text-xs text-readable-soft leading-relaxed">{item.desc}</p>
                       </div>
                     </div>
                   ))}
@@ -576,7 +576,7 @@ export default function RunningClient() {
                 {/* Callout */}
                 <div className="glass rounded-xl p-4 border border-emerald-500/20 bg-emerald-500/5">
                   <p className="text-xs font-semibold text-emerald-400 mb-1">The Man vs. Horse Marathon</p>
-                  <p className="text-xs text-white/50 leading-relaxed">
+                  <p className="text-xs text-readable-soft leading-relaxed">
                     Since 1980, Llanwrtyd Wells, Wales has hosted a race pitting humans against horses over 22 miles.
                     Humans have won{" "}
                     <span className="text-emerald-300 font-medium">multiple times</span> — exclusively on hot days.
@@ -602,7 +602,7 @@ export default function RunningClient() {
                   </span>
                 </div>
 
-                <p className="text-sm text-white/50 leading-relaxed mb-5">
+                <p className="text-sm text-readable-soft leading-relaxed mb-5">
                   Running has accumulated a library of misconceptions — many of which keep people from doing the one activity
                   their body evolved to do. Here&apos;s what the evidence actually shows.
                 </p>
@@ -624,7 +624,7 @@ export default function RunningClient() {
                             </div>
                             <div className="flex items-start gap-2 mb-2">
                               <span className="text-emerald-400 text-xs shrink-0 mt-0.5">✓</span>
-                              <p className="text-xs text-white/65 leading-relaxed">
+                              <p className="text-xs text-readable-muted leading-relaxed">
                                 <span className="text-emerald-400 font-semibold">REALITY: </span>
                                 {myth.reality}
                               </p>
@@ -657,7 +657,7 @@ export default function RunningClient() {
                   </span>
                 </div>
 
-                <p className="text-sm text-white/55 leading-relaxed mb-5">
+                <p className="text-sm text-readable-muted leading-relaxed mb-5">
                   The &quot;running ruins your knees&quot; myth is one of the most costly misconceptions in medicine —
                   it keeps millions of people from an activity that would actually <em>protect</em> their joints.
                   The data tells the opposite story.<Cite id={3} />
@@ -675,8 +675,8 @@ export default function RunningClient() {
                       <div key={item.label}>
                         <div className="flex items-center justify-between mb-1.5">
                           <div>
-                            <span className="text-xs text-white/65">{item.label}</span>
-                            <span className="text-[10px] text-white/30 ml-2">{item.note}</span>
+                            <span className="text-xs text-readable-muted">{item.label}</span>
+                            <span className="text-[10px] text-readable-faint ml-2">{item.note}</span>
                           </div>
                           <span className={`text-sm font-bold ${item.textColor}`}>{item.rate}%</span>
                         </div>
@@ -692,13 +692,13 @@ export default function RunningClient() {
                       </div>
                     ))}
                   </div>
-                  <p className="text-[10px] text-white/30 mt-3 italic">
+                  <p className="text-[10px] text-readable-faint mt-3 italic">
                     Source: Lo et al., Arthritis Care &amp; Research, 2017. n = 2,683 participants.
                   </p>
                 </div>
 
                 {/* Why the myth is wrong */}
-                <p className="text-xs font-semibold text-white/40 uppercase tracking-wider mb-3">Why the &quot;Wear &amp; Tear&quot; Theory Is Wrong</p>
+                <p className="text-xs font-semibold text-readable-soft uppercase tracking-wider mb-3">Why the &quot;Wear &amp; Tear&quot; Theory Is Wrong</p>
                 <div className="space-y-2 mb-5">
                   {[
                     {
@@ -725,8 +725,8 @@ export default function RunningClient() {
                     <div key={i} className="flex items-start gap-3 glass rounded-xl p-3.5 border border-white/8">
                       <span className="text-base shrink-0 mt-0.5">{item.icon}</span>
                       <div>
-                        <p className="text-xs font-semibold text-white/70 mb-0.5">{item.title}</p>
-                        <p className="text-xs text-white/45 leading-relaxed">{item.desc}</p>
+                        <p className="text-xs font-semibold text-readable-strong mb-0.5">{item.title}</p>
+                        <p className="text-xs text-readable-soft leading-relaxed">{item.desc}</p>
                       </div>
                     </div>
                   ))}
@@ -738,7 +738,7 @@ export default function RunningClient() {
                     <Zap size={14} className="text-teal-400 shrink-0 mt-0.5" />
                     <div>
                       <p className="text-xs font-semibold text-teal-400 mb-1">The Dose Makes the Medicine — or the Poison</p>
-                      <p className="text-xs text-white/50 leading-relaxed">
+                      <p className="text-xs text-readable-soft leading-relaxed">
                         The data show a U-shaped curve: sedentary people and extreme competitive runners both have higher OA rates than moderate recreational runners.
                         The optimal dose is roughly <span className="text-teal-300 font-medium">15–25 miles/week at conversational pace</span>.
                         The problem has never been running — it&apos;s been doing too much too soon without adequate recovery and strength.
@@ -779,12 +779,12 @@ export default function RunningClient() {
                             <div className="flex-1 min-w-0">
                               <p className="text-sm font-semibold text-white/85">{benefit.title}</p>
                               {!isOpen && (
-                                <p className="text-xs text-white/40 mt-0.5 truncate">{benefit.preview}</p>
+                                <p className="text-xs text-readable-soft mt-0.5 truncate">{benefit.preview}</p>
                               )}
                             </div>
                             {isOpen
                               ? <ChevronDown size={14} className={benefit.chevronClass} />
-                              : <ChevronRight size={14} className="text-white/30" />}
+                              : <ChevronRight size={14} className="text-readable-faint" />}
                           </div>
                           <AnimatePresence initial={false}>
                             {isOpen && (
@@ -799,7 +799,7 @@ export default function RunningClient() {
                                   {benefit.points.map((pt, j) => (
                                     <li key={j} className="flex items-start gap-2">
                                       <span className={`${benefit.iconClass} text-xs shrink-0 mt-0.5`}>•</span>
-                                      <span className="text-xs text-white/55 leading-relaxed">{pt}</span>
+                                      <span className="text-xs text-readable-muted leading-relaxed">{pt}</span>
                                     </li>
                                   ))}
                                 </ul>
@@ -828,7 +828,7 @@ export default function RunningClient() {
                   </span>
                 </div>
 
-                <p className="text-sm text-white/55 leading-relaxed mb-5">
+                <p className="text-sm text-readable-muted leading-relaxed mb-5">
                   <GlossaryTerm termKey="zone2">Zone 2 training</GlossaryTerm> — low-intensity aerobic effort at 60–70% of max heart rate — is
                   the single most important training adaptation you can build.<Cite id={9} />{" "}
                   Elite endurance athletes dedicate <span className="text-green-300/80 font-medium">80% of their training volume</span> to Zone 2.
@@ -849,16 +849,16 @@ export default function RunningClient() {
                       <div key={z.zone} className={`flex items-center gap-3 ${z.highlight ? "glass rounded-lg p-2 border border-green-500/20" : ""}`}>
                         <div className="w-16 shrink-0">
                           <p className={`text-[10px] font-bold ${z.textColor}`}>{z.zone}</p>
-                          <p className="text-[9px] text-white/30">{z.pct} HR</p>
+                          <p className="text-[9px] text-readable-faint">{z.pct} HR</p>
                         </div>
                         <div className="flex-1">
                           <div className="flex items-center justify-between mb-1">
-                            <span className="text-[10px] text-white/55">{z.label}</span>
+                            <span className="text-[10px] text-readable-muted">{z.label}</span>
                           </div>
                           <div className="h-1.5 rounded-full bg-white/8 overflow-hidden">
                             <div className={`h-full ${z.color} rounded-full`} style={{ width: `${z.width}%` }} />
                           </div>
-                          <p className="text-[9px] text-white/30 mt-0.5">{z.desc}</p>
+                          <p className="text-[9px] text-readable-faint mt-0.5">{z.desc}</p>
                         </div>
                       </div>
                     ))}
@@ -874,14 +874,14 @@ export default function RunningClient() {
                     <div key={item.title} className="glass rounded-xl p-4 border border-white/8 text-center">
                       <div className="text-2xl mb-2">{item.emoji}</div>
                       <p className="text-xs font-semibold text-green-300/80 mb-1">{item.title}</p>
-                      <p className="text-[10px] text-white/40 leading-relaxed">{item.desc}</p>
+                      <p className="text-[10px] text-readable-soft leading-relaxed">{item.desc}</p>
                     </div>
                   ))}
                 </div>
 
                 {/* Why exactly 60-70%? */}
                 <div className="mt-5">
-                  <p className="text-xs font-semibold text-white/40 uppercase tracking-wider mb-3">
+                  <p className="text-xs font-semibold text-readable-soft uppercase tracking-wider mb-3">
                     Why Exactly 60–70%? The Physiology<Cite id={11} />
                   </p>
                   <div className="space-y-2">
@@ -910,8 +910,8 @@ export default function RunningClient() {
                       <div key={i} className="flex items-start gap-3 glass rounded-xl p-3.5 border border-white/8">
                         <span className="text-base shrink-0 mt-0.5">{item.icon}</span>
                         <div>
-                          <p className="text-xs font-semibold text-white/70 mb-0.5">{item.title}</p>
-                          <p className="text-xs text-white/45 leading-relaxed">{item.desc}</p>
+                          <p className="text-xs font-semibold text-readable-strong mb-0.5">{item.title}</p>
+                          <p className="text-xs text-readable-soft leading-relaxed">{item.desc}</p>
                         </div>
                       </div>
                     ))}
@@ -951,7 +951,7 @@ export default function RunningClient() {
                           <span className="text-base">{item.icon}</span>
                           <p className="text-xs font-semibold text-green-300/80">{item.title}</p>
                         </div>
-                        <p className="text-[10px] text-white/45 leading-relaxed">{item.desc}</p>
+                        <p className="text-[10px] text-readable-soft leading-relaxed">{item.desc}</p>
                       </div>
                     ))}
                   </div>
@@ -968,7 +968,7 @@ export default function RunningClient() {
                         { text: "→" }, { text: "Improved VO2 max" },
                         { text: "→" }, { text: "Better insulin sensitivity" },
                       ].map((item, i) => (
-                        <span key={i} className={item.text === "→" ? "text-green-400/35" : item.highlight ? "text-green-300/80 font-semibold" : "text-white/45"}>
+                        <span key={i} className={item.text === "→" ? "text-green-400/35" : item.highlight ? "text-green-300/80 font-semibold" : "text-readable-soft"}>
                           {item.text}
                         </span>
                       ))}
@@ -981,22 +981,22 @@ export default function RunningClient() {
                   <p className="text-xs font-semibold text-sky-400 mb-2">
                     Zone 2 and VO2 Max — How They Connect<Cite id={13} />
                   </p>
-                  <p className="text-xs text-white/50 leading-relaxed mb-3">
-                    VO2 max is limited by two factors: <span className="text-white/70 font-medium">cardiac output</span> (how much blood your heart pumps per minute) and <span className="text-white/70 font-medium">peripheral extraction</span> (how efficiently your muscles extract oxygen from that blood). Mitochondrial density is the primary driver of peripheral extraction — and Zone 2 is what builds it.
+                  <p className="text-xs text-readable-soft leading-relaxed mb-3">
+                    VO2 max is limited by two factors: <span className="text-readable-strong font-medium">cardiac output</span> (how much blood your heart pumps per minute) and <span className="text-readable-strong font-medium">peripheral extraction</span> (how efficiently your muscles extract oxygen from that blood). Mitochondrial density is the primary driver of peripheral extraction — and Zone 2 is what builds it.
                   </p>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 mb-3">
                     <div className="glass rounded-lg p-3 border border-green-500/20">
                       <p className="text-[10px] font-semibold text-green-400 mb-1">Zone 2 → peripheral extraction</p>
-                      <p className="text-[10px] text-white/40 leading-relaxed">More mitochondria per muscle cell → muscles extract more O₂ per liter of blood delivered → raises the ceiling on VO2 max</p>
+                      <p className="text-[10px] text-readable-soft leading-relaxed">More mitochondria per muscle cell → muscles extract more O₂ per liter of blood delivered → raises the ceiling on VO2 max</p>
                     </div>
                     <div className="glass rounded-lg p-3 border border-sky-500/20">
                       <p className="text-[10px] font-semibold text-sky-400 mb-1">HIIT → cardiac output<Cite id={14} /></p>
-                      <p className="text-[10px] text-white/40 leading-relaxed">4×4 intervals force the heart to pump near-maximally, enlarging stroke volume (blood per beat) — directly raising VO2 max</p>
+                      <p className="text-[10px] text-readable-soft leading-relaxed">4×4 intervals force the heart to pump near-maximally, enlarging stroke volume (blood per beat) — directly raising VO2 max</p>
                     </div>
                   </div>
                   <div className="flex items-start gap-2">
                     <Zap size={12} className="text-sky-400 shrink-0 mt-0.5" />
-                    <p className="text-[10px] text-white/40 leading-relaxed italic">
+                    <p className="text-[10px] text-readable-soft leading-relaxed italic">
                       Elite approach: 80% Zone 2 builds the mitochondrial base → 20% HIIT pushes cardiac output to the ceiling. Zone 2 without HIIT plateaus early. HIIT without a Zone 2 base produces rapid gains that stall — and injury follows. You need both, in that ratio.
                     </p>
                   </div>
@@ -1018,7 +1018,7 @@ export default function RunningClient() {
                   </span>
                 </div>
 
-                <p className="text-sm text-white/55 leading-relaxed mb-5">
+                <p className="text-sm text-readable-muted leading-relaxed mb-5">
                   For decades, lactate was blamed for the burn, for soreness, for fatigue. All of it was wrong.
                   George Brooks spent 40+ years at UC Berkeley demonstrating that <GlossaryTerm termKey="lactate">lactate</GlossaryTerm> is one of
                   the most important molecules in exercise physiology — a premium fuel, a signaling molecule, and a key
@@ -1027,7 +1027,7 @@ export default function RunningClient() {
 
                 {/* Myth vs Reality */}
                 <div className="glass rounded-xl p-4 border border-white/10 mb-5">
-                  <p className="text-xs font-semibold text-white/40 uppercase tracking-wider mb-3">The Old View vs. The Science</p>
+                  <p className="text-xs font-semibold text-readable-soft uppercase tracking-wider mb-3">The Old View vs. The Science</p>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
                       <p className="text-[10px] font-bold text-rose-400/70 uppercase tracking-wide mb-2">Old view (wrong)</p>
@@ -1041,7 +1041,7 @@ export default function RunningClient() {
                         ].map((item) => (
                           <li key={item} className="flex items-start gap-2">
                             <span className="text-rose-400 text-[10px] shrink-0 mt-0.5">✗</span>
-                            <span className="text-[10px] text-white/35 line-through decoration-rose-400/25 leading-snug">{item}</span>
+                            <span className="text-[10px] text-readable-faint line-through decoration-rose-400/25 leading-snug">{item}</span>
                           </li>
                         ))}
                       </ul>
@@ -1058,7 +1058,7 @@ export default function RunningClient() {
                         ].map((item) => (
                           <li key={item} className="flex items-start gap-2">
                             <span className="text-emerald-400 text-[10px] shrink-0 mt-0.5">✓</span>
-                            <span className="text-[10px] text-white/55 leading-snug">{item}</span>
+                            <span className="text-[10px] text-readable-muted leading-snug">{item}</span>
                           </li>
                         ))}
                       </ul>
@@ -1069,7 +1069,7 @@ export default function RunningClient() {
                 {/* What it is */}
                 <div className="glass rounded-xl p-4 border border-indigo-500/20 mb-5">
                   <p className="text-xs font-semibold text-indigo-400 mb-2">What Lactate Actually Is</p>
-                  <p className="text-xs text-white/50 leading-relaxed">
+                  <p className="text-xs text-readable-soft leading-relaxed">
                     When glucose is broken down via glycolysis, it produces pyruvate. When mitochondria
                     can&apos;t process all the pyruvate fast enough, it converts to <GlossaryTerm termKey="lactate">lactate</GlossaryTerm> — not as a failure, but as
                     a smart overflow valve. Lactate is produced continuously, even at rest. At low intensities,
@@ -1081,7 +1081,7 @@ export default function RunningClient() {
                 </div>
 
                 {/* 6 Benefits */}
-                <p className="text-xs font-semibold text-white/40 uppercase tracking-wider mb-3">
+                <p className="text-xs font-semibold text-readable-soft uppercase tracking-wider mb-3">
                   6 Benefits of Lactate During Exercise<Cite id={15} /><Cite id={16} />
                 </p>
                 <div className="space-y-2 mb-5">
@@ -1120,8 +1120,8 @@ export default function RunningClient() {
                     <div key={i} className="flex items-start gap-3 glass rounded-xl p-3.5 border border-white/8">
                       <span className="text-base shrink-0 mt-0.5">{item.icon}</span>
                       <div>
-                        <p className="text-xs font-semibold text-white/70 mb-0.5">{item.title}</p>
-                        <p className="text-xs text-white/45 leading-relaxed">{item.desc}</p>
+                        <p className="text-xs font-semibold text-readable-strong mb-0.5">{item.title}</p>
+                        <p className="text-xs text-readable-soft leading-relaxed">{item.desc}</p>
                       </div>
                     </div>
                   ))}
@@ -1142,8 +1142,8 @@ export default function RunningClient() {
                           {String(i + 1).padStart(2, "0")}
                         </span>
                         <div>
-                          <span className="text-xs font-medium text-white/65">{s.step}</span>
-                          <span className="text-xs text-white/35 ml-2">{s.detail}</span>
+                          <span className="text-xs font-medium text-readable-muted">{s.step}</span>
+                          <span className="text-xs text-readable-faint ml-2">{s.detail}</span>
                         </div>
                       </div>
                     ))}
@@ -1166,7 +1166,7 @@ export default function RunningClient() {
                   </span>
                 </div>
 
-                <p className="text-sm text-white/55 leading-relaxed mb-5">
+                <p className="text-sm text-readable-muted leading-relaxed mb-5">
                   <GlossaryTerm termKey="VO2max">VO2 max</GlossaryTerm> — your maximal oxygen consumption — is the single strongest predictor of all-cause mortality.<Cite id={10} />{" "}
                   Low fitness is a more powerful mortality predictor than smoking, hypertension, or diabetes.<Cite id={7} />{" "}
                   Every 1-MET increase in aerobic capacity is associated with{" "}
@@ -1188,7 +1188,7 @@ export default function RunningClient() {
                       <div key={row.label} className="flex items-center gap-3">
                         <div className="w-28 shrink-0">
                           <p className={`text-[10px] font-semibold ${row.textColor}`}>{row.label}</p>
-                          <p className="text-[9px] text-white/30">{row.range} ml/kg/min</p>
+                          <p className="text-[9px] text-readable-faint">{row.range} ml/kg/min</p>
                         </div>
                         <div className="flex-1">
                           <div className="h-1.5 rounded-full bg-white/8 overflow-hidden">
@@ -1201,7 +1201,7 @@ export default function RunningClient() {
                             />
                           </div>
                         </div>
-                        <span className="text-[10px] text-white/30 w-28 text-right shrink-0">{row.note}</span>
+                        <span className="text-[10px] text-readable-faint w-28 text-right shrink-0">{row.note}</span>
                       </div>
                     ))}
                   </div>
@@ -1222,8 +1222,8 @@ export default function RunningClient() {
                           {String(i + 1).padStart(2, "0")}
                         </span>
                         <div>
-                          <span className="text-xs font-medium text-white/65">{s.step}</span>
-                          <span className="text-xs text-white/35 ml-2">{s.detail}</span>
+                          <span className="text-xs font-medium text-readable-muted">{s.step}</span>
+                          <span className="text-xs text-readable-faint ml-2">{s.detail}</span>
                         </div>
                       </div>
                     ))}
@@ -1246,7 +1246,7 @@ export default function RunningClient() {
                   </span>
                 </div>
 
-                <p className="text-sm text-white/55 leading-relaxed mb-5">
+                <p className="text-sm text-readable-muted leading-relaxed mb-5">
                   Bone is living tissue that responds to mechanical stress. <GlossaryTerm termKey="boneRemodeling">Wolff&apos;s Law</GlossaryTerm> states that
                   bone adapts to the loads it bears — growing denser and stronger with repeated stress.
                   This is why <span className="text-amber-300/80 font-medium">running prevents osteoporosis</span>, not causes it.
@@ -1260,7 +1260,7 @@ export default function RunningClient() {
                       <span className="text-lg">🎾</span>
                       <p className="text-xs font-semibold text-amber-400">The Tennis Player Arm</p>
                     </div>
-                    <p className="text-xs text-white/50 leading-relaxed mb-3">
+                    <p className="text-xs text-readable-soft leading-relaxed mb-3">
                       Tennis players&apos; dominant arm bone is up to{" "}
                       <span className="text-amber-300 font-bold text-sm">40% thicker</span> than their non-dominant arm —
                       both exposed to the same nutrition, hormones, and genetics.
@@ -1269,8 +1269,8 @@ export default function RunningClient() {
                     <div className="flex items-end gap-3">
                       <div className="flex flex-col items-center">
                         <div className="w-6 bg-white/20 rounded-sm" style={{ height: "40px" }} />
-                        <p className="text-[9px] text-white/30 mt-1">Non-dom</p>
-                        <p className="text-[9px] text-white/50">baseline</p>
+                        <p className="text-[9px] text-readable-faint mt-1">Non-dom</p>
+                        <p className="text-[9px] text-readable-soft">baseline</p>
                       </div>
                       <div className="flex flex-col items-center">
                         <div className="w-8 bg-amber-400/60 rounded-sm" style={{ height: "56px" }} />
@@ -1286,12 +1286,12 @@ export default function RunningClient() {
                       <span className="text-lg">🚀</span>
                       <p className="text-xs font-semibold text-blue-400">Astronauts vs. Runners</p>
                     </div>
-                    <p className="text-xs text-white/50 leading-relaxed">
+                    <p className="text-xs text-readable-soft leading-relaxed">
                       Astronauts in microgravity lose{" "}
                       <span className="text-red-400 font-semibold">1–2% bone density per month</span> — with zero loading on their skeleton.
                       They exercise intensely but without gravity, bone still disappears.
                     </p>
-                    <p className="text-xs text-white/50 leading-relaxed mt-2">
+                    <p className="text-xs text-readable-soft leading-relaxed mt-2">
                       Regular runners, conversely, maintain and increase bone density throughout life.
                       Loading is the signal that tells the body: <em>&quot;this bone needs to be strong.&quot;</em>
                     </p>
@@ -1304,7 +1304,7 @@ export default function RunningClient() {
                     <AlertCircle size={13} className="text-amber-400 shrink-0 mt-0.5" />
                     <div>
                       <p className="text-xs font-semibold text-amber-400 mb-1">Critical Window: Children &amp; Adolescents</p>
-                      <p className="text-xs text-white/50 leading-relaxed">
+                      <p className="text-xs text-readable-soft leading-relaxed">
                         Daniel Lieberman emphasizes that{" "}
                         <span className="text-amber-300 font-medium">children need at least 1 hour of vigorous physical activity daily</span>{" "}
                         for proper bone and skeletal development. The bone mass accumulated during childhood and adolescence is the largest predictor of osteoporosis risk in old age.
@@ -1330,7 +1330,7 @@ export default function RunningClient() {
                   </span>
                 </div>
 
-                <p className="text-sm text-white/55 leading-relaxed mb-5">
+                <p className="text-sm text-readable-muted leading-relaxed mb-5">
                   The fear of running has it completely backwards. The danger isn&apos;t running — it&apos;s sitting.
                   Prolonged sitting is independently associated with all-cause mortality<Cite id={5} /> <em>regardless</em>{" "}
                   of how much you exercise at other times. You cannot exercise your way out of 10 hours of sitting per day.
@@ -1379,7 +1379,7 @@ export default function RunningClient() {
                           {side.stats.map((s) => (
                             <li key={s} className="flex items-start gap-2">
                               <span className={`${side.statColor} text-xs shrink-0 mt-0.5`}>•</span>
-                              <span className="text-xs text-white/50">{s}</span>
+                              <span className="text-xs text-readable-soft">{s}</span>
                             </li>
                           ))}
                         </ul>
@@ -1398,8 +1398,8 @@ export default function RunningClient() {
                     <div key={tip.title} className="flex items-start gap-3 glass rounded-xl p-3.5 border border-white/8">
                       <span className="text-base shrink-0">{tip.emoji}</span>
                       <div>
-                        <p className="text-xs font-semibold text-white/70 mb-0.5">{tip.title}</p>
-                        <p className="text-xs text-white/40 leading-relaxed">{tip.desc}</p>
+                        <p className="text-xs font-semibold text-readable-strong mb-0.5">{tip.title}</p>
+                        <p className="text-xs text-readable-soft leading-relaxed">{tip.desc}</p>
                       </div>
                     </div>
                   ))}
@@ -1410,7 +1410,7 @@ export default function RunningClient() {
                     <AlertCircle size={13} className="text-red-400 shrink-0 mt-0.5" />
                     <div>
                       <p className="text-xs font-semibold text-red-400 mb-1">Dis-Evolution: Why Mismatch Diseases Keep Rising</p>
-                      <p className="text-xs text-white/50 leading-relaxed">
+                      <p className="text-xs text-readable-soft leading-relaxed">
                         Lieberman coined <span className="text-red-300 font-medium">dis-evolution</span> — when treating the symptoms of mismatch diseases removes the pressure to fix their cause.
                         Pills for hypertension, statins for cholesterol, metformin for diabetes keep people alive without resolving the mismatch.
                         Heart disease kills <span className="text-red-300 font-medium">~1 in 3</span> people in the Western world yet is essentially absent in active hunter-gatherer populations like the Tsimane of the Amazon.
@@ -1450,8 +1450,8 @@ export default function RunningClient() {
                         <div key={item.cue} className="flex items-start gap-2">
                           <span className="text-violet-400 text-xs shrink-0 mt-0.5">→</span>
                           <div>
-                            <span className="text-xs font-medium text-white/65">{item.cue}</span>
-                            <p className="text-[10px] text-white/35 leading-relaxed">{item.why}</p>
+                            <span className="text-xs font-medium text-readable-muted">{item.cue}</span>
+                            <p className="text-[10px] text-readable-faint leading-relaxed">{item.why}</p>
                           </div>
                         </div>
                       ))}
@@ -1470,7 +1470,7 @@ export default function RunningClient() {
                       ].map((item) => (
                         <div key={item.injury} className="glass rounded-lg p-3 border border-violet-500/15">
                           <p className="text-[10px] font-semibold text-violet-300/80 mb-0.5">{item.injury}</p>
-                          <p className="text-[10px] text-white/40 leading-relaxed">{item.fix}</p>
+                          <p className="text-[10px] text-readable-soft leading-relaxed">{item.fix}</p>
                         </div>
                       ))}
                     </div>
@@ -1479,7 +1479,7 @@ export default function RunningClient() {
 
                 <div className="glass rounded-xl p-4 border border-violet-500/20 bg-violet-500/5">
                   <p className="text-xs font-semibold text-violet-400 mb-1">The 10% Rule</p>
-                  <p className="text-xs text-white/50 leading-relaxed">
+                  <p className="text-xs text-readable-soft leading-relaxed">
                     Most running injuries are not caused by running itself — they&apos;re caused by
                     <span className="text-violet-300 font-medium"> doing too much too soon</span>.
                     Never increase total weekly mileage by more than 10% per week.
@@ -1512,7 +1512,7 @@ export default function RunningClient() {
                         [{study.id}]
                       </span>
                       <div className="flex-1 flex items-start justify-between gap-2">
-                        <p className="text-xs font-medium text-white/70 leading-snug group-hover:text-white/90 transition-colors">
+                        <p className="text-xs font-medium text-readable-strong leading-snug group-hover:text-white/90 transition-colors">
                           {study.title}
                         </p>
                         <ExternalLink size={11} className="text-white/20 group-hover:text-emerald-400 transition-colors shrink-0 mt-0.5" />
@@ -1521,15 +1521,15 @@ export default function RunningClient() {
                     <p className="text-[10px] text-emerald-400/60 mb-1.5 pl-8">
                       {study.journal} · {study.year}
                     </p>
-                    <p className="text-[10px] text-white/40 leading-relaxed pl-8">{study.summary}</p>
+                    <p className="text-[10px] text-readable-soft leading-relaxed pl-8">{study.summary}</p>
                   </a>
                 ))}
               </div>
 
               <div className="border-t border-white/8 pt-5">
                 <div className="flex items-center gap-2 mb-3">
-                  <Users size={13} className="text-white/40" />
-                  <p className="text-xs font-semibold text-white/50">Expert Contributors</p>
+                  <Users size={13} className="text-readable-soft" />
+                  <p className="text-xs font-semibold text-readable-soft">Expert Contributors</p>
                 </div>
                 <div className="space-y-2">
                   {contributors.map((c) => (
@@ -1538,13 +1538,13 @@ export default function RunningClient() {
                         <span className="text-[10px] font-bold text-emerald-400/70">{c.initials}</span>
                       </div>
                       <div>
-                        <p className="text-xs font-semibold text-white/70">{c.name}</p>
+                        <p className="text-xs font-semibold text-readable-strong">{c.name}</p>
                         <p className="text-[10px] text-emerald-400/60">{c.credentials} · {c.affiliation}</p>
-                        <p className="text-[10px] text-white/35 mt-0.5">{c.focus}</p>
+                        <p className="text-[10px] text-readable-faint mt-0.5">{c.focus}</p>
                       </div>
                     </div>
                   ))}
-                  <p className="text-[10px] text-white/25 italic pl-1">Additional experts and sources will be cited as content expands.</p>
+                  <p className="text-[10px] text-readable-faint italic pl-1">Additional experts and sources will be cited as content expands.</p>
                 </div>
               </div>
             </div>
@@ -1585,10 +1585,10 @@ export default function RunningClient() {
                     onClick={() => setActiveGlossary(null)}
                     className="w-8 h-8 rounded-full bg-white/8 hover:bg-white/15 transition-colors flex items-center justify-center shrink-0 mt-1"
                   >
-                    <X size={14} className="text-white/60" />
+                    <X size={14} className="text-readable-muted" />
                   </button>
                 </div>
-                <p className="text-sm text-white/60 leading-relaxed mb-4">
+                <p className="text-sm text-readable-muted leading-relaxed mb-4">
                   {activeGlossaryEntry.body}
                 </p>
                 {activeGlossaryEntry.learnMore && (
