@@ -1,6 +1,6 @@
 "use client";
 
-import { createContext, useContext, useRef, useState } from "react";
+import { createContext, useCallback, useContext, useEffect, useRef, useState } from "react";
 import { motion, useInView, AnimatePresence } from "framer-motion";
 import Link from "next/link";
 import {
@@ -799,6 +799,368 @@ const consequenceWindows = [
   },
 ] as const;
 
+// ─── Meal Response Chart ──────────────────────────────────────────────────────
+const mealProfiles = {
+  highCarb: {
+    label: "High-Carb Meal",
+    emoji: "🍞",
+    accentColor: "#f87171",
+    badgeClass: "bg-red-500/15 text-red-300 border-red-500/25",
+    glucose: [70, 72, 100, 148, 172, 158, 132, 105, 85, 72, 68, 70],
+    insulin: [5, 8, 22, 52, 68, 62, 44, 26, 13, 7, 5, 5],
+    note: "Rapid spike → large insulin surge → crash → hunger returns within 2 hours",
+  },
+  protein: {
+    label: "Protein + Fat",
+    emoji: "🥩",
+    accentColor: "#34d399",
+    badgeClass: "bg-emerald-500/15 text-emerald-300 border-emerald-500/25",
+    glucose: [70, 71, 76, 84, 90, 89, 86, 82, 77, 73, 71, 70],
+    insulin: [5, 6, 13, 22, 28, 26, 22, 18, 13, 9, 7, 5],
+    note: "Gentle, sustained rise → modest insulin → no crash → stable energy for hours",
+  },
+  mixed: {
+    label: "Mixed (fiber + protein)",
+    emoji: "🥗",
+    accentColor: "#fbbf24",
+    badgeClass: "bg-amber-500/15 text-amber-300 border-amber-500/25",
+    glucose: [70, 71, 82, 108, 122, 116, 104, 92, 82, 75, 72, 70],
+    insulin: [5, 6, 15, 33, 43, 39, 30, 20, 11, 7, 5, 5],
+    note: "Fiber + protein slow glucose absorption — moderate response, modest crash risk",
+  },
+} as const;
+
+type MealKey = keyof typeof mealProfiles;
+
+const timeLabels = ["0m", "15m", "30m", "45m", "1h", "1.25h", "1.5h", "2h", "2.5h", "3h", "3.5h", "4h"];
+
+function MealResponseChart() {
+  const [activeMeal, setActiveMeal] = useState<MealKey>("highCarb");
+  const [animKey, setAnimKey] = useState(0);
+  const meal = mealProfiles[activeMeal];
+  const W = 420, H = 200, PX = 40, PY = 16;
+  const minG = 55, maxG = 185;
+  const minI = 0, maxI = 80;
+  const xStep = (W - PX * 2) / (meal.glucose.length - 1);
+
+  const toX = (i: number) => PX + i * xStep;
+  const toYg = (v: number) => H - PY - ((v - minG) / (maxG - minG)) * (H - PY * 2);
+  const toYi = (v: number) => H - PY - ((v - minI) / (maxI - minI)) * (H - PY * 2);
+
+  const glucosePath = meal.glucose.map((v, i) => `${i === 0 ? "M" : "L"} ${toX(i)} ${toYg(v)}`).join(" ");
+  const insulinPath = meal.insulin.map((v, i) => `${i === 0 ? "M" : "L"} ${toX(i)} ${toYi(v)}`).join(" ");
+
+  const handleMealChange = useCallback((key: MealKey) => {
+    setActiveMeal(key);
+    setAnimKey((k) => k + 1);
+  }, []);
+
+  return (
+    <div className="glass rounded-2xl p-6 border border-amber-500/20 relative overflow-hidden">
+      <div className="absolute inset-0 bg-gradient-to-br from-amber-500/6 to-transparent pointer-events-none" />
+      <div className="relative">
+        <div className="flex flex-wrap items-center gap-2 mb-2">
+          <span className="text-base">📈</span>
+          <h2 className="text-base font-semibold text-white">Glucose & Insulin Response After a Meal</h2>
+          <span className="text-[10px] px-2 py-0.5 rounded-full border bg-amber-500/10 text-amber-300/80 border-amber-500/15">Live Chart</span>
+        </div>
+        <p className="text-sm text-readable-soft leading-relaxed mb-4">
+          Select a meal type to see how blood glucose and insulin respond over 4 hours. The shape of this curve determines whether you&apos;ll feel energized or crash and crave more food.
+        </p>
+
+        <div className="flex flex-wrap gap-2 mb-4">
+          {(Object.keys(mealProfiles) as MealKey[]).map((key) => {
+            const p = mealProfiles[key];
+            return (
+              <button
+                key={key}
+                onClick={() => handleMealChange(key)}
+                className={`glass rounded-full border px-3 py-1.5 text-xs font-medium transition-all duration-200 ${
+                  activeMeal === key ? p.badgeClass : "border-white/8 text-readable-soft hover:border-white/15"
+                }`}
+              >
+                {p.emoji} {p.label}
+              </button>
+            );
+          })}
+        </div>
+
+        <div className="relative overflow-hidden rounded-2xl border border-white/8 bg-[radial-gradient(circle_at_top,rgba(255,255,255,0.04),transparent_60%)] p-3 mb-4">
+          <div className="flex gap-4 mb-2 px-1">
+            <div className="flex items-center gap-1.5">
+              <span className="w-5 h-[3px] rounded-full" style={{ backgroundColor: meal.accentColor }} />
+              <span className="text-[10px] text-readable-faint">Blood Glucose (mg/dL)</span>
+            </div>
+            <div className="flex items-center gap-1.5">
+              <span className="w-5 h-[2px] rounded-full border-t-2 border-dashed" style={{ borderColor: "rgba(148,163,184,0.5)" }} />
+              <span className="text-[10px] text-readable-faint">Insulin (μU/mL, relative)</span>
+            </div>
+          </div>
+
+          <svg viewBox={`0 0 ${W} ${H}`} className="w-full h-auto">
+            {/* horizontal gridlines */}
+            {[minG, 100, 140, maxG].map((v) => {
+              const y = toYg(v);
+              const isTarget = v === 100 || v === 140;
+              return (
+                <g key={v}>
+                  <line x1={PX} x2={W - PX} y1={y} y2={y}
+                    stroke={isTarget ? "rgba(255,255,255,0.12)" : "rgba(255,255,255,0.05)"}
+                    strokeDasharray={isTarget ? "4 5" : undefined} />
+                  {isTarget && (
+                    <text x={PX - 3} y={y + 4} textAnchor="end" fill="rgba(232,232,240,0.38)" fontSize="9">
+                      {v}
+                    </text>
+                  )}
+                </g>
+              );
+            })}
+
+            {/* crash zone shading */}
+            {activeMeal === "highCarb" && (
+              <rect
+                x={toX(7)} y={toYg(85)} width={toX(9) - toX(7)} height={toYg(65) - toYg(85)}
+                fill="rgba(248,113,113,0.08)" rx="2"
+              />
+            )}
+
+            {/* x-axis labels */}
+            {timeLabels.filter((_, i) => i % 2 === 0).map((label, idx) => {
+              const i = idx * 2;
+              return (
+                <text key={label} x={toX(i)} y={H - 1} textAnchor="middle"
+                  fill="rgba(232,232,240,0.35)" fontSize="9">
+                  {label}
+                </text>
+              );
+            })}
+
+            {/* fasting line */}
+            <line x1={PX} x2={W - PX} y1={toYg(70)} y2={toYg(70)}
+              stroke="rgba(255,255,255,0.08)" strokeDasharray="2 4" />
+            <text x={W - PX + 3} y={toYg(70) + 4} fill="rgba(232,232,240,0.3)" fontSize="8">Fast</text>
+
+            {/* insulin path (dashed) */}
+            <motion.path
+              key={`insulin-${animKey}`}
+              d={insulinPath}
+              fill="none"
+              stroke="rgba(148,163,184,0.5)"
+              strokeWidth="2"
+              strokeDasharray="5 4"
+              strokeLinecap="round"
+              initial={{ pathLength: 0, opacity: 0 }}
+              animate={{ pathLength: 1, opacity: 1 }}
+              transition={{ duration: 1.4, ease: "easeInOut" }}
+            />
+
+            {/* glucose path */}
+            <motion.path
+              key={`glucose-${animKey}`}
+              d={glucosePath}
+              fill="none"
+              stroke={meal.accentColor}
+              strokeWidth="2.5"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              initial={{ pathLength: 0, opacity: 0 }}
+              animate={{ pathLength: 1, opacity: 0.9 }}
+              transition={{ duration: 1.2, ease: "easeInOut" }}
+            />
+
+            {/* peak dot */}
+            {(() => {
+              const peakIdx = meal.glucose.reduce((mi, v, i, a) => (v > a[mi] ? i : mi), 0);
+              return (
+                <motion.circle
+                  key={`peak-${animKey}`}
+                  cx={toX(peakIdx)} cy={toYg(meal.glucose[peakIdx])} r={5}
+                  fill={meal.accentColor} stroke="rgba(13,13,15,0.9)" strokeWidth="2"
+                  initial={{ scale: 0 }}
+                  animate={{ scale: 1 }}
+                  transition={{ delay: 0.6, type: "spring", stiffness: 260, damping: 18 }}
+                />
+              );
+            })()}
+          </svg>
+        </div>
+
+        <div className="glass rounded-xl p-3.5 border border-white/8">
+          <AnimatePresence mode="wait">
+            <motion.p
+              key={activeMeal}
+              initial={{ opacity: 0, y: 6 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -4 }}
+              transition={{ duration: 0.2 }}
+              className="text-xs text-readable-soft leading-relaxed"
+            >
+              <span style={{ color: meal.accentColor }} className="font-medium">{meal.emoji} {meal.label}:</span>{" "}
+              {meal.note}
+            </motion.p>
+          </AnimatePresence>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ─── GLUT4 Cell Animation ──────────────────────────────────────────────────────
+function GLUT4Animation() {
+  const [phase, setPhase] = useState<"resting" | "insulin" | "exercise">("resting");
+  const [glucoseDots, setGlucoseDots] = useState<{ id: number; x: number; y: number; entering: boolean }[]>([]);
+  const nextId = useRef(0);
+
+  const isActive = phase !== "resting";
+
+  useEffect(() => {
+    if (!isActive) {
+      setGlucoseDots([]);
+      return;
+    }
+    const outside = Array.from({ length: 6 }, (_, i) => ({
+      id: nextId.current++,
+      x: 20 + (i % 3) * 28,
+      y: 30 + Math.floor(i / 3) * 30,
+      entering: false,
+    }));
+    setGlucoseDots(outside);
+
+    const t = setTimeout(() => {
+      setGlucoseDots((prev) => prev.map((d) => ({ ...d, entering: true })));
+    }, 800);
+    return () => clearTimeout(t);
+  }, [phase, isActive]);
+
+  const transporterCount = phase === "insulin" ? 4 : phase === "exercise" ? 6 : 0;
+
+  return (
+    <div className="glass rounded-2xl p-5 border border-emerald-500/20 relative overflow-hidden">
+      <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/6 to-transparent pointer-events-none" />
+      <div className="relative">
+        <div className="flex flex-wrap items-center gap-2 mb-3">
+          <span className="text-base">🔬</span>
+          <h3 className="text-sm font-semibold text-white">GLUT4 Transport: Inside a Muscle Cell</h3>
+          <span className="text-[10px] px-2 py-0.5 rounded-full border bg-emerald-500/10 text-emerald-300/80 border-emerald-500/15">Animation</span>
+        </div>
+        <p className="text-xs text-readable-soft leading-relaxed mb-4">
+          GLUT4 transporters normally hide inside the cell. Both insulin AND muscle contractions signal them to move to the cell surface — opening the &ldquo;door&rdquo; for glucose entry.
+        </p>
+
+        <div className="flex flex-wrap gap-2 mb-4">
+          {(["resting", "insulin", "exercise"] as const).map((p) => (
+            <button
+              key={p}
+              onClick={() => setPhase(p)}
+              className={`glass rounded-full border px-3 py-1.5 text-xs font-medium transition-all duration-200 capitalize ${
+                phase === p
+                  ? p === "resting"
+                    ? "border-white/20 text-white bg-white/[0.05]"
+                    : p === "insulin"
+                    ? "border-amber-500/30 text-amber-300 bg-amber-500/10"
+                    : "border-emerald-500/30 text-emerald-300 bg-emerald-500/10"
+                  : "border-white/8 text-readable-soft hover:border-white/15"
+              }`}
+            >
+              {p === "resting" ? "😴 Resting" : p === "insulin" ? "💉 Insulin Signal" : "💪 Muscle Contraction"}
+            </button>
+          ))}
+        </div>
+
+        <div className="relative rounded-2xl border border-white/8 bg-[radial-gradient(ellipse_at_center,rgba(16,24,18,0.9),rgba(10,12,14,0.95))] overflow-hidden" style={{ height: 200 }}>
+          <svg viewBox="0 0 280 180" className="w-full h-full">
+            {/* Extracellular space label */}
+            <text x="14" y="14" fill="rgba(232,232,240,0.3)" fontSize="8">Extracellular</text>
+
+            {/* Cell membrane */}
+            <ellipse cx="140" cy="135" rx="110" ry="52"
+              fill="rgba(16,28,22,0.85)" stroke="rgba(52,211,153,0.35)" strokeWidth="2" />
+
+            {/* Intracellular label */}
+            <text x="105" y="150" fill="rgba(52,211,153,0.4)" fontSize="8">Muscle Cell</text>
+
+            {/* GLUT4 transporters on membrane */}
+            {Array.from({ length: transporterCount }).map((_, i) => {
+              const angle = (Math.PI * (i + 0.5)) / transporterCount;
+              const cx = 140 + 110 * Math.cos(angle) * 0.95;
+              const cy = 135 - 52 * Math.sin(angle) * 0.95;
+              return (
+                <motion.g key={`glut4-${phase}-${i}`}
+                  initial={{ scale: 0, opacity: 0 }}
+                  animate={{ scale: 1, opacity: 1 }}
+                  transition={{ delay: 0.1 + i * 0.12, type: "spring", stiffness: 280, damping: 20 }}>
+                  <rect x={cx - 7} y={cy - 9} width="14" height="18" rx="4"
+                    fill="rgba(251,191,36,0.7)" stroke="rgba(251,191,36,0.9)" strokeWidth="1" />
+                  <text x={cx} y={cy + 4} textAnchor="middle" fill="rgba(0,0,0,0.8)" fontSize="6" fontWeight="bold">G4</text>
+                </motion.g>
+              );
+            })}
+
+            {/* Resting GLUT4 inside cell */}
+            {phase === "resting" && [1, 2, 3].map((_, i) => (
+              <g key={`inner-${i}`}>
+                <rect x={100 + i * 26} y={130} width="14" height="14" rx="3"
+                  fill="rgba(251,191,36,0.2)" stroke="rgba(251,191,36,0.3)" strokeWidth="1" />
+                <text x={107 + i * 26} y={141} textAnchor="middle" fill="rgba(251,191,36,0.5)" fontSize="6" fontWeight="bold">G4</text>
+              </g>
+            ))}
+
+            {/* Glucose molecules */}
+            {glucoseDots.map((dot) => (
+              <motion.g key={dot.id}
+                initial={{ x: dot.x, y: dot.y, opacity: 1, scale: 1 }}
+                animate={dot.entering
+                  ? { x: 140, y: 135, opacity: 0, scale: 0.3 }
+                  : { x: dot.x, y: dot.y, opacity: 1, scale: 1 }}
+                transition={dot.entering
+                  ? { duration: 0.8, delay: Math.random() * 0.4, ease: "easeIn" }
+                  : { duration: 0 }}>
+                <circle r="9" fill="rgba(251,191,36,0.15)" stroke="rgba(251,191,36,0.6)" strokeWidth="1.5" />
+                <text y="4" textAnchor="middle" fill="rgba(251,191,36,0.9)" fontSize="8" fontWeight="bold">G</text>
+              </motion.g>
+            ))}
+
+            {/* No signal message */}
+            {phase === "resting" && (
+              <text x="140" y="88" textAnchor="middle" fill="rgba(232,232,240,0.35)" fontSize="9">
+                GLUT4 stored inside • glucose waiting outside
+              </text>
+            )}
+
+            {/* Exercise lightning bolts */}
+            {phase === "exercise" && [50, 90, 180, 220].map((x, i) => (
+              <motion.text key={i} x={x} y={22 + (i % 2) * 12}
+                fill="rgba(52,211,153,0.7)" fontSize="12"
+                initial={{ opacity: 0, y: 30 }}
+                animate={{ opacity: [0, 1, 0.7], y: [30, 20, 22] }}
+                transition={{ delay: i * 0.15, duration: 0.5, repeat: Infinity, repeatDelay: 1.5 }}>
+                ⚡
+              </motion.text>
+            ))}
+          </svg>
+        </div>
+
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={phase}
+            initial={{ opacity: 0, y: 6 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -4 }}
+            transition={{ duration: 0.2 }}
+            className="mt-3 glass rounded-xl p-3 border border-white/8"
+          >
+            <p className="text-xs text-readable-soft leading-relaxed">
+              {phase === "resting" && <><span className="text-white/70 font-medium">Resting:</span> GLUT4 transporters are stored inside the cell. Glucose floats outside waiting — but the door is closed.</>}
+              {phase === "insulin" && <><span className="text-amber-300 font-medium">Insulin signal:</span> Insulin binds to receptors on the cell surface. This triggers a cascade that moves GLUT4 to the membrane — glucose rushes in. In insulin resistance, this signal is impaired.</>}
+              {phase === "exercise" && <><span className="text-emerald-300 font-medium">Muscle contraction:</span> When you contract a muscle, it triggers GLUT4 movement <em>independently of insulin</em> — via AMPK signaling. This is why exercise lowers blood sugar even in the presence of insulin resistance.</>}
+            </p>
+          </motion.div>
+        </AnimatePresence>
+      </div>
+    </div>
+  );
+}
+
 // ─── Page ─────────────────────────────────────────────────────────────────────
 export default function InsulinClient() {
   const [expandedPillar, setExpandedPillar] = useState<number | null>(null);
@@ -958,6 +1320,11 @@ export default function InsulinClient() {
                 </div>
               </div>
             </div>
+          </Section>
+
+          {/* Meal Response Chart */}
+          <Section>
+            <MealResponseChart />
           </Section>
 
           {/* Damage Map */}
@@ -1870,6 +2237,11 @@ export default function InsulinClient() {
                 </div>
               </div>
             </div>
+          </Section>
+
+          {/* GLUT4 Animation */}
+          <Section>
+            <GLUT4Animation />
           </Section>
 
           {/* Post-Meal Glucose Hacks */}
