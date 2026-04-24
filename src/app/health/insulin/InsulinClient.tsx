@@ -350,6 +350,44 @@ const surprisingTriggers: { emoji: string; title: string; desc: React.ReactNode 
   },
 ];
 
+const insulinMisconceptions: {
+  myth: string;
+  reality: React.ReactNode;
+  border: string;
+  labelClass: string;
+}[] = [
+  {
+    myth: "Insulin is inherently bad.",
+    reality: <>Insulin is essential for life. It moves nutrients where they need to go and helps regulate glucose, amino acid handling, and energy storage. The real problem is <span className="text-white/75 font-medium">chronic hyperinsulinemia</span> and loss of insulin sensitivity, not insulin itself.<Cite id={9} /></>,
+    border: "border-amber-500/20",
+    labelClass: "text-amber-400",
+  },
+  {
+    myth: "If fasting glucose is normal, insulin is probably normal too.",
+    reality: <>Not necessarily. Insulin can stay elevated for years while fasting glucose still looks “normal.” That silent compensatory phase is why fasting insulin and <GlossaryTerm termKey="homaScore">HOMA-IR</GlossaryTerm> are much better early warning markers.<Cite id={9} /></>,
+    border: "border-orange-500/20",
+    labelClass: "text-orange-400",
+  },
+  {
+    myth: "Every insulin spike is harmful.",
+    reality: <>Context matters. A short-lived rise after protein is not the same as all-day elevated baseline insulin. In whey studies, insulin increased while post-meal glucose exposure fell, and human muscle data show insulin also supports amino acid transport and recovery signaling.<Cite id={11} /><Cite id={12} /><Cite id={13} /><Cite id={14} /></>,
+    border: "border-teal-500/20",
+    labelClass: "text-teal-400",
+  },
+  {
+    myth: "Only people with obvious obesity become insulin resistant.",
+    reality: <>Body size is an imperfect proxy. Visceral fat, low muscle mass, inflammation, poor sleep, chronic stress, and ethnicity all change risk. You can have a “normal” BMI and still be metabolically unhealthy if tissue function and fat distribution are poor.<Cite id={2} /></>,
+    border: "border-violet-500/20",
+    labelClass: "text-violet-400",
+  },
+  {
+    myth: "Exercise only helps because it burns calories.",
+    reality: <>Muscle contractions improve glucose disposal directly. During movement, <GlossaryTerm termKey="glut4">GLUT4</GlossaryTerm> transporters move to the cell surface independently of insulin, which is why walking and resistance training can improve control even before meaningful fat loss happens.<Cite id={3} /></>,
+    border: "border-emerald-500/20",
+    labelClass: "text-emerald-400",
+  },
+];
+
 const studies = [
   {
     id: 1,
@@ -2579,6 +2617,36 @@ export default function InsulinClient() {
                       Go deeper on diet architecture <ChevronRight size={12} className="group-hover:translate-x-0.5 transition-transform" />
                     </Link>
                   </div>
+                </div>
+              </div>
+            </div>
+          </Section>
+
+          {/* Misconceptions */}
+          <Section>
+            <div className="glass rounded-2xl p-6 border border-white/10 relative overflow-hidden">
+              <div className="absolute inset-0 bg-gradient-to-br from-amber-500/6 via-transparent to-sky-500/6 pointer-events-none" />
+              <div className="relative">
+                <div className="flex flex-wrap items-center gap-2 mb-4">
+                  <AlertCircle size={16} className="text-amber-400" />
+                  <h2 className="text-base font-semibold text-white">Common Misconceptions About Insulin</h2>
+                  <span className="text-[10px] px-2 py-0.5 rounded-full border bg-amber-500/10 text-amber-300/80 border-amber-500/15">
+                    Debunked
+                  </span>
+                </div>
+                <p className="text-sm text-readable-soft leading-relaxed mb-5">
+                  A lot of bad insulin advice comes from treating every insulin signal like the same thing.
+                  These are the myths that create the most confusion.
+                </p>
+                <div className="grid grid-cols-1 gap-3">
+                  {insulinMisconceptions.map((item) => (
+                    <div key={item.myth} className={`glass rounded-xl p-4 border ${item.border}`}>
+                      <p className={`text-[10px] font-semibold uppercase tracking-[0.18em] ${item.labelClass} mb-2`}>Misconception</p>
+                      <p className="text-sm font-semibold text-white/85 mb-3">{item.myth}</p>
+                      <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-readable-faint mb-2">Reality</p>
+                      <p className="text-xs text-readable-soft leading-relaxed">{item.reality}</p>
+                    </div>
+                  ))}
                 </div>
               </div>
             </div>
