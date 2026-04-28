@@ -1,6 +1,6 @@
 "use client";
 
-import { createContext, useContext, useRef, useState } from "react";
+import { createContext, useCallback, useContext, useEffect, useRef, useState } from "react";
 import { motion, useInView, AnimatePresence } from "framer-motion";
 import Link from "next/link";
 import {
@@ -426,6 +426,424 @@ const contributors = [
     focus: "MAF Method (Maximum Aerobic Function); Zone 2 training protocols; fat adaptation and aerobic base building for endurance athletes",
   },
 ];
+
+// ─── Zone 2 HR Calculator ─────────────────────────────────────────────────────
+function Zone2Calculator() {
+  const [age, setAge] = useState(30);
+  const maxHR = 220 - age;
+  const z2Low = Math.round(maxHR * 0.60);
+  const z2High = Math.round(maxHR * 0.70);
+  const zones = [
+    { label: "Z1", low: Math.round(maxHR * 0.50), high: Math.round(maxHR * 0.60), color: "bg-blue-500", textColor: "text-blue-400", pct: 50 },
+    { label: "Z2", low: z2Low, high: z2High, color: "bg-emerald-500", textColor: "text-emerald-400", pct: 80, highlight: true },
+    { label: "Z3", low: Math.round(maxHR * 0.70), high: Math.round(maxHR * 0.80), color: "bg-yellow-500", textColor: "text-yellow-400", pct: 45 },
+    { label: "Z4", low: Math.round(maxHR * 0.80), high: Math.round(maxHR * 0.90), color: "bg-orange-500", textColor: "text-orange-400", pct: 35 },
+    { label: "Z5", low: Math.round(maxHR * 0.90), high: maxHR, color: "bg-red-500", textColor: "text-red-400", pct: 20 },
+  ];
+
+  return (
+    <div className="glass rounded-2xl p-5 border border-emerald-500/20 relative overflow-hidden">
+      <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/6 to-transparent pointer-events-none" />
+      <div className="relative">
+        <div className="flex flex-wrap items-center gap-2 mb-3">
+          <span className="text-base">💓</span>
+          <h3 className="text-sm font-semibold text-white">Your Zone 2 Heart Rate — Live Calculator</h3>
+          <span className="text-[10px] px-2 py-0.5 rounded-full border bg-emerald-500/10 text-emerald-300/80 border-emerald-500/15">Interactive</span>
+        </div>
+        <p className="text-xs text-readable-soft leading-relaxed mb-4">
+          Drag the slider to your age. Your Zone 2 range updates instantly. This is the bpm you should stay inside for 80% of your training volume.
+        </p>
+
+        <div className="mb-5">
+          <div className="flex items-center justify-between mb-2">
+            <span className="text-xs text-readable-soft">Age: <span className="text-white font-semibold">{age}</span></span>
+            <span className="text-xs text-readable-faint">Est. max HR: <span className="text-white/70 font-medium">{maxHR} bpm</span></span>
+          </div>
+          <input
+            type="range" min={18} max={75} value={age}
+            onChange={(e) => setAge(Number(e.target.value))}
+            className="w-full h-2 rounded-full appearance-none cursor-pointer"
+            style={{ background: `linear-gradient(to right, #34d399 0%, #34d399 ${((age - 18) / (75 - 18)) * 100}%, rgba(255,255,255,0.1) ${((age - 18) / (75 - 18)) * 100}%, rgba(255,255,255,0.1) 100%)` }}
+          />
+          <div className="flex justify-between text-[9px] text-readable-faint mt-1">
+            <span>18</span><span>75</span>
+          </div>
+        </div>
+
+        {/* Zone 2 hero */}
+        <motion.div
+          key={`z2-${age}`}
+          initial={{ scale: 0.97, opacity: 0.7 }}
+          animate={{ scale: 1, opacity: 1 }}
+          transition={{ type: "spring", stiffness: 260, damping: 22 }}
+          className="glass rounded-2xl p-4 border border-emerald-500/35 bg-emerald-500/8 mb-4 text-center"
+        >
+          <p className="text-[10px] text-emerald-400/70 uppercase tracking-widest mb-1">Your Zone 2 Target</p>
+          <p className="text-3xl font-bold text-emerald-400">{z2Low}–{z2High} <span className="text-base font-normal text-readable-faint">bpm</span></p>
+          <p className="text-[10px] text-readable-faint mt-1">Stay here for conversational-pace running · 80% of training volume</p>
+        </motion.div>
+
+        {/* All zones */}
+        <div className="space-y-2">
+          {zones.map((z) => (
+            <div key={z.label} className={`flex items-center gap-3 rounded-xl p-2.5 transition-all ${z.highlight ? "glass border border-emerald-500/20 bg-emerald-500/5" : ""}`}>
+              <span className={`text-[10px] font-bold w-5 ${z.textColor}`}>{z.label}</span>
+              <div className="flex-1">
+                <div className="h-2 rounded-full bg-white/8 overflow-hidden">
+                  <motion.div
+                    className={`h-full ${z.color} ${z.highlight ? "opacity-80" : "opacity-40"} rounded-full`}
+                    key={`bar-${z.label}-${age}`}
+                    initial={{ width: 0 }}
+                    animate={{ width: `${z.pct}%` }}
+                    transition={{ duration: 0.5, ease: "easeOut" }}
+                  />
+                </div>
+              </div>
+              <span className={`text-[10px] font-medium tabular-nums ${z.highlight ? "text-emerald-300" : "text-readable-faint"}`}>
+                {z.low}–{z.high}
+              </span>
+            </div>
+          ))}
+        </div>
+        <p className="text-[9px] text-readable-faint mt-3 italic">Formula: 220 − age = estimated max HR. For precision, use a lab VO2 max test or the talk-test method during running.</p>
+      </div>
+    </div>
+  );
+}
+
+// ─── Lactate Curve Chart ──────────────────────────────────────────────────────
+function LactateCurveChart() {
+  const [view, setView] = useState<"trained" | "untrained" | "both">("both");
+  const W = 380, H = 200, PX = 36, PY = 16;
+
+  // x = intensity % (0–100), y = blood lactate mmol/L (0–12)
+  const untrainedPoints = [[0,1],[15,1.1],[30,1.3],[45,1.8],[55,2.8],[65,4.5],[75,7],[85,10],[95,12]];
+  const trainedPoints   = [[0,0.8],[20,0.9],[40,1.0],[55,1.2],[65,1.7],[73,2.2],[80,3.5],[88,6],[95,10]];
+
+  const toX = (pct: number) => PX + (pct / 100) * (W - PX * 2);
+  const toY = (mmol: number) => H - PY - (mmol / 12) * (H - PY * 2);
+
+  const makePath = (pts: number[][]) =>
+    pts.map(([x, y], i) => `${i === 0 ? "M" : "L"} ${toX(x)} ${toY(y)}`).join(" ");
+
+  // LT1 and LT2 markers
+  const lt1Untrained = toX(45);
+  const lt2Untrained = toX(65);
+  const lt1Trained = toX(65);
+  const lt2Trained = toX(80);
+
+  return (
+    <div className="glass rounded-2xl p-5 border border-indigo-500/20 relative overflow-hidden">
+      <div className="absolute inset-0 bg-gradient-to-br from-indigo-500/6 to-transparent pointer-events-none" />
+      <div className="relative">
+        <div className="flex flex-wrap items-center gap-2 mb-2">
+          <span className="text-base">📊</span>
+          <h3 className="text-sm font-semibold text-white">The Lactate Curve: Trained vs. Untrained</h3>
+          <span className="text-[10px] px-2 py-0.5 rounded-full border bg-indigo-500/10 text-indigo-300/80 border-indigo-500/15">Animated Chart</span>
+        </div>
+        <p className="text-xs text-readable-soft leading-relaxed mb-4">
+          Training doesn&apos;t reduce lactate production — it improves clearance. The curve shifts right: a trained athlete can sustain higher intensities before lactate accumulates.
+        </p>
+
+        <div className="flex gap-2 mb-4">
+          {(["both", "untrained", "trained"] as const).map((v) => (
+            <button key={v} onClick={() => setView(v)}
+              className={`glass rounded-full border px-3 py-1 text-xs font-medium transition-all ${
+                view === v
+                  ? v === "untrained" ? "border-rose-500/30 text-rose-300 bg-rose-500/10"
+                    : v === "trained" ? "border-emerald-500/30 text-emerald-300 bg-emerald-500/10"
+                    : "border-white/20 text-white bg-white/[0.05]"
+                  : "border-white/8 text-readable-soft hover:border-white/15"
+              }`}>
+              {v === "both" ? "Both" : v === "untrained" ? "🔴 Untrained" : "🟢 Trained"}
+            </button>
+          ))}
+        </div>
+
+        <div className="rounded-2xl border border-white/8 bg-[radial-gradient(ellipse_at_top,rgba(255,255,255,0.04),transparent_60%)] p-3 mb-4 overflow-hidden">
+          <svg viewBox={`0 0 ${W} ${H}`} className="w-full h-auto">
+            {/* Grid */}
+            {[0,2,4,6,8,10,12].map((v) => (
+              <g key={v}>
+                <line x1={PX} x2={W-PX} y1={toY(v)} y2={toY(v)} stroke="rgba(255,255,255,0.05)" />
+                <text x={PX-4} y={toY(v)+4} textAnchor="end" fill="rgba(232,232,240,0.3)" fontSize="9">{v}</text>
+              </g>
+            ))}
+            {/* X labels */}
+            {[0,25,50,75,100].map((v) => (
+              <text key={v} x={toX(v)} y={H-2} textAnchor="middle" fill="rgba(232,232,240,0.3)" fontSize="9">{v}%</text>
+            ))}
+            {/* Axis labels */}
+            <text x={PX-2} y={PY} fill="rgba(232,232,240,0.35)" fontSize="8">mmol/L</text>
+            <text x={W-PX} y={H-2} fill="rgba(232,232,240,0.35)" fontSize="8" textAnchor="end">Intensity →</text>
+
+            {/* LT threshold markers */}
+            {(view === "untrained" || view === "both") && (
+              <>
+                <line x1={lt1Untrained} y1={PY} x2={lt1Untrained} y2={H-PY} stroke="rgba(251,113,133,0.3)" strokeDasharray="3 3" />
+                <text x={lt1Untrained} y={PY+2} textAnchor="middle" fill="rgba(251,113,133,0.6)" fontSize="7">LT1</text>
+                <line x1={lt2Untrained} y1={PY} x2={lt2Untrained} y2={H-PY} stroke="rgba(251,113,133,0.3)" strokeDasharray="3 3" />
+                <text x={lt2Untrained} y={PY+2} textAnchor="middle" fill="rgba(251,113,133,0.6)" fontSize="7">LT2</text>
+              </>
+            )}
+            {(view === "trained" || view === "both") && (
+              <>
+                <line x1={lt1Trained} y1={PY} x2={lt1Trained} y2={H-PY} stroke="rgba(52,211,153,0.3)" strokeDasharray="3 3" />
+                <text x={lt1Trained+2} y={PY+2} textAnchor="middle" fill="rgba(52,211,153,0.6)" fontSize="7">LT1</text>
+                <line x1={lt2Trained} y1={PY} x2={lt2Trained} y2={H-PY} stroke="rgba(52,211,153,0.3)" strokeDasharray="3 3" />
+                <text x={lt2Trained+2} y={PY+2} textAnchor="middle" fill="rgba(52,211,153,0.6)" fontSize="7">LT2</text>
+              </>
+            )}
+
+            {/* 2 mmol threshold line */}
+            <line x1={PX} x2={W-PX} y1={toY(2)} y2={toY(2)} stroke="rgba(251,191,36,0.2)" strokeDasharray="5 3" />
+            <text x={W-PX+2} y={toY(2)+3} fill="rgba(251,191,36,0.5)" fontSize="8">LT1≈2</text>
+
+            {/* Untrained curve */}
+            {(view === "untrained" || view === "both") && (
+              <motion.path
+                key={`ut-${view}`}
+                d={makePath(untrainedPoints)}
+                fill="none" stroke="#f87171" strokeWidth="2.5" strokeLinecap="round"
+                initial={{ pathLength: 0, opacity: 0 }}
+                animate={{ pathLength: 1, opacity: 0.85 }}
+                transition={{ duration: 1.2, ease: "easeInOut" }}
+              />
+            )}
+            {/* Trained curve */}
+            {(view === "trained" || view === "both") && (
+              <motion.path
+                key={`tr-${view}`}
+                d={makePath(trainedPoints)}
+                fill="none" stroke="#34d399" strokeWidth="2.5" strokeLinecap="round"
+                initial={{ pathLength: 0, opacity: 0 }}
+                animate={{ pathLength: 1, opacity: 0.85 }}
+                transition={{ duration: 1.2, ease: "easeInOut", delay: view === "both" ? 0.3 : 0 }}
+              />
+            )}
+          </svg>
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div className="glass rounded-xl p-3 border border-rose-500/15">
+            <p className="text-xs font-semibold text-rose-400 mb-1">🔴 Untrained</p>
+            <p className="text-xs text-readable-soft leading-relaxed">LT1 hits around 45% intensity. Lactate spikes steeply beyond that. Zone 4 effort becomes unsustainable quickly.</p>
+          </div>
+          <div className="glass rounded-xl p-3 border border-emerald-500/15">
+            <p className="text-xs font-semibold text-emerald-400 mb-1">🟢 Trained (Zone 2 adapted)</p>
+            <p className="text-xs text-readable-soft leading-relaxed">LT1 shifts to ~65% intensity. The same pace produces far less lactate. Sustained effort at higher intensities becomes possible.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ─── VO2 Max Mortality Chart ──────────────────────────────────────────────────
+const vo2Tiers = [
+  { label: "Low", vo2: "<37", mortalityRR: 5.0, color: "#ef4444", bg: "bg-red-500", text: "text-red-400", border: "border-red-500/20", desc: "Low fitness is a stronger mortality predictor than smoking, hypertension, or diabetes." },
+  { label: "Below Avg", vo2: "37–42", mortalityRR: 3.0, color: "#f97316", bg: "bg-orange-500", text: "text-orange-400", border: "border-orange-500/20", desc: "Moving from Low to Below Average cuts mortality risk nearly in half — the biggest single gain." },
+  { label: "Average", vo2: "43–48", mortalityRR: 2.0, color: "#eab308", bg: "bg-yellow-500", text: "text-yellow-400", border: "border-yellow-500/20", desc: "Moderate fitness. Most recreational runners who train consistently land here." },
+  { label: "Above Avg", vo2: "49–55", mortalityRR: 1.4, color: "#84cc16", bg: "bg-lime-500", text: "text-lime-400", border: "border-lime-500/20", desc: "Well-trained amateur endurance athletes. Substantially lower all-cause mortality." },
+  { label: "Elite", vo2: ">55", mortalityRR: 1.0, color: "#22c55e", bg: "bg-green-500", text: "text-green-400", border: "border-green-500/20", desc: "Baseline reference. Elite endurance athletes. 40–50% lower mortality vs. Low fitness group." },
+] as const;
+
+function VO2MortalityChart() {
+  const [active, setActive] = useState<number | null>(null);
+  const maxRR = 5.0;
+
+  return (
+    <div className="glass rounded-2xl p-5 border border-sky-500/20 relative overflow-hidden">
+      <div className="absolute inset-0 bg-gradient-to-br from-sky-500/6 to-transparent pointer-events-none" />
+      <div className="relative">
+        <div className="flex flex-wrap items-center gap-2 mb-2">
+          <span className="text-base">❤️‍🔥</span>
+          <h3 className="text-sm font-semibold text-white">VO2 Max vs. Mortality Risk</h3>
+          <span className="text-[10px] px-2 py-0.5 rounded-full border bg-sky-500/10 text-sky-300/80 border-sky-500/15">Tap a bar</span>
+        </div>
+        <p className="text-xs text-readable-soft leading-relaxed mb-4">
+          Relative mortality risk by fitness category. Low fitness is the most dangerous column — riskier than any single lifestyle factor. Tap a tier for details.
+        </p>
+
+        {/* Bar chart */}
+        <div className="flex items-end gap-2 mb-4" style={{ height: 140 }}>
+          {vo2Tiers.map((tier, i) => {
+            const barH = (tier.mortalityRR / maxRR) * 110;
+            const isActive = active === i;
+            return (
+              <button key={tier.label} className="flex-1 flex flex-col items-center gap-1.5"
+                onClick={() => setActive(active === i ? null : i)}>
+                <AnimatePresence>
+                  {isActive && (
+                    <motion.span
+                      initial={{ opacity: 0, y: 4 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}
+                      className={`text-[10px] font-bold ${tier.text}`}>
+                      {tier.mortalityRR}×
+                    </motion.span>
+                  )}
+                </AnimatePresence>
+                <motion.div
+                  className={`w-full rounded-t-lg ${tier.bg} transition-opacity`}
+                  style={{ opacity: isActive ? 1 : 0.55, height: barH }}
+                  whileInView={{ scaleY: [0, 1] }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.6, delay: i * 0.08, ease: "easeOut" }}
+                  whileHover={{ opacity: 0.8 }}
+                />
+                <span className={`text-[9px] font-medium leading-tight text-center ${isActive ? tier.text : "text-readable-faint"}`}>{tier.label}</span>
+                <span className="text-[8px] text-readable-faint leading-none">{tier.vo2}</span>
+              </button>
+            );
+          })}
+        </div>
+
+        <AnimatePresence mode="wait">
+          {active !== null ? (
+            <motion.div key={active}
+              initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -4 }}
+              transition={{ duration: 0.2 }}
+              className={`glass rounded-xl p-3.5 border ${vo2Tiers[active].border}`}>
+              <p className={`text-xs font-semibold ${vo2Tiers[active].text} mb-1`}>{vo2Tiers[active].label} fitness · {vo2Tiers[active].vo2} ml/kg/min</p>
+              <p className="text-xs text-readable-soft leading-relaxed">{vo2Tiers[active].desc}</p>
+            </motion.div>
+          ) : (
+            <div className="glass rounded-xl p-3 border border-white/8">
+              <p className="text-[10px] text-readable-faint leading-relaxed">Relative risk shown vs. Elite tier. The Low→Below Average jump is the most impactful fitness improvement anyone can make — cutting risk nearly in half.</p>
+            </div>
+          )}
+        </AnimatePresence>
+      </div>
+    </div>
+  );
+}
+
+// ─── Mitochondria Before / After ─────────────────────────────────────────────
+function MitochondriaAnimation() {
+  const [state, setState] = useState<"untrained" | "trained">("untrained");
+  const [animKey, setAnimKey] = useState(0);
+
+  const mitoCount = state === "trained" ? 14 : 4;
+  const mitoPositions = [
+    [32,38],[60,28],[85,50],[48,65],
+    [22,60],[72,62],[95,30],[40,45],
+    [68,40],[28,50],[55,75],[80,72],[45,25],[90,55],
+  ].slice(0, mitoCount);
+
+  const handleToggle = useCallback((s: "untrained" | "trained") => {
+    setState(s);
+    setAnimKey((k) => k + 1);
+  }, []);
+
+  return (
+    <div className="glass rounded-2xl p-5 border border-green-500/20 relative overflow-hidden">
+      <div className="absolute inset-0 bg-gradient-to-br from-green-500/5 to-transparent pointer-events-none" />
+      <div className="relative">
+        <div className="flex flex-wrap items-center gap-2 mb-2">
+          <span className="text-base">🔋</span>
+          <h3 className="text-sm font-semibold text-white">Mitochondrial Density: Before & After Zone 2</h3>
+          <span className="text-[10px] px-2 py-0.5 rounded-full border bg-green-500/10 text-green-300/80 border-green-500/15">Animation</span>
+        </div>
+        <p className="text-xs text-readable-soft leading-relaxed mb-4">
+          Zone 2 training activates <span className="text-green-300/80">PGC-1α</span> — the master switch for building new mitochondria. After consistent training, slow-twitch muscle fibers can have 3–4× more mitochondria per cell.
+        </p>
+
+        <div className="flex gap-2 mb-5">
+          <button onClick={() => handleToggle("untrained")}
+            className={`glass rounded-full border px-3 py-1.5 text-xs font-medium transition-all ${state === "untrained" ? "border-white/20 text-white bg-white/[0.05]" : "border-white/8 text-readable-soft hover:border-white/15"}`}>
+            😴 Untrained
+          </button>
+          <button onClick={() => handleToggle("trained")}
+            className={`glass rounded-full border px-3 py-1.5 text-xs font-medium transition-all ${state === "trained" ? "border-green-500/30 text-green-300 bg-green-500/10" : "border-white/8 text-readable-soft hover:border-white/15"}`}>
+            🏃 After Zone 2 Training
+          </button>
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 items-center">
+          {/* Cell SVG */}
+          <div className="flex justify-center">
+            <svg viewBox="0 0 140 140" className="w-36 h-36">
+              {/* Cell body */}
+              <ellipse cx="70" cy="70" rx="58" ry="52"
+                fill={state === "trained" ? "rgba(22,101,52,0.25)" : "rgba(30,30,40,0.4)"}
+                stroke={state === "trained" ? "rgba(52,211,153,0.5)" : "rgba(255,255,255,0.15)"}
+                strokeWidth="2" />
+              {/* Nucleus */}
+              <circle cx="70" cy="70" r="14" fill="rgba(255,255,255,0.06)" stroke="rgba(255,255,255,0.15)" strokeWidth="1.5" />
+              <text x="70" y="74" textAnchor="middle" fill="rgba(255,255,255,0.4)" fontSize="8">nucleus</text>
+
+              {/* Mitochondria */}
+              {mitoPositions.map(([px, py], i) => {
+                const cx = (px / 100) * 116 + 12;
+                const cy = (py / 100) * 104 + 18;
+                return (
+                  <motion.g key={`mito-${animKey}-${i}`}
+                    initial={{ scale: 0, opacity: 0 }}
+                    animate={{ scale: 1, opacity: 1 }}
+                    transition={{ delay: i * 0.08, type: "spring", stiffness: 260, damping: 18 }}>
+                    <ellipse cx={cx} cy={cy} rx="8" ry="4.5" transform={`rotate(${(i * 37) % 180} ${cx} ${cy})`}
+                      fill={state === "trained" ? "rgba(52,211,153,0.55)" : "rgba(251,191,36,0.45)"}
+                      stroke={state === "trained" ? "rgba(52,211,153,0.8)" : "rgba(251,191,36,0.7)"}
+                      strokeWidth="1" />
+                  </motion.g>
+                );
+              })}
+
+              {/* Count badge */}
+              <motion.text key={`count-${animKey}`}
+                x="70" y="132" textAnchor="middle"
+                fill={state === "trained" ? "rgba(52,211,153,0.8)" : "rgba(251,191,36,0.7)"}
+                fontSize="9" fontWeight="bold"
+                initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.5 }}>
+                {state === "trained" ? "~3-4× more mitochondria" : "Low mitochondrial density"}
+              </motion.text>
+            </svg>
+          </div>
+
+          {/* Stats */}
+          <AnimatePresence mode="wait">
+            <motion.div key={state}
+              initial={{ opacity: 0, x: 12 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -8 }}
+              transition={{ duration: 0.22 }}
+              className="space-y-2.5">
+              {(state === "untrained"
+                ? [
+                    { label: "Fat oxidation at Z2", value: 35, color: "bg-amber-400" },
+                    { label: "Lactate clearance rate", value: 28, color: "bg-rose-400" },
+                    { label: "Sustained endurance", value: 22, color: "bg-sky-400" },
+                  ]
+                : [
+                    { label: "Fat oxidation at Z2", value: 78, color: "bg-green-400" },
+                    { label: "Lactate clearance rate", value: 82, color: "bg-emerald-400" },
+                    { label: "Sustained endurance", value: 88, color: "bg-teal-400" },
+                  ]
+              ).map((item) => (
+                <div key={item.label}>
+                  <div className="flex justify-between text-[10px] mb-1">
+                    <span className="text-readable-soft">{item.label}</span>
+                    <span className={state === "trained" ? "text-green-400" : "text-readable-faint"}>{item.value}%</span>
+                  </div>
+                  <div className="h-2 rounded-full bg-white/8 overflow-hidden">
+                    <motion.div className={`h-full ${item.color} rounded-full`}
+                      key={`${state}-${item.label}`}
+                      initial={{ width: 0 }} animate={{ width: `${item.value}%` }}
+                      transition={{ duration: 0.6, ease: "easeOut" }} />
+                  </div>
+                </div>
+              ))}
+              <div className={`glass rounded-xl p-3 border ${state === "trained" ? "border-green-500/20" : "border-white/8"} mt-2`}>
+                <p className="text-xs text-readable-soft leading-relaxed">
+                  {state === "untrained"
+                    ? "Fewer mitochondria means the cell hits its aerobic ceiling quickly. Fat burning is inefficient. Lactate accumulates fast. Effort feels harder than it should."
+                    : "More mitochondria = a bigger aerobic engine. Fat burns cleanly at higher paces. Lactate gets recycled as fuel instead of accumulating. The same effort feels easier."}
+                </p>
+              </div>
+            </motion.div>
+          </AnimatePresence>
+        </div>
+      </div>
+    </div>
+  );
+}
 
 // ─── Page ─────────────────────────────────────────────────────────────────────
 export default function RunningClient() {
@@ -1005,6 +1423,14 @@ export default function RunningClient() {
             </div>
           </Section>
 
+          {/* Zone 2 HR Calculator + Mitochondria Animation */}
+          <Section>
+            <div className="grid grid-cols-1 xl:grid-cols-2 gap-5">
+              <Zone2Calculator />
+              <MitochondriaAnimation />
+            </div>
+          </Section>
+
           {/* ── Lactate: The Misunderstood Molecule ────────────────────────── */}
           <Section>
             <div className="glass rounded-2xl p-6 border border-indigo-500/20 relative overflow-hidden">
@@ -1153,6 +1579,11 @@ export default function RunningClient() {
             </div>
           </Section>
 
+          {/* Lactate Curve Chart */}
+          <Section>
+            <LactateCurveChart />
+          </Section>
+
           {/* ── VO2 Max ─────────────────────────────────────────────────────── */}
           <Section>
             <div className="glass rounded-2xl p-6 border border-sky-500/20 relative overflow-hidden">
@@ -1231,6 +1662,11 @@ export default function RunningClient() {
                 </div>
               </div>
             </div>
+          </Section>
+
+          {/* VO2 Max Mortality Chart */}
+          <Section>
+            <VO2MortalityChart />
           </Section>
 
           {/* ── Bone Health: Use It or Lose It ─────────────────────────────── */}

@@ -2,7 +2,7 @@
 
 import { motion } from "framer-motion";
 import Link from "next/link";
-import { ArrowLeft, ArrowRight, Droplets, Zap, Activity, Scale, Apple } from "lucide-react";
+import { ArrowLeft, ArrowRight, Droplets, Zap, Activity, Scale, Apple, Brain } from "lucide-react";
 
 const topics = [
   {
@@ -56,6 +56,19 @@ const topics = [
     iconColor: "text-blue-400",
     tagColor: "bg-blue-500/10 text-blue-300/80 border-blue-500/15",
     readTime: "6 min read",
+  },
+  {
+    href: "/health/brain",
+    icon: Brain,
+    title: "Brain Health",
+    description: "Alzheimer's prevention, cognitive reserve, exercise protocols, APOE E4, what damages your brain, SSRIs, and the insulin-brain connection.",
+    tags: ["Alzheimer's", "Cognitive Reserve", "SSRIs", "BDNF", "APOE E4"],
+    gradient: "from-cyan-500/20 to-sky-500/10",
+    border: "border-cyan-500/20 hover:border-cyan-500/40",
+    iconBg: "bg-cyan-500/15 border-cyan-500/25",
+    iconColor: "text-cyan-400",
+    tagColor: "bg-cyan-500/10 text-cyan-300/80 border-cyan-500/15",
+    readTime: "18 min read",
   },
   {
     href: "/health/diet",

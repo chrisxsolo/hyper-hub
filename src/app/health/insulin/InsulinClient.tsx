@@ -1199,6 +1199,441 @@ function GLUT4Animation() {
   );
 }
 
+// ─── Insulin-Glucagon Balance ────────────────────────────────────────────────
+function InsulinGlucagonBalance() {
+  const [state, setState] = useState<"fed" | "fasted" | "exercise">("fed");
+
+  const configs = {
+    fed: {
+      label: "After a meal",
+      insulinH: 80, glucagonH: 20,
+      insulinColor: "#f59e0b", glucagonColor: "#6b7280",
+      insulinLabel: "HIGH", glucagonLabel: "low",
+      mode: "Storage mode 🔒", modeColor: "text-amber-400",
+      insulinFacts: ["Drives glucose into cells", "Activates fat storage", "Promotes protein synthesis", "Suppresses glucagon"],
+      glucagonFacts: ["Suppressed by insulin", "Liver glucose output off", "Fat breakdown paused"],
+    },
+    fasted: {
+      label: "Fasting / between meals",
+      insulinH: 18, glucagonH: 75,
+      insulinColor: "#6b7280", glucagonColor: "#34d399",
+      insulinLabel: "low", glucagonLabel: "HIGH",
+      mode: "Release mode 🔓", modeColor: "text-emerald-400",
+      insulinFacts: ["Near baseline", "Fat burning unlocked", "Glycogen preserved"],
+      glucagonFacts: ["Signals liver to release glucose", "Activates fat breakdown", "Maintains blood sugar during fast"],
+    },
+    exercise: {
+      label: "During exercise",
+      insulinH: 12, glucagonH: 85,
+      insulinColor: "#6b7280", glucagonColor: "#a78bfa",
+      insulinLabel: "very low", glucagonLabel: "HIGH",
+      mode: "Fuel demand mode ⚡", modeColor: "text-violet-400",
+      insulinFacts: ["Drops during exercise", "GLUT4 works independently", "Muscle takes glucose without insulin"],
+      glucagonFacts: ["Rises to match demand", "Liver pours out glucose as fuel", "Fat mobilized for sustained effort"],
+    },
+  } as const;
+
+  const c = configs[state];
+
+  return (
+    <div className="glass rounded-2xl p-6 border border-white/10 relative overflow-hidden">
+      <div className="absolute inset-0 bg-gradient-to-br from-amber-500/5 via-emerald-500/3 to-transparent pointer-events-none" />
+      <div className="relative">
+        <div className="flex flex-wrap items-center gap-2 mb-2">
+          <span className="text-base">⚖️</span>
+          <h2 className="text-base font-semibold text-white">Insulin vs. Glucagon: The Metabolic Seesaw</h2>
+          <span className="text-[10px] px-2 py-0.5 rounded-full border bg-white/5 text-white/50 border-white/10">Interactive</span>
+        </div>
+        <p className="text-sm text-readable-soft leading-relaxed mb-4">
+          These two hormones are always working in opposition. When insulin is high, glucagon is suppressed — and vice versa. Your metabolic state at any moment is determined by which side dominates.
+        </p>
+
+        <div className="flex flex-wrap gap-2 mb-5">
+          {(["fed", "fasted", "exercise"] as const).map((s) => (
+            <button key={s} onClick={() => setState(s)}
+              className={`glass rounded-full border px-3 py-1.5 text-xs font-medium transition-all duration-200 ${
+                state === s ? "border-white/25 text-white bg-white/[0.06]" : "border-white/8 text-readable-soft hover:border-white/15"
+              }`}>
+              {s === "fed" ? "🍽️ After a meal" : s === "fasted" ? "⏳ Fasting" : "💪 Exercise"}
+            </button>
+          ))}
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-[1fr_auto_1fr] gap-4 items-end mb-5">
+          {/* Insulin column */}
+          <div className="flex flex-col items-center gap-2">
+            <p className="text-xs text-readable-faint uppercase tracking-widest">Insulin</p>
+            <div className="w-full flex items-end justify-center" style={{ height: 100 }}>
+              <motion.div
+                className="w-16 rounded-t-xl"
+                style={{ backgroundColor: c.insulinColor + "cc" }}
+                initial={false}
+                animate={{ height: c.insulinH }}
+                transition={{ type: "spring", stiffness: 180, damping: 22 }}
+              />
+            </div>
+            <motion.p
+              key={`il-${state}`}
+              className="text-sm font-bold uppercase tracking-wider"
+              style={{ color: c.insulinColor }}
+              initial={{ opacity: 0, scale: 0.85 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.25 }}>
+              {c.insulinLabel}
+            </motion.p>
+          </div>
+
+          {/* Mode badge */}
+          <div className="flex flex-col items-center gap-2 pb-8">
+            <div className="w-px h-8 bg-white/10" />
+            <AnimatePresence mode="wait">
+              <motion.div key={state}
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.9 }}
+                transition={{ duration: 0.2 }}
+                className="text-center">
+                <p className={`text-xs font-semibold ${c.modeColor}`}>{c.mode}</p>
+              </motion.div>
+            </AnimatePresence>
+            <div className="w-px h-8 bg-white/10" />
+          </div>
+
+          {/* Glucagon column */}
+          <div className="flex flex-col items-center gap-2">
+            <p className="text-xs text-readable-faint uppercase tracking-widest">Glucagon</p>
+            <div className="w-full flex items-end justify-center" style={{ height: 100 }}>
+              <motion.div
+                className="w-16 rounded-t-xl"
+                style={{ backgroundColor: c.glucagonColor + "cc" }}
+                initial={false}
+                animate={{ height: c.glucagonH }}
+                transition={{ type: "spring", stiffness: 180, damping: 22 }}
+              />
+            </div>
+            <motion.p
+              key={`gl-${state}`}
+              className="text-sm font-bold uppercase tracking-wider"
+              style={{ color: c.glucagonColor }}
+              initial={{ opacity: 0, scale: 0.85 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.25 }}>
+              {c.glucagonLabel}
+            </motion.p>
+          </div>
+        </div>
+
+        <AnimatePresence mode="wait">
+          <motion.div key={state}
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -6 }}
+            transition={{ duration: 0.22 }}
+            className="grid grid-cols-2 gap-3">
+            <div className="glass rounded-xl p-3 border border-white/8">
+              <p className="text-[10px] font-semibold text-amber-400/80 uppercase tracking-widest mb-2">Insulin is doing</p>
+              <ul className="space-y-1.5">
+                {c.insulinFacts.map((f) => (
+                  <li key={f} className="flex items-start gap-1.5 text-xs text-readable-soft">
+                    <span className="text-amber-400/60 shrink-0">→</span>{f}
+                  </li>
+                ))}
+              </ul>
+            </div>
+            <div className="glass rounded-xl p-3 border border-white/8">
+              <p className="text-[10px] font-semibold text-emerald-400/80 uppercase tracking-widest mb-2">Glucagon is doing</p>
+              <ul className="space-y-1.5">
+                {c.glucagonFacts.map((f) => (
+                  <li key={f} className="flex items-start gap-1.5 text-xs text-readable-soft">
+                    <span className="text-emerald-400/60 shrink-0">→</span>{f}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </motion.div>
+        </AnimatePresence>
+      </div>
+    </div>
+  );
+}
+
+// ─── Lipolysis Animation ──────────────────────────────────────────────────────
+function LipolysisAnimation() {
+  const [mode, setMode] = useState<"high" | "low">("high");
+
+  return (
+    <div className="glass rounded-2xl p-5 border border-orange-500/20 relative overflow-hidden">
+      <div className="absolute inset-0 bg-gradient-to-br from-orange-500/6 to-transparent pointer-events-none" />
+      <div className="relative">
+        <div className="flex flex-wrap items-center gap-2 mb-2">
+          <span className="text-base">🫙</span>
+          <h3 className="text-sm font-semibold text-white">Why You Can&apos;t Burn Fat When Insulin Is High</h3>
+          <span className="text-[10px] px-2 py-0.5 rounded-full border bg-orange-500/10 text-orange-300/80 border-orange-500/15">Animation</span>
+        </div>
+        <p className="text-xs text-readable-soft leading-relaxed mb-4">
+          Insulin is the master brake on lipolysis (fat breakdown). Even a small amount of insulin halts fat release. This is why &ldquo;eating less&rdquo; doesn&apos;t work if insulin stays chronically elevated.
+        </p>
+
+        <div className="flex gap-2 mb-5">
+          <button onClick={() => setMode("high")}
+            className={`glass rounded-full border px-3 py-1.5 text-xs font-medium transition-all ${mode === "high" ? "border-red-500/30 text-red-300 bg-red-500/10" : "border-white/8 text-readable-soft"}`}>
+            🔴 High Insulin
+          </button>
+          <button onClick={() => setMode("low")}
+            className={`glass rounded-full border px-3 py-1.5 text-xs font-medium transition-all ${mode === "low" ? "border-emerald-500/30 text-emerald-300 bg-emerald-500/10" : "border-white/8 text-readable-soft"}`}>
+            🟢 Low Insulin (Fasting/Exercise)
+          </button>
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 items-center">
+          {/* SVG fat cell */}
+          <div className="flex justify-center">
+            <svg viewBox="0 0 200 200" className="w-44 h-44">
+              {/* Fat droplets inside */}
+              {Array.from({ length: 7 }).map((_, i) => {
+                const angle = (i / 7) * Math.PI * 2;
+                const r = 30;
+                const cx = 100 + r * Math.cos(angle);
+                const cy = 100 + r * Math.sin(angle);
+                return (
+                  <motion.ellipse key={i} cx={cx} cy={cy}
+                    initial={false}
+                    animate={{ rx: mode === "high" ? 16 : 10, ry: mode === "high" ? 16 : 10, opacity: mode === "high" ? 0.85 : 0.4 }}
+                    transition={{ type: "spring", stiffness: 160, damping: 20, delay: i * 0.04 }}
+                    fill="#f59e0b" opacity="0.85" />
+                );
+              })}
+              {/* Cell membrane */}
+              <motion.circle cx="100" cy="100"
+                initial={false}
+                animate={{ r: mode === "high" ? 68 : 52 }}
+                transition={{ type: "spring", stiffness: 140, damping: 22 }}
+                fill="none" stroke={mode === "high" ? "rgba(239,68,68,0.6)" : "rgba(52,211,153,0.6)"} strokeWidth="3" />
+              {/* Center droplet */}
+              <motion.ellipse cx="100" cy="100"
+                initial={false}
+                animate={{ rx: mode === "high" ? 22 : 12, ry: mode === "high" ? 22 : 12 }}
+                transition={{ type: "spring", stiffness: 160, damping: 20 }}
+                fill="#f59e0b" opacity="0.9" />
+
+              {/* Outgoing fat arrows (low insulin only) */}
+              {mode === "low" && [0, 1, 2, 3].map((i) => {
+                const a = (i / 4) * Math.PI * 2 + Math.PI / 8;
+                const x1 = 100 + 55 * Math.cos(a);
+                const y1 = 100 + 55 * Math.sin(a);
+                const x2 = 100 + 80 * Math.cos(a);
+                const y2 = 100 + 80 * Math.sin(a);
+                return (
+                  <motion.line key={i} x1={x1} y1={y1} x2={x2} y2={y2}
+                    stroke="#34d399" strokeWidth="2" strokeLinecap="round"
+                    markerEnd="url(#arrowGreen)"
+                    initial={{ pathLength: 0, opacity: 0 }}
+                    animate={{ pathLength: 1, opacity: 0.8 }}
+                    transition={{ duration: 0.4, delay: i * 0.1 }} />
+                );
+              })}
+
+              {/* Lock (high insulin) */}
+              {mode === "high" && (
+                <motion.text x="100" y="162" textAnchor="middle" fontSize="18"
+                  initial={{ opacity: 0, scale: 0 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ type: "spring", stiffness: 260, damping: 18 }}>
+                  🔒
+                </motion.text>
+              )}
+
+              <defs>
+                <marker id="arrowGreen" markerWidth="6" markerHeight="6" refX="3" refY="3" orient="auto">
+                  <path d="M0,0 L0,6 L6,3 z" fill="#34d399" />
+                </marker>
+              </defs>
+            </svg>
+          </div>
+
+          {/* Explanation */}
+          <AnimatePresence mode="wait">
+            <motion.div key={mode}
+              initial={{ opacity: 0, x: 10 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: -8 }}
+              transition={{ duration: 0.22 }}
+              className="space-y-2.5">
+              {mode === "high" ? (
+                <>
+                  <div className="glass rounded-xl p-3 border border-red-500/20">
+                    <p className="text-xs font-semibold text-red-400 mb-1.5">🔴 Insulin locks the fat cell</p>
+                    <p className="text-xs text-readable-soft leading-relaxed">Insulin activates an enzyme (phosphodiesterase) that breaks down the signal needed to release fat. The fat cell is full — but the door is locked.</p>
+                  </div>
+                  <div className="glass rounded-xl p-3 border border-white/8">
+                    <p className="text-xs text-readable-soft leading-relaxed">
+                      <span className="text-white/70 font-medium">Why this matters:</span> You can eat at a calorie deficit and still not lose fat if fasting insulin is chronically elevated. The body prefers burning glucose — not stored fat — when insulin is present.
+                    </p>
+                  </div>
+                </>
+              ) : (
+                <>
+                  <div className="glass rounded-xl p-3 border border-emerald-500/20">
+                    <p className="text-xs font-semibold text-emerald-400 mb-1.5">🟢 Lipolysis unlocked</p>
+                    <p className="text-xs text-readable-soft leading-relaxed">When insulin drops — during fasting, exercise, or low-carb eating — HSL (hormone-sensitive lipase) activates and fat flows freely out of adipose tissue into the bloodstream as fuel.</p>
+                  </div>
+                  <div className="glass rounded-xl p-3 border border-white/8">
+                    <p className="text-xs text-readable-soft leading-relaxed">
+                      <span className="text-white/70 font-medium">Practical implication:</span> This is the core mechanism behind intermittent fasting, low-carb diets, and Zone 2 cardio for fat loss — all of them work by lowering insulin and unlocking this pathway.
+                    </p>
+                  </div>
+                </>
+              )}
+            </motion.div>
+          </AnimatePresence>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ─── Hyperinsulinemia Feedback Loop ──────────────────────────────────────────
+const loopNodes = [
+  { id: 0, label: "High-carb / high-sugar diet", icon: "🍞", x: 50, y: 4 },
+  { id: 1, label: "Blood glucose spikes", icon: "📈", x: 82, y: 28 },
+  { id: 2, label: "Pancreas floods insulin", icon: "💉", x: 82, y: 62 },
+  { id: 3, label: "Fat storage locked in", icon: "🔒", x: 50, y: 86 },
+  { id: 4, label: "Cells desensitize to insulin", icon: "😶", x: 18, y: 62 },
+  { id: 5, label: "Even more insulin needed", icon: "⬆️", x: 18, y: 28 },
+] as const;
+
+function FeedbackLoop() {
+  const [active, setActive] = useState<number | null>(null);
+  const [running, setRunning] = useState(false);
+  const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
+
+  const start = useCallback(() => {
+    setRunning(true);
+    setActive(0);
+    let step = 0;
+    timerRef.current = setInterval(() => {
+      step = (step + 1) % loopNodes.length;
+      setActive(step);
+    }, 1800);
+  }, []);
+
+  const stop = useCallback(() => {
+    setRunning(false);
+    setActive(null);
+    if (timerRef.current) clearInterval(timerRef.current);
+  }, []);
+
+  useEffect(() => () => { if (timerRef.current) clearInterval(timerRef.current); }, []);
+
+  const W = 280, H = 240;
+  const toCoord = (pct: number, dim: number) => (pct / 100) * dim;
+
+  return (
+    <div className="glass rounded-2xl p-6 border border-red-500/20 relative overflow-hidden">
+      <div className="absolute inset-0 bg-gradient-to-br from-red-500/6 to-transparent pointer-events-none" />
+      <div className="relative">
+        <div className="flex flex-wrap items-center gap-2 mb-2">
+          <span className="text-base">🔄</span>
+          <h2 className="text-base font-semibold text-white">The Hyperinsulinemia Feedback Loop</h2>
+          <span className="text-[10px] px-2 py-0.5 rounded-full border bg-red-500/10 text-red-300/80 border-red-500/15">Animated</span>
+        </div>
+        <p className="text-sm text-readable-soft leading-relaxed mb-4">
+          Insulin resistance is self-reinforcing. Each step worsens the next. Press play to watch the cycle.
+        </p>
+
+        <div className="grid grid-cols-1 sm:grid-cols-[auto_1fr] gap-5 items-center">
+          <div className="flex justify-center">
+            <div className="relative" style={{ width: W, height: H }}>
+              <svg viewBox={`0 0 ${W} ${H}`} className="absolute inset-0 w-full h-full">
+                {/* Arrows between nodes */}
+                {loopNodes.map((node, i) => {
+                  const next = loopNodes[(i + 1) % loopNodes.length];
+                  const x1 = toCoord(node.x, W);
+                  const y1 = toCoord(node.y, H) + 16;
+                  const x2 = toCoord(next.x, W);
+                  const y2 = toCoord(next.y, H) + 16;
+                  const isLit = active === i;
+                  return (
+                    <motion.line key={i}
+                      x1={x1} y1={y1} x2={x2} y2={y2}
+                      stroke={isLit ? "#f87171" : "rgba(255,255,255,0.1)"}
+                      strokeWidth={isLit ? 2 : 1}
+                      strokeDasharray={isLit ? undefined : "4 4"}
+                      transition={{ duration: 0.15 }} />
+                  );
+                })}
+              </svg>
+
+              {loopNodes.map((node) => {
+                const isLit = active === node.id;
+                const x = toCoord(node.x, W) - 36;
+                const y = toCoord(node.y, H);
+                return (
+                  <motion.div key={node.id}
+                    className="absolute flex flex-col items-center gap-0.5"
+                    style={{ left: x, top: y, width: 72 }}
+                    animate={{ scale: isLit ? 1.1 : 1 }}
+                    transition={{ type: "spring", stiffness: 300, damping: 22 }}>
+                    <div className={`w-10 h-10 rounded-full border flex items-center justify-center text-lg transition-all duration-200 ${
+                      isLit ? "bg-red-500/20 border-red-400/60 shadow-[0_0_14px_rgba(248,113,113,0.4)]" : "bg-white/4 border-white/10"
+                    }`}>
+                      {node.icon}
+                    </div>
+                    <p className={`text-center leading-tight transition-colors duration-200 ${isLit ? "text-red-300" : "text-readable-faint"}`}
+                      style={{ fontSize: 8 }}>
+                      {node.label}
+                    </p>
+                  </motion.div>
+                );
+              })}
+            </div>
+          </div>
+
+          <div className="space-y-3">
+            <button
+              onClick={running ? stop : start}
+              className={`w-full glass rounded-xl border py-2.5 text-sm font-medium transition-all ${
+                running ? "border-red-500/30 text-red-300 bg-red-500/10" : "border-white/15 text-white hover:bg-white/[0.04]"
+              }`}>
+              {running ? "⏹ Stop" : "▶ Play Loop"}
+            </button>
+
+            <AnimatePresence mode="wait">
+              {active !== null && (
+                <motion.div key={active}
+                  initial={{ opacity: 0, y: 6 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -4 }}
+                  transition={{ duration: 0.18 }}
+                  className="glass rounded-xl p-3.5 border border-red-500/15">
+                  <p className="text-base mb-1">{loopNodes[active].icon}</p>
+                  <p className="text-xs font-semibold text-red-300 mb-1">{loopNodes[active].label}</p>
+                  <p className="text-xs text-readable-soft leading-relaxed">
+                    {[
+                      "Excess carbohydrates drive repeated glucose spikes. Modern ultra-processed diets make this the default, not the exception.",
+                      "Every spike demands an insulin response. Frequent spikes mean insulin is rarely at baseline.",
+                      "The pancreas compensates by producing more insulin to push glucose into increasingly resistant cells.",
+                      "High insulin blocks lipolysis — fat burning stops. Visceral fat accumulates. Inflammation follows.",
+                      "Cells downregulate insulin receptors in self-defense against chronic overstimulation. Resistance deepens.",
+                      "To get the same result, the pancreas must produce even more insulin. The threshold keeps rising.",
+                    ][active]}
+                  </p>
+                </motion.div>
+              )}
+            </AnimatePresence>
+
+            {active === null && (
+              <div className="glass rounded-xl p-3.5 border border-white/8">
+                <p className="text-xs text-readable-faint leading-relaxed">Press play to watch each step light up with an explanation. This cycle is why insulin resistance is progressive without intervention.</p>
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 // ─── Page ─────────────────────────────────────────────────────────────────────
 export default function InsulinClient() {
   const [expandedPillar, setExpandedPillar] = useState<number | null>(null);
@@ -1206,6 +1641,7 @@ export default function InsulinClient() {
   const [activeDamageMap, setActiveDamageMap] = useState<(typeof damageMap)[number]["id"]>("arteries");
   const [activeStage, setActiveStage] = useState<(typeof progressionStages)[number]["id"]>("compensating");
   const [activeConsequenceWindow, setActiveConsequenceWindow] = useState<(typeof consequenceWindows)[number]["id"]>("months");
+  const progressionDetailRef = useRef<HTMLDivElement | null>(null);
   const activeGlossaryEntry: GlossaryEntry | null = activeGlossary ? glossaryData[activeGlossary] : null;
   const selectedDamageMap = damageMap.find((item) => item.id === activeDamageMap) ?? damageMap[0];
   const selectedStage = progressionStages.find((item) => item.id === activeStage) ?? progressionStages[0];
@@ -1231,6 +1667,23 @@ export default function InsulinClient() {
         return `${index === 0 ? "M" : "L"} ${x} ${y}`;
       })
       .join(" ");
+  const handleStageSelect = useCallback((
+    stageId: (typeof progressionStages)[number]["id"],
+    trigger?: HTMLButtonElement | null,
+  ) => {
+    setActiveStage(stageId);
+    trigger?.blur();
+
+    if (typeof window === "undefined" || !window.matchMedia("(max-width: 639px)").matches) {
+      return;
+    }
+
+    window.requestAnimationFrame(() => {
+      window.requestAnimationFrame(() => {
+        progressionDetailRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+      });
+    });
+  }, []);
 
   return (
     <GlossaryContext.Provider value={setActiveGlossary}>
@@ -1365,6 +1818,11 @@ export default function InsulinClient() {
             <MealResponseChart />
           </Section>
 
+          {/* Insulin-Glucagon Balance */}
+          <Section>
+            <InsulinGlucagonBalance />
+          </Section>
+
           {/* Damage Map */}
           <Section>
             <div className="glass rounded-2xl p-6 border border-amber-500/20 relative overflow-hidden">
@@ -1401,7 +1859,7 @@ export default function InsulinClient() {
                 </div>
 
                 <div className="grid grid-cols-1 xl:grid-cols-[0.9fr_1.1fr] gap-4">
-                  <div className="glass rounded-3xl border border-white/8 p-4">
+                  <div className="order-2 xl:order-1 glass rounded-3xl border border-white/8 p-4">
                     <p className="text-[10px] uppercase tracking-[0.18em] text-readable-faint mb-3">System Overview</p>
                     <div className="space-y-3">
                       {damageMap.map((item) => {
@@ -1430,7 +1888,7 @@ export default function InsulinClient() {
                     </div>
                   </div>
 
-                  <div className={`glass rounded-3xl p-5 border ${selectedDamageMap.border} relative overflow-hidden`}>
+                  <div className={`order-1 xl:order-2 glass rounded-3xl p-5 border ${selectedDamageMap.border} relative overflow-hidden`}>
                     <div className={`absolute inset-0 bg-gradient-to-br ${selectedDamageMap.gradient} via-transparent to-transparent pointer-events-none`} />
                     <AnimatePresence mode="wait">
                       <motion.div
@@ -1561,6 +2019,11 @@ export default function InsulinClient() {
             </div>
           </Section>
 
+          {/* Feedback Loop */}
+          <Section>
+            <FeedbackLoop />
+          </Section>
+
           {/* Progression Simulator */}
           <Section>
             <div className="glass rounded-2xl p-6 border border-orange-500/20 relative overflow-hidden">
@@ -1579,7 +2042,7 @@ export default function InsulinClient() {
                 </p>
 
                 <div className="mb-5">
-                  <div className="relative grid grid-cols-2 lg:grid-cols-4 gap-2">
+                  <div className="relative grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2">
                     <motion.div
                       className="absolute top-1/2 -translate-y-1/2 h-[2px] bg-gradient-to-r from-emerald-400/30 via-amber-400/40 to-red-400/40 hidden lg:block"
                       style={{
@@ -1593,16 +2056,17 @@ export default function InsulinClient() {
                       return (
                         <button
                           key={stage.id}
-                          onClick={() => setActiveStage(stage.id)}
+                          type="button"
+                          onClick={(event) => handleStageSelect(stage.id, event.currentTarget)}
                           className={`relative glass rounded-2xl border px-4 py-4 text-left transition-all duration-200 ${
                             isActive ? `${stage.border} bg-white/[0.05]` : "border-white/8 hover:border-white/15"
-                          }`}
+                          } w-full min-w-0 overflow-hidden focus:outline-none focus-visible:outline-none`}
                         >
                           <div className="flex items-center gap-3">
                             <motion.div
                               className={`w-7 h-7 rounded-full border flex items-center justify-center text-[10px] font-bold ${
                                 isActive ? `${stage.border} ${stage.accent}` : "border-white/12 text-readable-faint"
-                              }`}
+                              } shrink-0`}
                               animate={{
                                 scale: isActive ? 1.06 : 1,
                                 boxShadow: isPassed ? "0 0 18px rgba(255,255,255,0.08)" : "0 0 0 rgba(0,0,0,0)",
@@ -1610,9 +2074,9 @@ export default function InsulinClient() {
                             >
                               {index + 1}
                             </motion.div>
-                            <div>
+                            <div className="min-w-0">
                               <p className={`text-xs font-semibold mb-0.5 ${isActive ? stage.accent : "text-readable-strong"}`}>{stage.label}</p>
-                              <p className="text-[10px] text-readable-faint">{stage.microLabel}</p>
+                              <p className="text-[10px] text-readable-faint leading-snug">{stage.microLabel}</p>
                             </div>
                           </div>
                         </button>
@@ -1621,7 +2085,11 @@ export default function InsulinClient() {
                   </div>
                 </div>
 
-                <div className={`glass rounded-[28px] p-5 border ${selectedStage.border} relative overflow-hidden`}>
+                <div
+                  ref={progressionDetailRef}
+                  className={`glass rounded-[28px] p-5 border ${selectedStage.border} relative overflow-hidden`}
+                  style={{ scrollMarginTop: "1rem" }}
+                >
                   <div className={`absolute inset-0 bg-gradient-to-br ${selectedStage.glow} via-transparent to-transparent pointer-events-none`} />
                   <div className="relative grid grid-cols-1 xl:grid-cols-[1.08fr_0.92fr] gap-5">
                     <div className="glass rounded-2xl p-4 border border-white/8">
@@ -1658,13 +2126,13 @@ export default function InsulinClient() {
                           })}
 
                           <motion.rect
-                            x={chartPaddingX + activeStageIndex * chartStep - 26}
+                            x={chartPaddingX - 26}
                             y={chartPaddingY - 4}
                             width="52"
                             height={chartHeight - chartPaddingY * 2 + 8}
                             fill="url(#stageBeam)"
                             initial={false}
-                            animate={{ x: chartPaddingX + activeStageIndex * chartStep - 26 }}
+                            animate={{ translateX: activeStageIndex * chartStep }}
                             transition={{ type: "spring", stiffness: 220, damping: 24 }}
                           />
 
@@ -2060,6 +2528,11 @@ export default function InsulinClient() {
                 </p>
               </div>
             </div>
+          </Section>
+
+          {/* Lipolysis Animation */}
+          <Section>
+            <LipolysisAnimation />
           </Section>
 
           {/* Brain / Type 3 Diabetes */}
