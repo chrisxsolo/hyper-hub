@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import { motion, useInView } from "framer-motion";
 import Link from "next/link";
 import {
@@ -348,6 +348,158 @@ const insulinSmartMeals = [
   "Chicken thighs with cauliflower, cucumber salad, olives, and chimichurri.",
 ];
 
+const platePlaybooks = [
+  {
+    id: "recovery",
+    title: "Recovery Plate",
+    tone: "text-teal-400",
+    border: "border-teal-500/20",
+    badge: "Post-lift / post-run",
+    segments: [
+      { label: "Protein", value: 38, color: "#2dd4bf" },
+      { label: "Vegetable volume", value: 32, color: "#38bdf8" },
+      { label: "Carbs later", value: 20, color: "#a78bfa" },
+      { label: "Sauce / fats", value: 10, color: "#f59e0b" },
+    ],
+    metrics: [
+      { label: "Glucose stability", value: 78, tone: "bg-sky-400" },
+      { label: "Satiety", value: 86, tone: "bg-emerald-400" },
+      { label: "Recovery support", value: 94, tone: "bg-teal-400" },
+      { label: "Overeating friction", value: 74, tone: "bg-violet-400" },
+    ],
+    foods: ["Salmon", "Rice after protein", "Roasted broccoli", "Yogurt herb sauce"],
+    insight: (
+      <>
+        This is the classic protein-first plate: enough carbohydrate to refill training, but anchored by protein and fiber so the meal is doing
+        recovery work instead of acting like a glucose grenade.<Cite id={2} /><Cite id={11} />
+      </>
+    ),
+  },
+  {
+    id: "office",
+    title: "Office Lunch",
+    tone: "text-sky-400",
+    border: "border-sky-500/20",
+    badge: "Steady afternoon energy",
+    segments: [
+      { label: "Protein", value: 34, color: "#38bdf8" },
+      { label: "Vegetable volume", value: 36, color: "#34d399" },
+      { label: "Carbs later", value: 12, color: "#a78bfa" },
+      { label: "Sauce / fats", value: 18, color: "#f59e0b" },
+    ],
+    metrics: [
+      { label: "Glucose stability", value: 88, tone: "bg-sky-400" },
+      { label: "Satiety", value: 82, tone: "bg-emerald-400" },
+      { label: "Recovery support", value: 66, tone: "bg-teal-400" },
+      { label: "Overeating friction", value: 84, tone: "bg-violet-400" },
+    ],
+    foods: ["Chicken thighs", "Big salad", "Avocado", "Mustard vinaigrette"],
+    insight: (
+      <>
+        This is what “diet food” should usually feel like: flavorful, high-volume, and boringly effective. You are not chasing a buzz. You are building
+        a meal that makes the next three hours easier.<Cite id={8} /><Cite id={9} />
+      </>
+    ),
+  },
+  {
+    id: "dinner",
+    title: "Dinner Out",
+    tone: "text-emerald-400",
+    border: "border-emerald-500/20",
+    badge: "Social but controlled",
+    segments: [
+      { label: "Protein", value: 32, color: "#34d399" },
+      { label: "Vegetable volume", value: 28, color: "#38bdf8" },
+      { label: "Carbs later", value: 18, color: "#a78bfa" },
+      { label: "Sauce / fats", value: 22, color: "#f59e0b" },
+    ],
+    metrics: [
+      { label: "Glucose stability", value: 72, tone: "bg-sky-400" },
+      { label: "Satiety", value: 80, tone: "bg-emerald-400" },
+      { label: "Recovery support", value: 70, tone: "bg-teal-400" },
+      { label: "Overeating friction", value: 68, tone: "bg-violet-400" },
+    ],
+    foods: ["Steak or fish", "Vegetables first", "Potatoes or rice after", "Chimichurri or tahini"],
+    insight: (
+      <>
+        Social meals do not need to be metabolically perfect. The trick is preserving the architecture: protein first, some produce, and a sauce that
+        tastes expensive without behaving like dessert.<Cite id={11} />
+      </>
+    ),
+  },
+  {
+    id: "upf",
+    title: "Snack Trap",
+    tone: "text-orange-400",
+    border: "border-orange-500/20",
+    badge: "Easy to overeat",
+    segments: [
+      { label: "Protein", value: 10, color: "#fb7185" },
+      { label: "Vegetable volume", value: 4, color: "#38bdf8" },
+      { label: "Refined carbs", value: 56, color: "#f59e0b" },
+      { label: "Reward fats / sauces", value: 30, color: "#ef4444" },
+    ],
+    metrics: [
+      { label: "Glucose stability", value: 28, tone: "bg-sky-400" },
+      { label: "Satiety", value: 32, tone: "bg-emerald-400" },
+      { label: "Recovery support", value: 18, tone: "bg-teal-400" },
+      { label: "Overeating friction", value: 14, tone: "bg-violet-400" },
+    ],
+    foods: ["Sweet glaze", "Refined starch", "Low protein", "Soft hyper-palatable texture"],
+    insight: (
+      <>
+        This is the pattern that feels “fun” in the moment but usually backfires. It is low in friction, low in protein, easy to eat fast, and exactly
+        the sort of architecture that drove higher intake in the ultra-processed feeding trial.<Cite id={8} />
+      </>
+    ),
+  },
+] as const;
+
+const responseScenarios = [
+  {
+    id: "protein-first",
+    title: "Protein-first whole-food meal",
+    accent: "text-teal-400",
+    border: "border-teal-500/20",
+    subtitle: "Think salmon + vegetables + rice later",
+    curves: {
+      glucose: [18, 34, 42, 38, 28, 22],
+      satiety: [44, 72, 84, 78, 70, 60],
+      cravings: [22, 18, 14, 16, 22, 28],
+    },
+    takeaway: "Gentler glucose exposure, stronger fullness, and a smaller rebound craving wave.",
+    cite: [2, 11, 13],
+  },
+  {
+    id: "balanced-sauce",
+    title: "Savory protein bowl with sauce",
+    accent: "text-sky-400",
+    border: "border-sky-500/20",
+    subtitle: "Think chicken, greens, avocado, tahini",
+    curves: {
+      glucose: [16, 28, 34, 31, 24, 20],
+      satiety: [42, 68, 80, 74, 66, 56],
+      cravings: [24, 20, 16, 18, 24, 30],
+    },
+    takeaway: "Flavor helps adherence, and the richer sauce profile can still work when the chassis stays protein-and-veg based.",
+    cite: [8, 9, 13],
+  },
+  {
+    id: "carb-first",
+    title: "Processed carb-first meal",
+    accent: "text-orange-400",
+    border: "border-orange-500/20",
+    subtitle: "Think refined starch + sweet sauce + low protein",
+    curves: {
+      glucose: [20, 58, 86, 64, 38, 26],
+      satiety: [36, 46, 44, 28, 22, 18],
+      cravings: [26, 22, 24, 48, 68, 74],
+    },
+    takeaway: "Bigger early reward, weaker satiety, and a much nastier later pull toward more food.",
+    cite: [8, 10],
+  },
+] as const;
+
 const studies = [
   {
     id: 1,
@@ -472,6 +624,342 @@ const contributors = [
     focus: "Insulin biology, diet quality, and metabolic disease framing",
   },
 ];
+
+function PlateLab() {
+  const [activeId, setActiveId] = useState<(typeof platePlaybooks)[number]["id"]>("recovery");
+  const plate = platePlaybooks.find((item) => item.id === activeId) ?? platePlaybooks[0];
+  const radius = 70;
+  const circumference = 2 * Math.PI * radius;
+  let accumulated = 0;
+
+  return (
+    <div className="glass rounded-2xl p-6 border border-cyan-500/20 relative overflow-hidden">
+      <div className="absolute inset-0 bg-gradient-to-br from-cyan-500/7 via-teal-500/5 to-transparent pointer-events-none" />
+      <div className="relative">
+        <div className="flex flex-wrap items-center gap-2 mb-4">
+          <Sparkles size={16} className="text-cyan-400" />
+          <h2 className="text-base font-semibold text-white">Interactive Plate Lab</h2>
+          <span className="text-[10px] px-2 py-0.5 rounded-full border bg-cyan-500/10 text-cyan-300/80 border-cyan-500/15">
+            Plate Visualization
+          </span>
+        </div>
+        <p className="text-sm text-readable-muted leading-relaxed mb-5 max-w-4xl">
+          Same calories can behave very differently depending on what the plate is built from. Tap a plate style and watch the composition,
+          satiety, and downstream tradeoffs change.
+        </p>
+
+        <div className="flex flex-wrap gap-2 mb-5">
+          {platePlaybooks.map((item) => {
+            const isActive = item.id === activeId;
+            return (
+              <button
+                key={item.id}
+                type="button"
+                onClick={() => setActiveId(item.id)}
+                className={`glass rounded-full border px-4 py-2 text-xs font-medium transition-all duration-200 ${
+                  isActive ? `${item.border} bg-white/[0.05] ${item.tone}` : "border-white/8 text-readable-soft hover:border-white/15"
+                }`}
+              >
+                {item.title}
+              </button>
+            );
+          })}
+        </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-[0.92fr_1.08fr] gap-4">
+          <div className="glass rounded-xl p-5 border border-white/8">
+            <div className="flex items-start justify-between gap-3 mb-4">
+              <div>
+                <p className={`text-lg font-semibold ${plate.tone}`}>{plate.title}</p>
+                <p className="text-xs text-readable-faint mt-1">{plate.badge}</p>
+              </div>
+              <div className="text-right">
+                <p className="text-[10px] uppercase tracking-[0.18em] text-readable-faint mb-1">Default foods</p>
+                <p className="text-xs text-readable-soft">{plate.foods.join(" · ")}</p>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-[220px_1fr] gap-5 items-center">
+              <div className="mx-auto">
+                <svg viewBox="0 0 220 220" className="w-[220px] h-[220px]">
+                  <circle cx="110" cy="110" r={radius} fill="none" stroke="rgba(255,255,255,0.08)" strokeWidth="28" />
+                  {plate.segments.map((segment) => {
+                    const segmentLength = (segment.value / 100) * circumference;
+                    const dashOffset = -((accumulated / 100) * circumference);
+                    accumulated += segment.value;
+                    return (
+                      <motion.circle
+                        key={segment.label}
+                        cx="110"
+                        cy="110"
+                        r={radius}
+                        fill="none"
+                        stroke={segment.color}
+                        strokeWidth="28"
+                        strokeLinecap="round"
+                        transform="rotate(-90 110 110)"
+                        initial={{ strokeDasharray: `0 ${circumference}` }}
+                        animate={{ strokeDasharray: `${segmentLength} ${circumference - segmentLength}`, strokeDashoffset: dashOffset }}
+                        transition={{ duration: 0.55 }}
+                      />
+                    );
+                  })}
+                  <circle cx="110" cy="110" r="44" fill="rgba(13,13,15,0.92)" stroke="rgba(255,255,255,0.08)" />
+                  <text x="110" y="102" textAnchor="middle" fill="rgba(248,248,252,0.94)" fontSize="13" fontWeight="700">
+                    Plate
+                  </text>
+                  <text x="110" y="122" textAnchor="middle" fill="rgba(232,232,240,0.68)" fontSize="11">
+                    composition
+                  </text>
+                </svg>
+              </div>
+
+              <div className="space-y-3">
+                {plate.segments.map((segment) => (
+                  <div key={segment.label} className="glass rounded-xl p-3 border border-white/8">
+                    <div className="flex items-center justify-between mb-1.5">
+                      <div className="flex items-center gap-2">
+                        <span className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: segment.color }} />
+                        <span className="text-xs text-readable-soft">{segment.label}</span>
+                      </div>
+                      <span className="text-[10px] font-semibold text-readable-strong">{segment.value}%</span>
+                    </div>
+                    <div className="h-2.5 rounded-full bg-white/8 overflow-hidden">
+                      <motion.div
+                        className="h-full rounded-full"
+                        style={{ backgroundColor: segment.color }}
+                        initial={{ width: 0 }}
+                        animate={{ width: `${segment.value}%` }}
+                        transition={{ duration: 0.5 }}
+                      />
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          <div className="space-y-4">
+            <div className={`glass rounded-xl p-4 border ${plate.border}`}>
+              <p className="text-xs font-semibold text-readable-strong mb-3">Metabolic profile</p>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                {plate.metrics.map((metric) => (
+                  <div key={metric.label} className="glass rounded-xl p-3 border border-white/8">
+                    <div className="flex items-center justify-between mb-1.5">
+                      <span className="text-[10px] text-readable-soft">{metric.label}</span>
+                      <span className="text-[10px] font-semibold text-readable-strong">{metric.value}</span>
+                    </div>
+                    <div className="h-2.5 rounded-full bg-white/8 overflow-hidden">
+                      <motion.div
+                        className={`h-full ${metric.tone} rounded-full`}
+                        initial={{ width: 0 }}
+                        animate={{ width: `${metric.value}%` }}
+                        transition={{ duration: 0.55 }}
+                      />
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <div className="glass rounded-xl p-4 border border-white/8">
+              <p className="text-xs font-semibold text-readable-strong mb-2">Why this plate behaves this way</p>
+              <p className="text-xs text-readable-soft leading-relaxed">{plate.insight}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function ResponseCurveExplorer() {
+  const [activeId, setActiveId] = useState<(typeof responseScenarios)[number]["id"]>("protein-first");
+  const scenario = responseScenarios.find((item) => item.id === activeId) ?? responseScenarios[0];
+  const chartWidth = 420;
+  const chartHeight = 240;
+  const chartPaddingX = 34;
+  const chartPaddingY = 24;
+  const labels = ["0m", "30m", "60m", "90m", "2h", "3h"];
+  const step = (chartWidth - chartPaddingX * 2) / (labels.length - 1);
+  const linePath = (values: readonly number[]) =>
+    values
+      .map((value, index) => {
+        const x = chartPaddingX + index * step;
+        const y = chartHeight - chartPaddingY - (value / 100) * (chartHeight - chartPaddingY * 2);
+        return `${index === 0 ? "M" : "L"} ${x} ${y}`;
+      })
+      .join(" ");
+
+  const lines = [
+    { key: "glucose", label: "Glucose pressure", tone: "#38bdf8", values: scenario.curves.glucose },
+    { key: "satiety", label: "Satiety", tone: "#34d399", values: scenario.curves.satiety },
+    { key: "cravings", label: "Cravings rebound", tone: "#fb7185", values: scenario.curves.cravings },
+  ] as const;
+
+  return (
+    <div className="glass rounded-2xl p-6 border border-violet-500/20 relative overflow-hidden">
+      <div className="absolute inset-0 bg-gradient-to-br from-violet-500/7 via-sky-500/5 to-transparent pointer-events-none" />
+      <div className="relative">
+        <div className="flex flex-wrap items-center gap-2 mb-4">
+          <Brain size={16} className="text-violet-400" />
+          <h2 className="text-base font-semibold text-white">Meal Response Curve Explorer</h2>
+          <span className="text-[10px] px-2 py-0.5 rounded-full border bg-violet-500/10 text-violet-300/80 border-violet-500/15">
+            Animated Timeline
+          </span>
+        </div>
+        <p className="text-sm text-readable-muted leading-relaxed mb-5 max-w-4xl">
+          The meal is not just the first bite. The real question is what happens over the next few hours: how hard glucose rises,
+          how full you stay, and whether the meal sets up calm or another round of cravings.
+        </p>
+
+        <div className="flex flex-wrap gap-2 mb-5">
+          {responseScenarios.map((item) => {
+            const isActive = item.id === activeId;
+            return (
+              <button
+                key={item.id}
+                type="button"
+                onClick={() => setActiveId(item.id)}
+                className={`glass rounded-full border px-4 py-2 text-xs font-medium transition-all duration-200 ${
+                  isActive ? `${item.border} bg-white/[0.05] ${item.accent}` : "border-white/8 text-readable-soft hover:border-white/15"
+                }`}
+              >
+                {item.title}
+              </button>
+            );
+          })}
+        </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-[1.04fr_0.96fr] gap-4">
+          <div className="glass rounded-xl p-4 border border-white/8">
+            <div className="flex items-start justify-between gap-3 mb-3">
+              <div>
+                <p className={`text-sm font-semibold ${scenario.accent}`}>{scenario.title}</p>
+                <p className="text-[10px] uppercase tracking-[0.18em] text-readable-faint mt-1">{scenario.subtitle}</p>
+              </div>
+              <p className="text-[10px] text-readable-faint">3-hour window</p>
+            </div>
+
+            <div className="relative overflow-hidden rounded-2xl border border-white/8 bg-[radial-gradient(circle_at_top,rgba(255,255,255,0.06),transparent_58%)] p-3">
+              <svg viewBox={`0 0 ${chartWidth} ${chartHeight}`} className="w-full h-auto">
+                {[0, 25, 50, 75, 100].map((tick) => {
+                  const y = chartHeight - chartPaddingY - (tick / 100) * (chartHeight - chartPaddingY * 2);
+                  return (
+                    <g key={tick}>
+                      <line x1={chartPaddingX} x2={chartWidth - chartPaddingX} y1={y} y2={y} stroke="rgba(255,255,255,0.08)" strokeDasharray="4 6" />
+                      <text x={6} y={y + 4} fill="rgba(232,232,240,0.42)" fontSize="10">
+                        {tick}
+                      </text>
+                    </g>
+                  );
+                })}
+
+                {labels.map((label, index) => (
+                  <text
+                    key={label}
+                    x={chartPaddingX + index * step}
+                    y={chartHeight - 4}
+                    textAnchor="middle"
+                    fill="rgba(232,232,240,0.5)"
+                    fontSize="10"
+                  >
+                    {label}
+                  </text>
+                ))}
+
+                {lines.map((line) => (
+                  <motion.path
+                    key={line.key}
+                    d={linePath(line.values)}
+                    fill="none"
+                    stroke={line.tone}
+                    strokeWidth="3"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    initial={{ pathLength: 0, opacity: 0.25 }}
+                    animate={{ pathLength: 1, opacity: 0.95 }}
+                    transition={{ duration: 0.7 }}
+                  />
+                ))}
+
+                {lines.map((line) =>
+                  line.values.map((value, index) => {
+                    const x = chartPaddingX + index * step;
+                    const y = chartHeight - chartPaddingY - (value / 100) * (chartHeight - chartPaddingY * 2);
+                    return (
+                      <motion.circle
+                        key={`${line.key}-${index}-${activeId}`}
+                        cx={x}
+                        cy={y}
+                        r={index === 2 ? 5.5 : 4}
+                        fill={line.tone}
+                        stroke="rgba(13,13,15,0.92)"
+                        strokeWidth="2"
+                        initial={{ scale: 0 }}
+                        animate={{ scale: 1 }}
+                        transition={{ duration: 0.28, delay: index * 0.04 }}
+                      />
+                    );
+                  }),
+                )}
+              </svg>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 mt-3">
+              {lines.map((line) => (
+                <div key={line.key} className="glass rounded-xl border border-white/8 px-3 py-2">
+                  <div className="flex items-center gap-2">
+                    <span className="w-2 h-2 rounded-full" style={{ backgroundColor: line.tone }} />
+                    <span className="text-[10px] text-readable-soft">{line.label}</span>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div className="space-y-4">
+            <div className={`glass rounded-xl p-4 border ${scenario.border}`}>
+              <p className="text-xs font-semibold text-readable-strong mb-2">What this curve is saying</p>
+              <p className="text-xs text-readable-soft leading-relaxed">
+                {scenario.takeaway}
+                {scenario.cite.map((id) => (
+                  <Cite key={id} id={id} />
+                ))}
+              </p>
+            </div>
+
+            <div className="glass rounded-xl p-4 border border-white/8">
+              <p className="text-xs font-semibold text-readable-strong mb-3">Fast interpretation</p>
+              <div className="space-y-3">
+                {[
+                  { label: "Peak glucose pressure", value: Math.max(...scenario.curves.glucose), tone: "bg-sky-400" },
+                  { label: "Best satiety point", value: Math.max(...scenario.curves.satiety), tone: "bg-emerald-400" },
+                  { label: "Late cravings pull", value: scenario.curves.cravings[scenario.curves.cravings.length - 1], tone: "bg-rose-400" },
+                ].map((item) => (
+                  <div key={item.label}>
+                    <div className="flex items-center justify-between mb-1.5">
+                      <span className="text-[10px] text-readable-soft">{item.label}</span>
+                      <span className="text-[10px] font-semibold text-readable-strong">{item.value}</span>
+                    </div>
+                    <div className="h-2.5 rounded-full bg-white/8 overflow-hidden">
+                      <motion.div
+                        className={`h-full ${item.tone} rounded-full`}
+                        initial={{ width: 0 }}
+                        animate={{ width: `${item.value}%` }}
+                        transition={{ duration: 0.55 }}
+                      />
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
 
 export default function DietClient() {
   return (
@@ -780,6 +1268,14 @@ export default function DietClient() {
               </div>
             </div>
           </div>
+        </Section>
+
+        <Section>
+          <PlateLab />
+        </Section>
+
+        <Section>
+          <ResponseCurveExplorer />
         </Section>
 
         <Section>
