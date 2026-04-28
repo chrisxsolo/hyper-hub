@@ -260,6 +260,94 @@ const mealArchitecture = [
   },
 ];
 
+const insulinSmartFoodGroups: Array<{
+  title: string;
+  accent: string;
+  border: string;
+  foods: string[];
+  body: React.ReactNode;
+}> = [
+  {
+    title: "Protein-dominant staples",
+    accent: "text-teal-400",
+    border: "border-teal-500/20",
+    foods: ["Eggs", "Greek yogurt or skyr", "Chicken thighs or breast", "Salmon, tuna, sardines", "Lean beef", "Tofu or tempeh"],
+    body: (
+      <>
+        These foods are useful because they are <span className="text-white font-medium">amino-acid dense</span>. They can raise insulin,
+        but usually in the service of nutrient handling, muscle retention, and satiety rather than a large glucose surge. Protein also
+        has a higher thermic effect than a carbohydrate-heavy meal and helps preserve lean mass while dieting.<Cite id={4} /><Cite id={5} /><Cite id={6} /><Cite id={7} /><Cite id={13} />
+      </>
+    ),
+  },
+  {
+    title: "Fiber-rich whole-food volume",
+    accent: "text-sky-400",
+    border: "border-sky-500/20",
+    foods: ["Broccoli", "Cauliflower", "Zucchini", "Mushrooms", "Cucumbers", "Leafy greens", "Green beans", "Peppers"],
+    body: (
+      <>
+        These foods do not bring much glucose load, but they do bring <span className="text-white font-medium">volume, fiber, water, and friction</span>.
+        That matters because meals built around vegetables are slower to eat, more filling, and work well with the carb-last pattern that lowers
+        glucose and insulin excursions.<Cite id={11} />
+      </>
+    ),
+  },
+  {
+    title: "Supportive fats and add-ons",
+    accent: "text-emerald-400",
+    border: "border-emerald-500/20",
+    foods: ["Avocado", "Extra-virgin olive oil", "Olives", "Tahini", "Feta or goat cheese", "Nuts in sensible portions"],
+    body: (
+      <>
+        These make food enjoyable without turning the plate into a sugar delivery system. They improve flavor, make meals feel substantial,
+        and pair well with protein and vegetables so the diet is easier to stick to. That adherence piece matters because minimally processed,
+        satisfying meals are much harder to overeat than ultra-processed ones.<Cite id={8} /><Cite id={9} /><Cite id={10} />
+      </>
+    ),
+  },
+];
+
+const insulinSmartSauces = [
+  {
+    name: "Greek yogurt herb sauce",
+    pairWith: "Chicken, salmon, roasted vegetables",
+    why: "High-protein base, creamy texture, easy way to add flavor without a sweet glaze. Think yogurt + lemon + dill + garlic + salt.",
+  },
+  {
+    name: "Chimichurri",
+    pairWith: "Steak, chicken thighs, shrimp, zucchini",
+    why: "Herbs, olive oil, vinegar, garlic, and chili give a huge flavor return with almost no sugar load.",
+  },
+  {
+    name: "Tahini lemon sauce",
+    pairWith: "Bowls, roasted cauliflower, salmon, tofu",
+    why: "Savory and rich, but still built from sesame, acid, and salt rather than syrup. Great for making vegetables feel less like homework.",
+  },
+  {
+    name: "Pesto",
+    pairWith: "Eggs, chicken, turkey burgers, green beans",
+    why: "Fat- and herb-based sauce that adds intensity fast. A little goes a long way and it works well on simple protein plates.",
+  },
+  {
+    name: "Mustard vinaigrette",
+    pairWith: "Salads, salmon, potatoes eaten after protein, burger bowls",
+    why: "Mustard, olive oil, vinegar, and pepper keep things sharp and interesting without the sugary profile of many bottled dressings.",
+  },
+  {
+    name: "Salsa, salsa verde, or pico",
+    pairWith: "Egg scrambles, taco bowls, grilled meat, cottage cheese",
+    why: "Bright, acidic, low-friction flavor. Usually far lighter than BBQ, teriyaki, honey mustard, or sweet chili sauces.",
+  },
+];
+
+const insulinSmartMeals = [
+  "Egg scramble with spinach, feta, avocado, and salsa.",
+  "Salmon with roasted broccoli and a yogurt-dill or tahini-lemon sauce.",
+  "Burger bowl with lettuce, pickles, onions, tomato, mustard sauce, and roasted vegetables.",
+  "Chicken thighs with cauliflower, cucumber salad, olives, and chimichurri.",
+];
+
 const studies = [
   {
     id: 1,
@@ -689,6 +777,103 @@ export default function DietClient() {
                   Use minimally processed, protein-forward meals as your base. Let discretionary foods be passengers, not the chassis.
                   That framing is partly evidence-based and partly strategic inference from the trials above, but it is far more durable than trying to white-knuckle every social meal.
                 </p>
+              </div>
+            </div>
+          </div>
+        </Section>
+
+        <Section>
+          <div className="glass rounded-2xl p-6 border border-teal-500/20 relative overflow-hidden">
+            <div className="absolute inset-0 bg-gradient-to-br from-teal-500/7 via-emerald-500/5 to-transparent pointer-events-none" />
+            <div className="relative">
+              <div className="flex flex-wrap items-center gap-2 mb-4">
+                <Apple size={16} className="text-teal-400" />
+                <h2 className="text-base font-semibold text-white">Insulin-Smart Foods That Still Make Dieting Fun</h2>
+                <span className="text-[10px] px-2 py-0.5 rounded-full border bg-teal-500/10 text-teal-300/80 border-teal-500/15">
+                  Practical Foods
+                </span>
+              </div>
+
+              <p className="text-sm text-readable-muted leading-relaxed mb-5 max-w-4xl">
+                The practical goal is not <span className="text-white font-medium">zero insulin</span>. It is building meals that do not hammer glucose,
+                do not make you ravenous an hour later, and do not turn the diet into a joyless punishment phase. In practice, that usually means
+                <span className="text-white font-medium"> protein-forward whole foods, vegetables for volume, and sauces built from herbs, acid, fat, and salt instead of sugar.</span>
+              </p>
+              <p className="text-xs text-readable-faint leading-relaxed mb-5 max-w-4xl">
+                Important nuance: some of the best foods on this list still create a <span className="text-readable-strong">useful insulin response</span>,
+                especially protein foods. The benefit is that they usually come with lower glucose exposure, better satiety, better recovery support,
+                and much less of the “eat more, faster” behavior common with ultra-processed food.
+              </p>
+
+              <div className="grid grid-cols-1 lg:grid-cols-3 gap-3 mb-5">
+                {insulinSmartFoodGroups.map((group) => (
+                  <div key={group.title} className={`glass rounded-xl p-4 border ${group.border}`}>
+                    <p className={`text-xs font-semibold ${group.accent} mb-3`}>{group.title}</p>
+                    <div className="flex flex-wrap gap-1.5 mb-3">
+                      {group.foods.map((food) => (
+                        <span key={food} className="text-[10px] px-2.5 py-0.5 rounded-full border border-white/10 bg-white/[0.04] text-readable-soft">
+                          {food}
+                        </span>
+                      ))}
+                    </div>
+                    <p className="text-xs text-readable-soft leading-relaxed">{group.body}</p>
+                  </div>
+                ))}
+              </div>
+
+              <div className="grid grid-cols-1 lg:grid-cols-[1.02fr_0.98fr] gap-4 mb-5">
+                <div className="glass rounded-xl p-4 border border-teal-500/15">
+                  <p className="text-xs font-semibold text-teal-400 mb-3">Sauces that work better than sugary glazes</p>
+                  <div className="space-y-3">
+                    {insulinSmartSauces.map((sauce) => (
+                      <div key={sauce.name} className="glass rounded-xl p-3 border border-white/8">
+                        <div className="flex items-start justify-between gap-3 mb-1">
+                          <p className="text-xs font-semibold text-readable-strong">{sauce.name}</p>
+                          <span className="text-[10px] text-readable-faint shrink-0">{sauce.pairWith}</span>
+                        </div>
+                        <p className="text-xs text-readable-soft leading-relaxed">{sauce.why}</p>
+                      </div>
+                    ))}
+                  </div>
+                  <p className="text-[10px] text-readable-faint leading-relaxed mt-3">
+                    This part is practical inference, not a special “sauce literature” section: flavor helps adherence, and acid-herb-fat sauces usually
+                    support a protein-and-veg meal better than sticky sweet sauces built around sugar.
+                  </p>
+                </div>
+
+                <div className="glass rounded-xl p-4 border border-emerald-500/15">
+                  <p className="text-xs font-semibold text-emerald-400 mb-3">What this means mechanically</p>
+                  <div className="space-y-3 mb-4">
+                    {[
+                      "Protein dominance usually means more satiety, more lean-mass protection, and a higher thermic effect.",
+                      "Fiber-rich vegetables add chewing, volume, and slower meal speed without much glucose burden.",
+                      "Minimally processed meals are harder to overeat than hyper-palatable packaged foods.",
+                      "If you include carbs, placing them after protein and vegetables is usually a better metabolic trade than starting with them.",
+                    ].map((point) => (
+                      <div key={point} className="flex items-start gap-2 text-xs text-readable-soft">
+                        <ChevronRight size={11} className="text-emerald-400 shrink-0 mt-0.5" />
+                        <span>{point}</span>
+                      </div>
+                    ))}
+                  </div>
+                  <p className="text-xs text-readable-soft leading-relaxed">
+                    The honest framing: these foods do not create magical immunity to fat gain. A sustained calorie surplus can still store fat. What they
+                    usually do is make you <span className="text-white font-medium">less likely to overshoot intake</span>, while giving you a better glucose profile,
+                    better training support, and a diet pattern that promotes overall cardiometabolic health instead of fighting it.<Cite id={7} /><Cite id={8} /><Cite id={9} /><Cite id={10} /><Cite id={13} />
+                  </p>
+                </div>
+              </div>
+
+              <div className="glass rounded-xl p-4 border border-white/8">
+                <p className="text-xs font-semibold text-readable-strong mb-3">Easy meal ideas that fit this style</p>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                  {insulinSmartMeals.map((meal) => (
+                    <div key={meal} className="glass rounded-xl p-3 border border-white/8 flex items-start gap-2">
+                      <ChevronRight size={11} className="text-teal-400 shrink-0 mt-0.5" />
+                      <p className="text-xs text-readable-soft leading-relaxed">{meal}</p>
+                    </div>
+                  ))}
+                </div>
               </div>
             </div>
           </div>
