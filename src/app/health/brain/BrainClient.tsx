@@ -40,7 +40,13 @@ function Section({ children, className = "", id = "" }: { children: React.ReactN
 }
 
 // ─── Glossary ─────────────────────────────────────────────────────────────────
-const glossaryData = {
+type GlossaryEntry = Readonly<{
+  title: string;
+  body: string;
+  learnMore?: string;
+}>;
+
+const glossaryData: Record<string, GlossaryEntry> = {
   dopamine: {
     title: "Dopamine",
     body: "A neurotransmitter that drives motivation, focus, pleasure, and mood. The nucleus accumbens is the primary dopamine reward center. Constant high-stimulation inputs (porn, cocaine, social media, gambling) flood dopamine so repeatedly that receptors downregulate — you need more stimulation to feel anything. This is the neurological engine behind addiction and the reason 'brain rot' from social media is neurologically real.",
