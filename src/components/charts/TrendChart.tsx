@@ -4,6 +4,7 @@ import { useId, useMemo, useState } from "react";
 import { motion } from "framer-motion";
 
 export type TrendPoint = { date: string; value: number };
+export type Annotation = { date: string; label: string; color?: string; place?: "above" | "below" };
 
 const W = 680;
 const PAD = { top: 18, right: 18, bottom: 30, left: 46 };
@@ -33,6 +34,7 @@ export default function TrendChart({
   avgWindow = 7,
   markMinMax = false,
   goal = null,
+  annotations = [],
 }: {
   data: TrendPoint[];
   color?: string;
@@ -42,6 +44,7 @@ export default function TrendChart({
   avgWindow?: number;
   markMinMax?: boolean;
   goal?: number | null;
+  annotations?: Annotation[];
 }) {
   const gid = useId();
   const [hover, setHover] = useState<number | null>(null);
@@ -184,6 +187,31 @@ export default function TrendChart({
               </text>
             </g>
           ))}
+
+        {/* annotations */}
+        {annotations.map((a, i) => {
+          const c = g.coords.find((co) => co.p.date === a.date);
+          if (!c) return null;
+          const col = a.color ?? "#e2e8f0";
+          const place = a.place ?? (c.y < PAD.top + innerH / 2 ? "below" : "above");
+          const ly = place === "above" ? c.y - 14 : c.y + 20;
+          const w = a.label.length * 5.7 + 10;
+          const lx = Math.max(PAD.left + w / 2, Math.min(W - PAD.right - w / 2, c.x));
+          return (
+            <g key={i}>
+              <motion.circle
+                cx={c.x} cy={c.y} r={4.5} fill={col} stroke="#0d0d0f" strokeWidth={1.6}
+                initial={{ opacity: 0, scale: 0 }} animate={{ opacity: 1, scale: 1 }}
+                transition={{ delay: 1.4 + i * 0.18, type: "spring", stiffness: 300 }}
+              />
+              <motion.g initial={{ opacity: 0, y: place === "above" ? 4 : -4 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 1.5 + i * 0.18 }}>
+                <line x1={c.x} y1={c.y} x2={lx} y2={ly + (place === "above" ? 7 : -7)} stroke={`${col}55`} strokeWidth={1} />
+                <rect x={lx - w / 2} y={ly - 9} width={w} height={16} rx={4} fill="#15151aee" stroke={`${col}66`} />
+                <text x={lx} y={ly + 2} textAnchor="middle" fontSize="9.5" fill="#fff">{a.label}</text>
+              </motion.g>
+            </g>
+          );
+        })}
 
         {/* hover hit zones */}
         {g.coords.map((c) => (
