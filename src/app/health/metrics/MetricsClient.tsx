@@ -19,7 +19,7 @@ import {
 import { createClient } from "@/lib/supabase/client";
 import LineChart, { type ChartPoint } from "@/components/LineChart";
 import WeightLossView, { type WeightRow } from "./WeightLossView";
-import StepsView, { type StepRow, type HourlyRow, type WorkoutRow } from "./StepsView";
+import StepsView, { type StepRow, type WorkoutRow } from "./StepsView";
 
 // ── Row types ────────────────────────────────────────────────────────────────
 type SleepRow = {
@@ -87,7 +87,6 @@ export default function MetricsClient({
 
   const [weight, setWeight] = useState<WeightRow[]>([]);
   const [steps, setSteps] = useState<StepRow[]>([]);
-  const [hourly, setHourly] = useState<HourlyRow[]>([]);
   const [workouts, setWorkouts] = useState<WorkoutRow[]>([]);
   const [sleep, setSleep] = useState<SleepRow[]>([]);
   const [blood, setBlood] = useState<BloodRow[]>([]);
@@ -97,17 +96,15 @@ export default function MetricsClient({
 
   const load = useCallback(async () => {
     setLoading(true);
-    const [w, st, hr, wk, s, b] = await Promise.all([
+    const [w, st, wk, s, b] = await Promise.all([
       supabase.from("health_weight").select("*").order("measured_on"),
       supabase.from("health_steps").select("*").order("measured_on"),
-      supabase.from("health_steps_hourly").select("*").order("hour"),
       supabase.from("health_workouts").select("*").order("started_at"),
       supabase.from("health_sleep").select("*").order("measured_on"),
       supabase.from("health_blood_markers").select("*").order("drawn_on"),
     ]);
     if (w.data) setWeight(w.data as WeightRow[]);
     if (st.data) setSteps(st.data as StepRow[]);
-    if (hr.data) setHourly(hr.data as HourlyRow[]);
     if (wk.data) setWorkouts(wk.data as WorkoutRow[]);
     if (s.data) setSleep(s.data as SleepRow[]);
     if (b.data) setBlood(b.data as BloodRow[]);
@@ -220,7 +217,7 @@ export default function MetricsClient({
       ) : (
         <>
           {tab === "weight" && <WeightLossView rows={weight} />}
-          {tab === "steps" && <StepsView rows={steps} hourly={hourly} workouts={workouts} />}
+          {tab === "steps" && <StepsView rows={steps} workouts={workouts} weight={weight} />}
           {tab === "sleep" && (
             <SleepTab
               rows={sleep}
