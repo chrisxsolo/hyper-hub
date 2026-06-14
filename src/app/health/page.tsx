@@ -2,9 +2,22 @@
 
 import { motion } from "framer-motion";
 import Link from "next/link";
-import { ArrowLeft, ArrowRight, Droplets, Zap, Activity, Scale, Apple, Brain } from "lucide-react";
+import { ArrowLeft, ArrowRight, Droplets, Zap, Activity, Scale, Apple, Brain, LineChart } from "lucide-react";
 
 const topics = [
+  {
+    href: "/health/metrics",
+    icon: LineChart,
+    title: "My Metrics",
+    description: "Interactive weight-loss analysis — body composition, steps, blood tests, and sleep, all charted over time.",
+    tags: ["Weight Loss", "Body Comp", "Steps", "Trends"],
+    gradient: "from-cyan-500/20 to-blue-500/10",
+    border: "border-cyan-500/20 hover:border-cyan-500/40",
+    iconBg: "bg-cyan-500/15 border-cyan-500/25",
+    iconColor: "text-cyan-400",
+    tagColor: "bg-cyan-500/10 text-cyan-300/80 border-cyan-500/15",
+    readTime: "Dashboard",
+  },
   {
     href: "/health/insulin",
     icon: Droplets,
