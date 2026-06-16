@@ -97,6 +97,16 @@ export type NutritionRow = {
   note: string | null;
 };
 
+export type VitalsRow = {
+  id: string;
+  measured_on: string;
+  resting_hr: number | null;
+  hrv_ms: number | null;
+  cardio_recovery: number | null;
+  walking_hr_avg: number | null;
+  source?: string | null;
+};
+
 export type ExperimentRow = {
   id: string;
   name: string;

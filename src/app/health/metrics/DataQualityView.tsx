@@ -5,7 +5,7 @@ import { motion } from "framer-motion";
 import {
   Database, ShieldCheck, Activity, Scale, Footprints, Moon, Droplet,
   Dumbbell, Apple, Clock, CalendarRange, Layers, Copy, Crosshair,
-  CircleCheck, CircleAlert,
+  CircleCheck, CircleAlert, HeartPulse,
 } from "lucide-react";
 import {
   KpiGrid, Narrative, EmptyState, Pill, ConfidenceBadge, fadeUp,
@@ -17,7 +17,7 @@ import {
 } from "@/lib/health/stats";
 import type {
   WeightRow, StepRow, SleepRow, BloodRow,
-  WorkoutRow, StrengthRow, NutritionRow,
+  WorkoutRow, StrengthRow, NutritionRow, VitalsRow,
 } from "@/lib/health/types";
 
 const TODAY = new Date().toISOString().slice(0, 10);
@@ -102,7 +102,7 @@ function outlierCount(values: number[]): number {
 }
 
 export default function DataQualityView({
-  weight, steps, sleep, blood, workouts, strength, nutrition,
+  weight, steps, sleep, blood, workouts, strength, nutrition, vitals,
 }: {
   weight: WeightRow[];
   steps: StepRow[];
@@ -111,16 +111,18 @@ export default function DataQualityView({
   workouts: WorkoutRow[];
   strength: StrengthRow[];
   nutrition: NutritionRow[];
+  vitals: VitalsRow[];
 }) {
   const sources = useMemo<Coverage[]>(() => [
     buildCoverage("weight", "Body composition", Scale, "#22d3ee", weight.map((r) => r.measured_on)),
     buildCoverage("steps", "Steps", Footprints, "#34d399", steps.map((r) => r.measured_on)),
+    buildCoverage("vitals", "Heart (RHR/HRV)", HeartPulse, "#fb7185", vitals.map((r) => r.measured_on)),
     buildCoverage("sleep", "Sleep", Moon, "#a78bfa", sleep.map((r) => r.measured_on)),
     buildCoverage("blood", "Blood panels", Droplet, "#f87171", blood.map((r) => r.drawn_on)),
     buildCoverage("workouts", "Workouts", Activity, "#fb923c", workouts.map((r) => (r.started_at ? r.started_at.slice(0, 10) : ""))),
     buildCoverage("strength", "Strength", Dumbbell, "#60a5fa", strength.map((r) => r.performed_on)),
     buildCoverage("nutrition", "Nutrition", Apple, "#2dd4bf", nutrition.map((r) => r.eaten_on)),
-  ], [weight, steps, sleep, blood, workouts, strength, nutrition]);
+  ], [weight, steps, vitals, sleep, blood, workouts, strength, nutrition]);
 
   const active = useMemo(() => sources.filter((s) => s.count > 0), [sources]);
 

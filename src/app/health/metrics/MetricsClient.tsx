@@ -16,6 +16,7 @@ import {
   Microscope,
   Database,
   Radar,
+  HeartPulse,
   Plus,
   LogOut,
   Loader2,
@@ -29,11 +30,12 @@ import StepsView, { type StepRow, type WorkoutRow } from "./StepsView";
 import BloodView, { type BloodRow } from "./BloodView";
 import OverviewView from "./OverviewView";
 import RunningLabView from "./RunningLabView";
+import RecoveryView from "./RecoveryView";
 import StrengthView from "./StrengthView";
 import NutritionView from "./NutritionView";
 import DataQualityView from "./DataQualityView";
 import CorrelationLabView from "./CorrelationLabView";
-import type { StrengthRow, NutritionRow, ExperimentRow } from "@/lib/health/types";
+import type { StrengthRow, NutritionRow, ExperimentRow, VitalsRow } from "@/lib/health/types";
 
 // ── Row types ────────────────────────────────────────────────────────────────
 type SleepRow = {
@@ -48,8 +50,8 @@ type SleepRow = {
   note: string | null;
 };
 type Tab =
-  | "overview" | "weight" | "steps" | "running" | "strength"
-  | "nutrition" | "sleep" | "blood" | "lab" | "data";
+  | "overview" | "weight" | "steps" | "running" | "strength" | "nutrition"
+  | "recovery" | "sleep" | "blood" | "lab" | "data";
 
 const today = () => new Date().toISOString().slice(0, 10);
 
@@ -60,6 +62,7 @@ const tabs: { key: Tab; label: string; icon: React.ElementType; color: string }[
   { key: "running", label: "Running", icon: Activity, color: "#fb923c" },
   { key: "strength", label: "Strength", icon: Dumbbell, color: "#f472b6" },
   { key: "nutrition", label: "Nutrition", icon: UtensilsCrossed, color: "#2dd4bf" },
+  { key: "recovery", label: "Recovery", icon: HeartPulse, color: "#fb7185" },
   { key: "sleep", label: "Sleep", icon: Moon, color: "#a78bfa" },
   { key: "blood", label: "Blood", icon: FlaskConical, color: "#22d3ee" },
   { key: "lab", label: "Lab", icon: Microscope, color: "#818cf8" },
@@ -104,13 +107,14 @@ export default function MetricsClient({
   const [strength, setStrength] = useState<StrengthRow[]>([]);
   const [nutrition, setNutrition] = useState<NutritionRow[]>([]);
   const [experiments, setExperiments] = useState<ExperimentRow[]>([]);
+  const [vitals, setVitals] = useState<VitalsRow[]>([]);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [err, setErr] = useState("");
 
   const load = useCallback(async () => {
     setLoading(true);
-    const [w, st, wk, s, b, str, nut, exp] = await Promise.all([
+    const [w, st, wk, s, b, str, nut, exp, vit] = await Promise.all([
       supabase.from("health_weight").select("*").order("measured_on"),
       supabase.from("health_steps").select("*").order("measured_on"),
       supabase.from("health_workouts").select("*").order("started_at"),
@@ -119,6 +123,7 @@ export default function MetricsClient({
       supabase.from("health_strength_sets").select("*").order("performed_on"),
       supabase.from("health_nutrition").select("*").order("eaten_on"),
       supabase.from("health_experiments").select("*").order("started_on"),
+      supabase.from("health_vitals").select("*").order("measured_on"),
     ]);
     if (w.data) setWeight(w.data as WeightRow[]);
     if (st.data) setSteps(st.data as StepRow[]);
@@ -128,7 +133,8 @@ export default function MetricsClient({
     if (str.data) setStrength(str.data as StrengthRow[]);
     if (nut.data) setNutrition(nut.data as NutritionRow[]);
     if (exp.data) setExperiments(exp.data as ExperimentRow[]);
-    const firstErr = w.error || st.error || s.error || b.error || str.error || nut.error || exp.error;
+    if (vit.data) setVitals(vit.data as VitalsRow[]);
+    const firstErr = w.error || st.error || s.error || b.error || str.error || nut.error || exp.error || vit.error;
     if (firstErr) setErr(firstErr.message);
     setLoading(false);
   }, [supabase]);
@@ -255,11 +261,13 @@ export default function MetricsClient({
               blood={blood}
               strength={strength}
               nutrition={nutrition}
+              vitals={vitals}
             />
           )}
           {tab === "weight" && <WeightLossView rows={weight} />}
           {tab === "steps" && <StepsView rows={steps} workouts={workouts} weight={weight} />}
           {tab === "running" && <RunningLabView workouts={workouts} />}
+          {tab === "recovery" && <RecoveryView vitals={vitals} />}
           {tab === "strength" && (
             <StrengthView
               rows={strength}
@@ -302,6 +310,7 @@ export default function MetricsClient({
               workouts={workouts}
               strength={strength}
               nutrition={nutrition}
+              vitals={vitals}
             />
           )}
           {tab === "sleep" && (

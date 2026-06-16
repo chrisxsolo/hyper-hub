@@ -9,7 +9,7 @@ import {
 } from "lucide-react";
 import { fadeUp, SectionCard, Narrative, Pill, ConfidenceBadge } from "@/components/health/ui";
 import type {
-  WeightRow, StepRow, WorkoutRow, SleepRow, BloodRow, StrengthRow, NutritionRow,
+  WeightRow, StepRow, WorkoutRow, SleepRow, BloodRow, StrengthRow, NutritionRow, VitalsRow,
 } from "@/lib/health/types";
 import {
   analyzeDeviation, mean, type DeviationReport, type DeviationLevel, MI_PER_KM,
@@ -41,7 +41,7 @@ type SignalDef = {
 };
 
 export default function OverviewView({
-  weight, steps, workouts, sleep, blood, strength, nutrition,
+  weight, steps, workouts, sleep, blood, strength, nutrition, vitals,
 }: {
   weight: WeightRow[];
   steps: StepRow[];
@@ -50,6 +50,7 @@ export default function OverviewView({
   blood: BloodRow[];
   strength: StrengthRow[];
   nutrition: NutritionRow[];
+  vitals: VitalsRow[];
 }) {
   const signals = useMemo(() => {
     const defs: { def: SignalDef; series: { date: string; value: number }[] }[] = [
@@ -57,17 +58,18 @@ export default function OverviewView({
         series: dailySeries(weight, (r) => r.measured_on, (r) => Number(r.weight_lbs)) },
       { def: { key: "steps", label: "Steps", unit: "", dec: 0, icon: Footprints, goodDown: false },
         series: dailySeries(steps, (r) => r.measured_on, (r) => Number(r.steps)) },
+      // Resting HR & HRV come from the dense daily vitals export, not the sparse sleep log.
       { def: { key: "rhr", label: "Resting HR", unit: "bpm", dec: 0, icon: HeartPulse, goodDown: true },
-        series: dailySeries(sleep, (r) => r.measured_on, (r) => (r.resting_hr != null ? Number(r.resting_hr) : null)) },
+        series: dailySeries(vitals, (r) => r.measured_on, (r) => (r.resting_hr != null ? Number(r.resting_hr) : null)) },
       { def: { key: "hrv", label: "HRV", unit: "ms", dec: 0, icon: Activity, goodDown: false },
-        series: dailySeries(sleep, (r) => r.measured_on, (r) => (r.hrv_ms != null ? Number(r.hrv_ms) : null)) },
+        series: dailySeries(vitals, (r) => r.measured_on, (r) => (r.hrv_ms != null ? Number(r.hrv_ms) : null)) },
       { def: { key: "sleep", label: "Sleep", unit: "hrs", dec: 1, icon: Moon, goodDown: false },
         series: dailySeries(sleep, (r) => r.measured_on, (r) => Number(r.total_hours)) },
     ];
     return defs
       .map(({ def, series }) => ({ def, series, report: analyzeDeviation(series) }))
       .filter((s): s is { def: SignalDef; series: { date: string; value: number }[]; report: DeviationReport } => s.report != null);
-  }, [weight, steps, sleep]);
+  }, [weight, steps, sleep, vitals]);
 
   const sustainedCount = signals.filter((s) => s.report.sustained).length;
 
@@ -104,7 +106,7 @@ export default function OverviewView({
     );
   }
 
-  const totalObs = weight.length + steps.length + workouts.length + sleep.length + blood.length + strength.length + nutrition.length;
+  const totalObs = weight.length + steps.length + workouts.length + sleep.length + blood.length + strength.length + nutrition.length + vitals.length;
 
   return (
     <motion.div initial="hidden" animate="show" variants={{ show: { transition: { staggerChildren: 0.05 } } }} className="space-y-6">

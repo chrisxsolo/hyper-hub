@@ -23,8 +23,18 @@ export default function AnimatedNumber({
   const inView = useInView(ref, { once: true, margin: "-40px" });
   const [display, setDisplay] = useState(0);
 
+  // Fallback: if the IntersectionObserver never reports in-view (some embeds,
+  // headless browsers, or odd scroll roots), still reveal the value so a number
+  // is never stuck at 0. The scroll-triggered count-up wins when it fires first.
+  const [fallback, setFallback] = useState(false);
   useEffect(() => {
-    if (!inView) return;
+    const t = setTimeout(() => setFallback(true), 900);
+    return () => clearTimeout(t);
+  }, []);
+  const trigger = inView || fallback;
+
+  useEffect(() => {
+    if (!trigger) return;
     let raf = 0;
     const start = performance.now();
     const from = 0;
@@ -36,7 +46,7 @@ export default function AnimatedNumber({
     };
     raf = requestAnimationFrame(tick);
     return () => cancelAnimationFrame(raf);
-  }, [inView, value, duration]);
+  }, [trigger, value, duration]);
 
   return (
     <span ref={ref} className={className}>
