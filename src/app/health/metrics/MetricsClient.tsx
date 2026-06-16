@@ -10,6 +10,12 @@ import {
   Footprints,
   Moon,
   FlaskConical,
+  Activity,
+  Dumbbell,
+  UtensilsCrossed,
+  Microscope,
+  Database,
+  Radar,
   Plus,
   LogOut,
   Loader2,
@@ -21,6 +27,13 @@ import LineChart, { type ChartPoint } from "@/components/LineChart";
 import WeightLossView, { type WeightRow } from "./WeightLossView";
 import StepsView, { type StepRow, type WorkoutRow } from "./StepsView";
 import BloodView, { type BloodRow } from "./BloodView";
+import OverviewView from "./OverviewView";
+import RunningLabView from "./RunningLabView";
+import StrengthView from "./StrengthView";
+import NutritionView from "./NutritionView";
+import DataQualityView from "./DataQualityView";
+import CorrelationLabView from "./CorrelationLabView";
+import type { StrengthRow, NutritionRow, ExperimentRow } from "@/lib/health/types";
 
 // ── Row types ────────────────────────────────────────────────────────────────
 type SleepRow = {
@@ -34,15 +47,23 @@ type SleepRow = {
   sleep_score: number | null;
   note: string | null;
 };
-type Tab = "weight" | "steps" | "sleep" | "blood";
+type Tab =
+  | "overview" | "weight" | "steps" | "running" | "strength"
+  | "nutrition" | "sleep" | "blood" | "lab" | "data";
 
 const today = () => new Date().toISOString().slice(0, 10);
 
 const tabs: { key: Tab; label: string; icon: React.ElementType; color: string }[] = [
-  { key: "weight", label: "Weight Loss", icon: Scale, color: "#60a5fa" },
+  { key: "overview", label: "Overview", icon: Radar, color: "#22d3ee" },
+  { key: "weight", label: "Weight", icon: Scale, color: "#60a5fa" },
   { key: "steps", label: "Steps", icon: Footprints, color: "#34d399" },
+  { key: "running", label: "Running", icon: Activity, color: "#fb923c" },
+  { key: "strength", label: "Strength", icon: Dumbbell, color: "#f472b6" },
+  { key: "nutrition", label: "Nutrition", icon: UtensilsCrossed, color: "#2dd4bf" },
   { key: "sleep", label: "Sleep", icon: Moon, color: "#a78bfa" },
   { key: "blood", label: "Blood", icon: FlaskConical, color: "#22d3ee" },
+  { key: "lab", label: "Lab", icon: Microscope, color: "#818cf8" },
+  { key: "data", label: "Data", icon: Database, color: "#94a3b8" },
 ];
 
 // ── Small form primitives ──────────────────────────────────────────────────────
@@ -73,35 +94,53 @@ export default function MetricsClient({
 }) {
   const supabase = useMemo(() => createClient(), []);
   const router = useRouter();
-  const [tab, setTab] = useState<Tab>("weight");
+  const [tab, setTab] = useState<Tab>("overview");
 
   const [weight, setWeight] = useState<WeightRow[]>([]);
   const [steps, setSteps] = useState<StepRow[]>([]);
   const [workouts, setWorkouts] = useState<WorkoutRow[]>([]);
   const [sleep, setSleep] = useState<SleepRow[]>([]);
   const [blood, setBlood] = useState<BloodRow[]>([]);
+  const [strength, setStrength] = useState<StrengthRow[]>([]);
+  const [nutrition, setNutrition] = useState<NutritionRow[]>([]);
+  const [experiments, setExperiments] = useState<ExperimentRow[]>([]);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [err, setErr] = useState("");
 
   const load = useCallback(async () => {
     setLoading(true);
-    const [w, st, wk, s, b] = await Promise.all([
+    const [w, st, wk, s, b, str, nut, exp] = await Promise.all([
       supabase.from("health_weight").select("*").order("measured_on"),
       supabase.from("health_steps").select("*").order("measured_on"),
       supabase.from("health_workouts").select("*").order("started_at"),
       supabase.from("health_sleep").select("*").order("measured_on"),
       supabase.from("health_blood_markers").select("*").order("drawn_on"),
+      supabase.from("health_strength_sets").select("*").order("performed_on"),
+      supabase.from("health_nutrition").select("*").order("eaten_on"),
+      supabase.from("health_experiments").select("*").order("started_on"),
     ]);
     if (w.data) setWeight(w.data as WeightRow[]);
     if (st.data) setSteps(st.data as StepRow[]);
     if (wk.data) setWorkouts(wk.data as WorkoutRow[]);
     if (s.data) setSleep(s.data as SleepRow[]);
     if (b.data) setBlood(b.data as BloodRow[]);
-    const firstErr = w.error || st.error || s.error || b.error;
+    if (str.data) setStrength(str.data as StrengthRow[]);
+    if (nut.data) setNutrition(nut.data as NutritionRow[]);
+    if (exp.data) setExperiments(exp.data as ExperimentRow[]);
+    const firstErr = w.error || st.error || s.error || b.error || str.error || nut.error || exp.error;
     if (firstErr) setErr(firstErr.message);
     setLoading(false);
   }, [supabase]);
+
+  // Most recent body weight — feeds protein-per-kg and relative-strength math.
+  const bodyWeightLbs = useMemo(() => {
+    if (!weight.length) return null;
+    const sorted = [...weight].sort((a, b) =>
+      (a.measured_at ?? a.measured_on).localeCompare(b.measured_at ?? b.measured_on),
+    );
+    return Number(sorted[sorted.length - 1].weight_lbs);
+  }, [weight]);
 
   useEffect(() => {
     load();
@@ -133,7 +172,7 @@ export default function MetricsClient({
   }
 
   return (
-    <div className="max-w-3xl mx-auto px-6 py-12">
+    <div className="max-w-5xl mx-auto px-4 sm:px-6 py-12">
       {/* Back + account */}
       <motion.div
         initial={{ opacity: 0 }}
@@ -173,12 +212,13 @@ export default function MetricsClient({
       >
         <h1 className="text-3xl font-bold text-white tracking-tight">My Metrics</h1>
         <p className="text-sm text-readable-soft mt-1">
-          Blood tests, weight, and sleep over time.
+          A personal health lab — baselines, running performance, lifting, nutrition,
+          blood, and the relationships between them.
         </p>
       </motion.div>
 
       {/* Tabs */}
-      <div className="flex gap-2 mb-6">
+      <div className="flex flex-wrap gap-2 mb-6">
         {tabs.map(({ key, label, icon: Icon }) => (
           <button
             key={key}
@@ -206,8 +246,64 @@ export default function MetricsClient({
         </div>
       ) : (
         <>
+          {tab === "overview" && (
+            <OverviewView
+              weight={weight}
+              steps={steps}
+              workouts={workouts}
+              sleep={sleep}
+              blood={blood}
+              strength={strength}
+              nutrition={nutrition}
+            />
+          )}
           {tab === "weight" && <WeightLossView rows={weight} />}
           {tab === "steps" && <StepsView rows={steps} workouts={workouts} weight={weight} />}
+          {tab === "running" && <RunningLabView workouts={workouts} />}
+          {tab === "strength" && (
+            <StrengthView
+              rows={strength}
+              canEdit={canEdit}
+              saving={saving}
+              onAdd={(p) => insert("health_strength_sets", p)}
+              onDelete={(id) => remove("health_strength_sets", id)}
+              bodyWeightLbs={bodyWeightLbs}
+            />
+          )}
+          {tab === "nutrition" && (
+            <NutritionView
+              rows={nutrition}
+              canEdit={canEdit}
+              saving={saving}
+              onAdd={(p) => insert("health_nutrition", p)}
+              onDelete={(id) => remove("health_nutrition", id)}
+              bodyWeightLbs={bodyWeightLbs}
+            />
+          )}
+          {tab === "lab" && (
+            <CorrelationLabView
+              weight={weight}
+              steps={steps}
+              workouts={workouts}
+              sleep={sleep}
+              experiments={experiments}
+              canEdit={canEdit}
+              saving={saving}
+              onAddExperiment={(p) => insert("health_experiments", p)}
+              onDeleteExperiment={(id) => remove("health_experiments", id)}
+            />
+          )}
+          {tab === "data" && (
+            <DataQualityView
+              weight={weight}
+              steps={steps}
+              sleep={sleep}
+              blood={blood}
+              workouts={workouts}
+              strength={strength}
+              nutrition={nutrition}
+            />
+          )}
           {tab === "sleep" && (
             <SleepTab
               rows={sleep}
