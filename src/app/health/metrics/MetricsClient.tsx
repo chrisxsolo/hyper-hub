@@ -20,6 +20,7 @@ import { createClient } from "@/lib/supabase/client";
 import LineChart, { type ChartPoint } from "@/components/LineChart";
 import WeightLossView, { type WeightRow } from "./WeightLossView";
 import StepsView, { type StepRow, type WorkoutRow } from "./StepsView";
+import BloodView, { type BloodRow } from "./BloodView";
 
 // ── Row types ────────────────────────────────────────────────────────────────
 type SleepRow = {
@@ -33,17 +34,6 @@ type SleepRow = {
   sleep_score: number | null;
   note: string | null;
 };
-type BloodRow = {
-  id: string;
-  drawn_on: string;
-  marker: string;
-  value: number;
-  unit: string | null;
-  ref_low: number | null;
-  ref_high: number | null;
-  lab: string | null;
-};
-
 type Tab = "weight" | "steps" | "sleep" | "blood";
 
 const today = () => new Date().toISOString().slice(0, 10);
@@ -360,8 +350,6 @@ function BloodTab({
     () => Array.from(new Set(rows.map((r) => r.marker))).sort(),
     [rows],
   );
-  const [selected, setSelected] = useState<string>("");
-  const activeMarker = selected || markers[0] || "";
 
   const [date, setDate] = useState(today());
   const [marker, setMarker] = useState("");
@@ -369,13 +357,6 @@ function BloodTab({
   const [unit, setUnit] = useState("");
   const [low, setLow] = useState("");
   const [high, setHigh] = useState("");
-
-  const series = rows.filter((r) => r.marker === activeMarker);
-  const points: ChartPoint[] = series.map((r) => ({
-    date: r.drawn_on,
-    value: Number(r.value),
-  }));
-  const last = series[series.length - 1];
 
   async function submit(e: React.FormEvent) {
     e.preventDefault();
@@ -389,44 +370,13 @@ function BloodTab({
       ref_high: high ? Number(high) : null,
     });
     if (ok) {
-      setSelected(marker.trim());
       setValue("");
     }
   }
 
   return (
     <div className="space-y-6">
-      {markers.length > 0 && (
-        <div className="flex flex-wrap gap-2">
-          {markers.map((m) => (
-            <button
-              key={m}
-              onClick={() => setSelected(m)}
-              className={`px-3 py-1.5 rounded-lg text-xs font-medium border transition-all ${
-                activeMarker === m
-                  ? "bg-cyan-500/15 text-cyan-200 border-cyan-500/30"
-                  : "text-readable-soft border-white/10 hover:bg-white/[0.05]"
-              }`}
-            >
-              {m}
-            </button>
-          ))}
-        </div>
-      )}
-
-      <ChartCard
-        title={activeMarker || "Blood markers"}
-        unit={last?.unit ?? ""}
-        color="#22d3ee"
-      >
-        <LineChart
-          data={points}
-          color="#22d3ee"
-          unit={last?.unit ?? ""}
-          refLow={last?.ref_low ?? null}
-          refHigh={last?.ref_high ?? null}
-        />
-      </ChartCard>
+      <BloodView rows={rows} canEdit={canEdit} onDelete={onDelete} />
 
       {canEdit && (
       <AddCard onSubmit={submit} saving={saving}>
@@ -455,23 +405,6 @@ function BloodTab({
         </Field>
       </AddCard>
       )}
-
-      <HistoryList
-        canEdit={canEdit}
-        items={series
-          .slice()
-          .reverse()
-          .map((r) => ({
-            id: r.id,
-            date: r.drawn_on,
-            primary: `${r.value}${r.unit ? " " + r.unit : ""}`,
-            secondary:
-              r.ref_low != null && r.ref_high != null
-                ? `ref ${r.ref_low}–${r.ref_high}`
-                : "",
-          }))}
-        onDelete={onDelete}
-      />
     </div>
   );
 }
