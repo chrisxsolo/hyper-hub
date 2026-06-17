@@ -8,7 +8,7 @@ import {
   ArrowLeft, ChevronLeft, ChevronRight, LogOut, Lock, Settings2,
   Flame, Beef, UtensilsCrossed, Target, CalendarDays, LineChart as LineIcon,
   CalendarRange, CheckCircle2, X, RotateCcw, AlertTriangle, Pencil,
-  ScanLine, FlaskConical,
+  ScanLine,
 } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import ProgressRing from "@/components/charts/ProgressRing";
@@ -34,7 +34,7 @@ import type {
   SavedFood, TargetHistoryRow,
 } from "@/lib/nutrition/types";
 
-type Tab = "today" | "plan" | "trends" | "calendar";
+type Tab = "today" | "trends" | "calendar";
 type PendingInput = { text: string; mealType: MealType; date: string; time: string };
 
 const DEFAULT_CAL_TARGET = 2200;
@@ -394,7 +394,6 @@ export default function NutritionClient({ email, canEdit }: { email: string | nu
       <div className="flex gap-2 mb-6">
         {([
           { key: "today", label: "Today", icon: CalendarDays },
-          { key: "plan", label: "Plan", icon: FlaskConical },
           { key: "trends", label: "Trends", icon: LineIcon },
           { key: "calendar", label: "Calendar", icon: CalendarRange },
         ] as { key: Tab; label: string; icon: React.ElementType }[]).map(({ key, label, icon: Icon }) => (
@@ -506,17 +505,23 @@ export default function NutritionClient({ email, canEdit }: { email: string | nu
               onSaveTemplate={saveTemplate}
             />
           </div>
+
+          {/* Plan the rest of the day — experiment on top of what's logged */}
+          {canEdit && (
+            <PlanTab
+              savedFoods={savedFoods}
+              day={selectedDate}
+              dayLabel={fmtDayLabel(selectedDate)}
+              isToday={isToday}
+              baselineCal={daySummary.cal}
+              baselineProt={daySummary.prot}
+              baselineCount={daySummary.count}
+              target={{ calorie: dayTarget.calorie, protein: dayTarget.protein }}
+              api={api}
+              onSaved={() => { setFlash("Added to your day."); load(); }}
+            />
+          )}
         </div>
-      ) : tab === "plan" ? (
-        <PlanTab
-          savedFoods={savedFoods}
-          targetHistory={targetHistory}
-          calTarget={calTarget}
-          proteinTarget={proteinTarget}
-          selectedDate={selectedDate}
-          api={api}
-          onSaved={() => { setFlash("Plan saved & logged."); load(); }}
-        />
       ) : tab === "trends" ? (
         <TrendsView
           weekBars={weekBars} calTrend={calTrend} proteinTrend={proteinTrend}
