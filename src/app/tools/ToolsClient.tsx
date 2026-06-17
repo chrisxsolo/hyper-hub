@@ -2,7 +2,7 @@
 
 import { motion } from "framer-motion";
 import Link from "next/link";
-import { ArrowLeft, ArrowRight, UtensilsCrossed, ShoppingCart, LineChart } from "lucide-react";
+import { ArrowLeft, ArrowRight, UtensilsCrossed, ShoppingCart, LineChart, Package } from "lucide-react";
 
 const container = { hidden: {}, show: { transition: { staggerChildren: 0.1 } } };
 const item = {
@@ -13,10 +13,12 @@ const item = {
 export default function ToolsClient({
   calorieSummary,
   grocerySummary,
+  productsSummary,
   metricsSummary,
 }: {
   calorieSummary: string;
   grocerySummary: string;
+  productsSummary: string;
   metricsSummary: string;
 }) {
   const tools = [
@@ -41,6 +43,17 @@ export default function ToolsClient({
       border: "border-amber-500/20 hover:border-amber-500/40",
       iconBg: "bg-amber-500/15 border-amber-500/25",
       iconColor: "text-amber-400",
+    },
+    {
+      href: "/tools/products",
+      icon: Package,
+      title: "My Costco Products",
+      summary: productsSummary,
+      cta: "Open database",
+      gradient: "from-rose-500/20 to-pink-500/10",
+      border: "border-rose-500/20 hover:border-rose-500/40",
+      iconBg: "bg-rose-500/15 border-rose-500/25",
+      iconColor: "text-rose-400",
     },
     {
       href: "/tools/metrics",

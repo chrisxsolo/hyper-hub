@@ -6,10 +6,11 @@ import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   ArrowLeft, LogOut, Lock, Plus, Check, Trash2, Pencil, X,
-  ShoppingCart, Loader2, Sparkles,
+  ShoppingCart, Loader2, Sparkles, ScanLine,
 } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import { GROCERY_CATEGORIES, type DbGroceryItem } from "@/lib/health/grocery";
+import ProductScanner from "../products/ProductScanner";
 
 const inputCls =
   "rounded-lg bg-white/[0.04] border border-white/10 px-3 py-2 text-sm text-white placeholder:text-white/30 focus:outline-none focus:border-emerald-500/40 transition-colors w-full";
@@ -36,6 +37,7 @@ export default function GroceryClient({
   const [editName, setEditName] = useState("");
   const [editQty, setEditQty] = useState("");
   const [editCat, setEditCat] = useState("");
+  const [scanOpen, setScanOpen] = useState(false);
 
   const active = items.filter((i) => !i.checked);
   const done = items.filter((i) => i.checked);
@@ -238,6 +240,14 @@ export default function GroceryClient({
             </div>
           )}
 
+          {/* Scan a product / price → product database (and optionally this list) */}
+          <button
+            onClick={() => setScanOpen(true)}
+            className="w-full inline-flex items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-emerald-500/15 to-teal-500/10 border border-emerald-500/25 text-emerald-200 px-4 py-3 text-sm font-medium hover:from-emerald-500/25 hover:to-teal-500/20 transition-colors mb-4"
+          >
+            <ScanLine size={17} /> Scan Product or Price
+          </button>
+
           {/* Add item */}
           <form onSubmit={addItem} className="glass rounded-2xl border border-white/10 p-4 mb-6">
             <div className="flex flex-col sm:flex-row gap-2">
@@ -347,6 +357,16 @@ export default function GroceryClient({
             </div>
           )}
         </>
+      )}
+
+      {scanOpen && (
+        <ProductScanner
+          onClose={() => setScanOpen(false)}
+          defaultAddToGrocery
+          onAddedToGrocery={(item) =>
+            setItems((prev) => (prev.some((i) => i.id === item.id) ? prev : [...prev, item]))
+          }
+        />
       )}
     </div>
   );

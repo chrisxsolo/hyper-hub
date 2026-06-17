@@ -67,6 +67,24 @@ export default async function ToolsPage() {
     }
   })();
 
+  // ── Products summary (private — owner only) ──
+  const productsP = (async () => {
+    if (!canEdit) return "A personal Costco product & price database";
+    try {
+      const { count } = await supabase
+        .from("costco_products")
+        .select("id", { count: "exact", head: true });
+      if (count != null) {
+        return count > 0
+          ? `${count} product${count === 1 ? "" : "s"} tracked — scan to add more`
+          : "Scan a product or price tag to start";
+      }
+      return "Scan products to build your price database";
+    } catch {
+      return "Scan products to build your price database";
+    }
+  })();
+
   // ── Metrics summary (public-read data) ──
   const metricsP = (async () => {
     try {
@@ -85,9 +103,10 @@ export default async function ToolsPage() {
     }
   })();
 
-  const [calorieSummary, grocerySummary, metricsSummary] = await Promise.all([
+  const [calorieSummary, grocerySummary, productsSummary, metricsSummary] = await Promise.all([
     calorieP,
     groceryP,
+    productsP,
     metricsP,
   ]);
 
@@ -95,6 +114,7 @@ export default async function ToolsPage() {
     <ToolsClient
       calorieSummary={calorieSummary}
       grocerySummary={grocerySummary}
+      productsSummary={productsSummary}
       metricsSummary={metricsSummary}
     />
   );

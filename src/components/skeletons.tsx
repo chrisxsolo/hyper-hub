@@ -59,7 +59,7 @@ export function ToolsHubSkeleton() {
       <BackLink label="Back to Hub" />
       <PageHeader titleWidth="w-64" />
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-        {[0, 1, 2].map((i) => (
+        {[0, 1, 2, 3].map((i) => (
           <CardSkeleton key={i} />
         ))}
       </div>
@@ -118,6 +118,27 @@ export function ListSkeleton() {
       <div className="flex flex-col gap-2.5">
         {Array.from({ length: 6 }).map((_, i) => (
           <Box key={i} className="h-14" />
+        ))}
+      </div>
+    </div>
+  );
+}
+
+/** /tools/products — My Costco Products (scan CTA + filters + product cards). */
+export function ProductsSkeleton() {
+  return (
+    <div className="max-w-3xl mx-auto px-4 sm:px-6 py-12">
+      <BackLink label="Back to Tools" />
+      <PageHeader titleWidth="w-60" />
+      <Bar className="h-12 w-full rounded-2xl mb-6" />
+      <div className="flex gap-2 mb-5">
+        <Bar className="h-9 flex-1 rounded-lg" />
+        <Bar className="h-9 w-40 rounded-lg" />
+        <Bar className="h-9 w-28 rounded-lg" />
+      </div>
+      <div className="flex flex-col gap-3">
+        {Array.from({ length: 4 }).map((_, i) => (
+          <Box key={i} className="h-28" />
         ))}
       </div>
     </div>
