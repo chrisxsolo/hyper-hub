@@ -8,6 +8,7 @@ import {
   ArrowLeft, ChevronLeft, ChevronRight, LogOut, Lock, Settings2,
   Flame, Beef, UtensilsCrossed, Target, CalendarDays, LineChart as LineIcon,
   CalendarRange, CheckCircle2, X, RotateCcw, AlertTriangle, Pencil,
+  ScanLine, FlaskConical,
 } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import ProgressRing from "@/components/charts/ProgressRing";
@@ -15,6 +16,8 @@ import BarChart from "@/components/charts/BarChart";
 import TrendChart from "@/components/charts/TrendChart";
 import MealLogger, { DRAFT_KEY } from "./MealLogger";
 import ProductFoodPicker from "../products/ProductFoodPicker";
+import ScanFoodFlow from "./ScanFoodFlow";
+import PlanTab from "./PlanTab";
 import ReviewPanel from "./ReviewPanel";
 import MealTimeline from "./MealTimeline";
 import EditMealSheet from "./EditMealSheet";
@@ -31,7 +34,7 @@ import type {
   SavedFood, TargetHistoryRow,
 } from "@/lib/nutrition/types";
 
-type Tab = "today" | "trends" | "calendar";
+type Tab = "today" | "plan" | "trends" | "calendar";
 type PendingInput = { text: string; mealType: MealType; date: string; time: string };
 
 const DEFAULT_CAL_TARGET = 2200;
@@ -74,6 +77,7 @@ export default function NutritionClient({ email, canEdit }: { email: string | nu
   const [editing, setEditing] = useState<MealWithItems | null>(null);
   const [showSettings, setShowSettings] = useState(false);
   const [foodPickerOpen, setFoodPickerOpen] = useState(false);
+  const [scanFoodOpen, setScanFoodOpen] = useState(false);
 
   // ── Load (server-side date-range query; excludes soft-deleted) ───────────────
   const load = useCallback(async () => {
@@ -390,6 +394,7 @@ export default function NutritionClient({ email, canEdit }: { email: string | nu
       <div className="flex gap-2 mb-6">
         {([
           { key: "today", label: "Today", icon: CalendarDays },
+          { key: "plan", label: "Plan", icon: FlaskConical },
           { key: "trends", label: "Trends", icon: LineIcon },
           { key: "calendar", label: "Calendar", icon: CalendarRange },
         ] as { key: Tab; label: string; icon: React.ElementType }[]).map(({ key, label, icon: Icon }) => (
@@ -450,12 +455,20 @@ export default function NutritionClient({ email, canEdit }: { email: string | nu
             ) : (
               <>
                 <MealLogger defaultDate={selectedDate} busy={analyzing} onAnalyze={(input) => analyze(input)} />
-                <button
-                  onClick={() => setFoodPickerOpen(true)}
-                  className="w-full inline-flex items-center justify-center gap-2 rounded-xl border border-white/10 text-readable-soft px-4 py-2.5 text-sm hover:bg-white/[0.05] transition-colors"
-                >
-                  <UtensilsCrossed size={15} className="text-emerald-400" /> Log from your Costco products
-                </button>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                  <button
+                    onClick={() => setScanFoodOpen(true)}
+                    className="w-full inline-flex items-center justify-center gap-2 rounded-xl border border-white/10 text-readable-soft px-4 py-2.5 text-sm hover:bg-white/[0.05] transition-colors"
+                  >
+                    <ScanLine size={15} className="text-emerald-400" /> Scan a food to log
+                  </button>
+                  <button
+                    onClick={() => setFoodPickerOpen(true)}
+                    className="w-full inline-flex items-center justify-center gap-2 rounded-xl border border-white/10 text-readable-soft px-4 py-2.5 text-sm hover:bg-white/[0.05] transition-colors"
+                  >
+                    <UtensilsCrossed size={15} className="text-emerald-400" /> Log from your Costco products
+                  </button>
+                </div>
                 {analyzeFailed && pending && (
                   <div className="glass rounded-2xl border border-amber-500/25 bg-amber-500/[0.06] p-4">
                     <div className="flex items-start gap-2 mb-3">
@@ -494,6 +507,16 @@ export default function NutritionClient({ email, canEdit }: { email: string | nu
             />
           </div>
         </div>
+      ) : tab === "plan" ? (
+        <PlanTab
+          savedFoods={savedFoods}
+          targetHistory={targetHistory}
+          calTarget={calTarget}
+          proteinTarget={proteinTarget}
+          selectedDate={selectedDate}
+          api={api}
+          onSaved={() => { setFlash("Plan saved & logged."); load(); }}
+        />
       ) : tab === "trends" ? (
         <TrendsView
           weekBars={weekBars} calTrend={calTrend} proteinTrend={proteinTrend}
@@ -516,6 +539,16 @@ export default function NutritionClient({ email, canEdit }: { email: string | nu
           defaultDate={selectedDate}
           onLogged={() => { setSelectedDate(selectedDate); setFlash("Logged from your products."); load(); }}
           onClose={() => setFoodPickerOpen(false)}
+        />
+      )}
+
+      {/* Scan a food → estimate/read nutrition → weigh grams → log */}
+      {scanFoodOpen && (
+        <ScanFoodFlow
+          defaultDate={selectedDate}
+          onClose={() => setScanFoodOpen(false)}
+          onLogged={() => { setSelectedDate(selectedDate); setFlash("Scanned and logged."); load(); }}
+          onCatalogChanged={load}
         />
       )}
 
