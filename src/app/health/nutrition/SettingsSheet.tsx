@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Loader2, Check, Download, Trash2, Link2, Salad, BookMarked } from "lucide-react";
+import { Loader2, Check, Download, Trash2, Link2, Salad, BookMarked, KeyRound } from "lucide-react";
 import type { AliasRow, MealTemplate, NutritionSettings, SavedFood } from "@/lib/nutrition/types";
 
 const TIMEZONES = [
@@ -55,6 +55,7 @@ export default function SettingsBody({
   onDeleteTemplate,
   onCreateAlias,
   onDeleteAlias,
+  onChangePassword,
 }: {
   settings: NutritionSettings | null;
   savedFoods: SavedFood[];
@@ -66,6 +67,7 @@ export default function SettingsBody({
   onDeleteTemplate: (id: string) => void;
   onCreateAlias: (phrase: string, templateId: string) => void;
   onDeleteAlias: (id: string) => void;
+  onChangePassword: (pw: string) => Promise<boolean>;
 }) {
   const [cal, setCal] = useState(String(settings?.calorie_target ?? 2200));
   const [prot, setProt] = useState(String(settings?.protein_target_g ?? 160));
@@ -82,6 +84,17 @@ export default function SettingsBody({
 
   const [aliasPhrase, setAliasPhrase] = useState("");
   const [aliasTemplate, setAliasTemplate] = useState("");
+
+  const [newPw, setNewPw] = useState("");
+  const [pwStatus, setPwStatus] = useState<"idle" | "saving" | "done" | "err">("idle");
+
+  async function changePassword() {
+    if (newPw.length < 6) { setPwStatus("err"); return; }
+    setPwStatus("saving");
+    const ok = await onChangePassword(newPw);
+    setPwStatus(ok ? "done" : "err");
+    if (ok) setNewPw("");
+  }
 
   function save() {
     onSaveSettings({
@@ -234,6 +247,31 @@ export default function SettingsBody({
             ))}
           </div>
         )}
+      </Section>
+
+      <Section icon={KeyRound} title="Account">
+        <p className="text-[11px] text-readable-faint -mt-1">Change your sign-in password.</p>
+        <div className="flex flex-col sm:flex-row gap-2">
+          <input
+            type="password"
+            value={newPw}
+            onChange={(e) => { setNewPw(e.target.value); setPwStatus("idle"); }}
+            placeholder="New password (min 6 chars)"
+            autoComplete="new-password"
+            className={input}
+          />
+          <button
+            type="button"
+            disabled={pwStatus === "saving" || newPw.length < 6}
+            onClick={changePassword}
+            className="inline-flex items-center gap-1.5 rounded-lg bg-white/[0.06] border border-white/15 text-white px-4 py-2 text-sm hover:bg-white/[0.1] transition-colors disabled:opacity-40 shrink-0 justify-center"
+          >
+            {pwStatus === "saving" ? <Loader2 size={14} className="animate-spin" /> : <KeyRound size={14} />}
+            Update password
+          </button>
+        </div>
+        {pwStatus === "done" && <p className="text-[11px] text-emerald-300">Password updated.</p>}
+        {pwStatus === "err" && <p className="text-[11px] text-rose-300">Couldn&apos;t update — use at least 6 characters.</p>}
       </Section>
 
       <Section icon={Download} title="Data">

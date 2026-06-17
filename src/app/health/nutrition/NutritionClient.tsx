@@ -270,6 +270,12 @@ export default function NutritionClient({ email, canEdit }: { email: string | nu
     setSaving(false);
     if (res.ok) { setFlash("Settings saved."); setShowSettings(false); await load(); }
   }
+  async function changePassword(pw: string): Promise<boolean> {
+    const { error } = await supabase.auth.updateUser({ password: pw });
+    if (error) { setErr(error.message); return false; }
+    setFlash("Password updated.");
+    return true;
+  }
   async function deleteFood(id: string) { const r = await api(`/api/nutrition/foods/${id}`, "DELETE"); if (r.ok) await load(); }
   async function deleteTemplate(id: string) { const r = await api(`/api/nutrition/templates/${id}`, "DELETE"); if (r.ok) await load(); }
   async function createAlias(phrase: string, templateId: string) { const r = await api("/api/nutrition/aliases", "POST", { phrase, template_id: templateId }); if (r.ok) { setFlash("Alias added."); await load(); } }
@@ -504,7 +510,7 @@ export default function NutritionClient({ email, canEdit }: { email: string | nu
         <SettingsBody
           settings={settings} savedFoods={savedFoods} templates={templates} aliases={aliases} saving={saving}
           onSaveSettings={saveSettings} onDeleteFood={deleteFood} onDeleteTemplate={deleteTemplate}
-          onCreateAlias={createAlias} onDeleteAlias={deleteAlias}
+          onCreateAlias={createAlias} onDeleteAlias={deleteAlias} onChangePassword={changePassword}
         />
       </Sheet>
 
