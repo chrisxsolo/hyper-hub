@@ -34,5 +34,11 @@ export async function proxy(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/health/metrics/:path*", "/login", "/auth/:path*"],
+  matcher: [
+    "/health/metrics/:path*",
+    "/health/nutrition/:path*",
+    "/api/nutrition/:path*",
+    "/login",
+    "/auth/:path*",
+  ],
 };

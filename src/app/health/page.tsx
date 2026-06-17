@@ -2,9 +2,22 @@
 
 import { motion } from "framer-motion";
 import Link from "next/link";
-import { ArrowLeft, ArrowRight, Droplets, Zap, Activity, Scale, Apple, Brain, LineChart } from "lucide-react";
+import { ArrowLeft, ArrowRight, Droplets, Zap, Activity, Scale, Apple, Brain, LineChart, UtensilsCrossed } from "lucide-react";
 
 const topics = [
+  {
+    href: "/health/nutrition",
+    icon: UtensilsCrossed,
+    title: "Nutrition Tracker",
+    description: "Log meals in plain language — \"a 4x4 from In-N-Out\" — and track calories and protein accurately, with verified sources and editable estimates.",
+    tags: ["Calories", "Protein", "AI Parsing", "Daily Log"],
+    gradient: "from-emerald-500/20 to-teal-500/10",
+    border: "border-emerald-500/20 hover:border-emerald-500/40",
+    iconBg: "bg-emerald-500/15 border-emerald-500/25",
+    iconColor: "text-emerald-400",
+    tagColor: "bg-emerald-500/10 text-emerald-300/80 border-emerald-500/15",
+    readTime: "Tracker",
+  },
   {
     href: "/health/metrics",
     icon: LineChart,

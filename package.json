@@ -10,16 +10,20 @@
     "build": "./scripts/with-nvm-node.sh node ./node_modules/next/dist/bin/next build",
     "start": "./scripts/with-nvm-node.sh node ./node_modules/next/dist/bin/next start",
     "lint": "./scripts/with-nvm-node.sh node ./node_modules/eslint/bin/eslint.js",
+    "test": "./scripts/with-nvm-node.sh node ./node_modules/vitest/vitest.mjs run",
+    "test:watch": "./scripts/with-nvm-node.sh node ./node_modules/vitest/vitest.mjs",
     "postinstall": "node ./scripts/repair-next-install.mjs"
   },
   "dependencies": {
+    "@anthropic-ai/sdk": "^0.70.1",
     "@supabase/ssr": "^0.12.0",
     "@supabase/supabase-js": "^2.108.1",
     "framer-motion": "^12.38.0",
     "lucide-react": "^1.8.0",
     "next": "16.2.4",
     "react": "19.2.4",
-    "react-dom": "19.2.4"
+    "react-dom": "19.2.4",
+    "zod": "^4.4.3"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
@@ -29,6 +33,7 @@
     "eslint": "^9",
     "eslint-config-next": "16.2.4",
     "tailwindcss": "^4",
-    "typescript": "^5"
+    "typescript": "^5",
+    "vitest": "^3.2.6"
   }
 }

@@ -90,3 +90,16 @@ body {
   0% { background-position: -200% center; }
   100% { background-position: 200% center; }
 }
+
+/* Respect the OS "reduce motion" setting: stop the ambient orbs and collapse
+   transitions/animations so the UI is calm and accessible. Framer Motion is
+   handled separately via <MotionConfig reducedMotion="user">. */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+  .bg-orb { animation: none !important; }
+}
