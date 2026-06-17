@@ -22,7 +22,8 @@ export async function POST(request: NextRequest) {
   const rid = requestId();
   const { supabase, isOwner } = await getAuthContext();
   if (!isOwner) return jsonError(401, "Sign in as the owner to scan products.", rid);
-  if (!rateLimit("scan", 15, 60_000)) {
+  // Generous limit so batch uploads (many images in a burst) aren't throttled.
+  if (!rateLimit("scan", 60, 60_000)) {
     return jsonError(429, "Too many scans in a short window — wait a moment and retry.", rid);
   }
 

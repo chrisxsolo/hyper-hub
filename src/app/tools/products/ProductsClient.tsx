@@ -6,12 +6,13 @@ import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   ArrowLeft, LogOut, Lock, Star, Trash2, ScanLine, Search, Package,
-  ListPlus, Check, Loader2, ChevronDown, History,
+  ListPlus, Check, Loader2, ChevronDown, History, Layers,
 } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import { formatUnitPrice } from "@/lib/products/units";
 import { PRODUCT_CATEGORIES, type ProductOverview, type PriceHistoryEntry } from "@/lib/products/types";
 import ProductScanner from "./ProductScanner";
+import BatchScanner from "./BatchScanner";
 
 const inputCls =
   "rounded-lg bg-white/[0.04] border border-white/10 px-3 py-2 text-sm text-white placeholder:text-white/30 focus:outline-none focus:border-emerald-500/40 transition-colors";
@@ -40,6 +41,7 @@ export default function ProductsClient({
   const [favOnly, setFavOnly] = useState(false);
   const [cat, setCat] = useState("");
   const [scanOpen, setScanOpen] = useState(false);
+  const [batchOpen, setBatchOpen] = useState(false);
   const [err, setErr] = useState("");
 
   async function signOut() {
@@ -147,13 +149,22 @@ export default function ProductsClient({
         </div>
       ) : (
         <>
-          {/* Scan CTA */}
-          <button
-            onClick={() => setScanOpen(true)}
-            className="w-full inline-flex items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-emerald-500/20 to-teal-500/15 border border-emerald-500/30 text-emerald-200 px-4 py-3.5 text-sm font-semibold hover:from-emerald-500/30 hover:to-teal-500/25 transition-colors mb-6"
-          >
-            <ScanLine size={18} /> Scan Product or Price
-          </button>
+          {/* Scan CTAs */}
+          <div className="flex gap-2 mb-6">
+            <button
+              onClick={() => setScanOpen(true)}
+              className="flex-1 inline-flex items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-emerald-500/20 to-teal-500/15 border border-emerald-500/30 text-emerald-200 px-4 py-3.5 text-sm font-semibold hover:from-emerald-500/30 hover:to-teal-500/25 transition-colors"
+            >
+              <ScanLine size={18} /> Scan Product or Price
+            </button>
+            <button
+              onClick={() => setBatchOpen(true)}
+              className="inline-flex items-center justify-center gap-2 rounded-2xl bg-white/[0.04] border border-white/10 text-white px-4 py-3.5 text-sm font-medium hover:bg-white/[0.08] transition-colors"
+              title="Upload several product photos at once"
+            >
+              <Layers size={17} /> <span className="hidden sm:inline">Batch upload</span>
+            </button>
+          </div>
 
           {/* Filters */}
           {products.length > 0 && (
@@ -205,6 +216,7 @@ export default function ProductsClient({
       )}
 
       {scanOpen && <ProductScanner onClose={() => setScanOpen(false)} onSaved={upsert} />}
+      {batchOpen && <BatchScanner onClose={() => setBatchOpen(false)} onSaved={upsert} />}
     </div>
   );
 }

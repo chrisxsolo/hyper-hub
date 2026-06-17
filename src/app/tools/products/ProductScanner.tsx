@@ -8,6 +8,7 @@ import {
 import { computeUnitPricing, formatUnitPrice } from "@/lib/products/units";
 import { PRODUCT_CATEGORIES, type ProductOverview } from "@/lib/products/types";
 import type { DbGroceryItem } from "@/lib/health/grocery";
+import { fileToScaledJpeg } from "./image";
 
 const inputCls =
   "rounded-lg bg-white/[0.04] border border-white/10 px-3 py-2 text-sm text-white placeholder:text-white/30 focus:outline-none focus:border-emerald-500/40 transition-colors w-full";
@@ -55,41 +56,6 @@ function s(v: unknown): string {
 function toNum(v: string): number | null {
   const n = Number(v.replace(/[^0-9.\-]/g, ""));
   return Number.isFinite(n) && v.trim() !== "" ? n : null;
-}
-
-// Downscale a captured/selected image to a Claude-friendly JPEG and return base64.
-async function fileToScaledJpeg(
-  file: File,
-  maxDim = 1568,
-  quality = 0.82,
-): Promise<{ base64: string; mediaType: "image/jpeg"; previewUrl: string }> {
-  const dataUrl = await new Promise<string>((res, rej) => {
-    const fr = new FileReader();
-    fr.onload = () => res(fr.result as string);
-    fr.onerror = () => rej(new Error("Could not read the image file."));
-    fr.readAsDataURL(file);
-  });
-  const img = await new Promise<HTMLImageElement>((res, rej) => {
-    const i = new Image();
-    i.onload = () => res(i);
-    i.onerror = () => rej(new Error("That image format isn't supported — try a JPEG or PNG."));
-    i.src = dataUrl;
-  });
-  let { width, height } = img;
-  const longest = Math.max(width, height);
-  if (longest > maxDim) {
-    const scale = maxDim / longest;
-    width = Math.round(width * scale);
-    height = Math.round(height * scale);
-  }
-  const canvas = document.createElement("canvas");
-  canvas.width = width;
-  canvas.height = height;
-  const ctx = canvas.getContext("2d");
-  if (!ctx) throw new Error("Your browser can't process images.");
-  ctx.drawImage(img, 0, 0, width, height);
-  const out = canvas.toDataURL("image/jpeg", quality);
-  return { base64: out.split(",")[1] ?? "", mediaType: "image/jpeg", previewUrl: out };
 }
 
 // Mounted only while open (parents render it conditionally), so every open
