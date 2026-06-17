@@ -1,4 +1,4 @@
-import { createClient } from "@/lib/supabase/server";
+import { getViewer } from "@/lib/supabase/server";
 import MetricsClient from "./MetricsClient";
 
 // Public dashboard — anyone can view the charts (data is public-read in the DB).
@@ -6,12 +6,7 @@ import MetricsClient from "./MetricsClient";
 const OWNER_EMAIL = "chrissolorzano118@gmail.com";
 
 export default async function MetricsPage() {
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-
-  const email = user?.email ?? null;
+  const { email } = await getViewer();
   const canEdit = email === OWNER_EMAIL;
 
   return <MetricsClient email={email} canEdit={canEdit} />;

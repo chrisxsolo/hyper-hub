@@ -1,4 +1,4 @@
-import { createClient } from "@/lib/supabase/server";
+import { getViewer } from "@/lib/supabase/server";
 import { guides } from "@/data/health/guides";
 import type { DbNote } from "@/lib/health/notes";
 import KnowledgeHubClient from "./KnowledgeHubClient";
@@ -14,11 +14,8 @@ export const metadata = {
 };
 
 export default async function HealthPage() {
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-  const canEdit = user?.email === OWNER_EMAIL;
+  const { supabase, email } = await getViewer();
+  const canEdit = email === OWNER_EMAIL;
 
   let notes: DbNote[] = [];
   if (canEdit) {

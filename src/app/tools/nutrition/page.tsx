@@ -1,4 +1,4 @@
-import { createClient } from "@/lib/supabase/server";
+import { getViewer } from "@/lib/supabase/server";
 import NutritionClient from "./NutritionClient";
 
 // Public dashboard — anyone can view (data is public-read, like the rest of the
@@ -11,12 +11,7 @@ export const metadata = {
 };
 
 export default async function NutritionPage() {
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-
-  const email = user?.email ?? null;
+  const { email } = await getViewer();
   const canEdit = email === OWNER_EMAIL;
 
   return <NutritionClient email={email} canEdit={canEdit} />;

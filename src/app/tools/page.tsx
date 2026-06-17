@@ -1,4 +1,4 @@
-import { createClient } from "@/lib/supabase/server";
+import { getViewer } from "@/lib/supabase/server";
 import { todayInTz } from "@/lib/nutrition/db";
 import ToolsClient from "./ToolsClient";
 
@@ -13,72 +13,83 @@ export const metadata = {
 };
 
 export default async function ToolsPage() {
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-  const canEdit = user?.email === OWNER_EMAIL;
+  const { supabase, email } = await getViewer();
+  const canEdit = email === OWNER_EMAIL;
+
+  // The three tile summaries are independent, so fetch them concurrently rather
+  // than one-after-another — the page is only as slow as the slowest summary.
+  // Each is best-effort and falls back to a static subtitle on empty/error.
 
   // ── Calorie tracker summary (public-read data) ──
-  let calorieSummary = "Today's calories, protein, and remaining targets";
-  try {
-    const { data: settings } = await supabase
-      .from("nutrition_settings")
-      .select("calorie_target, protein_target_g, timezone")
-      .limit(1)
-      .maybeSingle();
-    const today = todayInTz(settings?.timezone ?? null);
-    const { data: meals } = await supabase
-      .from("nutrition_meals")
-      .select("total_calories, total_protein_g")
-      .eq("eaten_on", today)
-      .is("deleted_at", null);
-    if (meals && meals.length > 0) {
-      const kcal = Math.round(meals.reduce((s, m) => s + (m.total_calories ?? 0), 0));
-      const protein = Math.round(meals.reduce((s, m) => s + (m.total_protein_g ?? 0), 0));
-      const target = settings?.calorie_target ?? null;
-      const left = target != null ? Math.max(0, target - kcal) : null;
-      calorieSummary =
-        `Today: ${kcal.toLocaleString()} kcal · ${protein}g protein` +
-        (left != null ? ` · ${left.toLocaleString()} left` : "");
-    } else {
-      calorieSummary = "No meals logged today — tap to start";
+  const calorieP = (async () => {
+    try {
+      const { data: settings } = await supabase
+        .from("nutrition_settings")
+        .select("calorie_target, protein_target_g, timezone")
+        .limit(1)
+        .maybeSingle();
+      const today = todayInTz(settings?.timezone ?? null);
+      const { data: meals } = await supabase
+        .from("nutrition_meals")
+        .select("total_calories, total_protein_g")
+        .eq("eaten_on", today)
+        .is("deleted_at", null);
+      if (meals && meals.length > 0) {
+        const kcal = Math.round(meals.reduce((s, m) => s + (m.total_calories ?? 0), 0));
+        const protein = Math.round(meals.reduce((s, m) => s + (m.total_protein_g ?? 0), 0));
+        const target = settings?.calorie_target ?? null;
+        const left = target != null ? Math.max(0, target - kcal) : null;
+        return (
+          `Today: ${kcal.toLocaleString()} kcal · ${protein}g protein` +
+          (left != null ? ` · ${left.toLocaleString()} left` : "")
+        );
+      }
+      return "No meals logged today — tap to start";
+    } catch {
+      return "Today's calories, protein, and remaining targets";
     }
-  } catch {
-    /* keep default */
-  }
+  })();
 
   // ── Grocery summary (private — owner only) ──
-  let grocerySummary = "Your running Costco shopping list";
-  if (canEdit) {
+  const groceryP = (async () => {
+    if (!canEdit) return "Your running Costco shopping list";
     try {
       const { count } = await supabase
         .from("grocery_items")
         .select("id", { count: "exact", head: true })
         .eq("checked", false);
       if (count != null) {
-        grocerySummary = count > 0 ? `${count} item${count === 1 ? "" : "s"} remaining` : "All caught up — list is clear";
+        return count > 0 ? `${count} item${count === 1 ? "" : "s"} remaining` : "All caught up — list is clear";
       }
+      return "Your running Costco shopping list";
     } catch {
-      /* keep default */
+      return "Your running Costco shopping list";
     }
-  }
+  })();
 
   // ── Metrics summary (public-read data) ──
-  let metricsSummary = "Weight, activity, nutrition, sleep, and health trends";
-  try {
-    const { data: w } = await supabase
-      .from("health_weight")
-      .select("weight_lbs, measured_on")
-      .order("measured_on", { ascending: false })
-      .limit(1)
-      .maybeSingle();
-    if (w?.weight_lbs != null) {
-      metricsSummary = `Latest weight ${Number(w.weight_lbs).toFixed(1)} lbs · activity, sleep & trends`;
+  const metricsP = (async () => {
+    try {
+      const { data: w } = await supabase
+        .from("health_weight")
+        .select("weight_lbs, measured_on")
+        .order("measured_on", { ascending: false })
+        .limit(1)
+        .maybeSingle();
+      if (w?.weight_lbs != null) {
+        return `Latest weight ${Number(w.weight_lbs).toFixed(1)} lbs · activity, sleep & trends`;
+      }
+      return "Weight, activity, nutrition, sleep, and health trends";
+    } catch {
+      return "Weight, activity, nutrition, sleep, and health trends";
     }
-  } catch {
-    /* keep default */
-  }
+  })();
+
+  const [calorieSummary, grocerySummary, metricsSummary] = await Promise.all([
+    calorieP,
+    groceryP,
+    metricsP,
+  ]);
 
   return (
     <ToolsClient

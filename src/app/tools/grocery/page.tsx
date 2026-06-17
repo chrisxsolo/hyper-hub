@@ -1,4 +1,4 @@
-import { createClient } from "@/lib/supabase/server";
+import { getViewer } from "@/lib/supabase/server";
 import GroceryClient from "./GroceryClient";
 import type { DbGroceryItem } from "@/lib/health/grocery";
 
@@ -12,11 +12,7 @@ export const metadata = {
 };
 
 export default async function GroceryPage() {
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-  const email = user?.email ?? null;
+  const { supabase, email } = await getViewer();
   const canEdit = email === OWNER_EMAIL;
 
   let items: DbGroceryItem[] = [];
