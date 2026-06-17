@@ -2,7 +2,8 @@ import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 
 // Refreshes the Supabase auth session on each request so Server Components
-// always see a valid session. Only runs on the metrics/auth routes.
+// always see a valid session. Only runs on the tool/health/auth routes that
+// depend on the owner session.
 export async function proxy(request: NextRequest) {
   let response = NextResponse.next({ request });
 
@@ -35,9 +36,11 @@ export async function proxy(request: NextRequest) {
 
 export const config = {
   matcher: [
-    "/health/metrics/:path*",
-    "/health/nutrition/:path*",
+    "/health/:path*",
+    "/tools/:path*",
     "/api/nutrition/:path*",
+    "/api/health/:path*",
+    "/api/grocery/:path*",
     "/login",
     "/auth/:path*",
   ],

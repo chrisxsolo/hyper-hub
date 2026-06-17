@@ -2,22 +2,36 @@
 
 import { motion } from "framer-motion";
 import Link from "next/link";
-import { Dumbbell, Camera, Brain, ArrowRight, Sparkles } from "lucide-react";
+import { Dumbbell, Camera, Brain, ArrowRight, Sparkles, Wrench } from "lucide-react";
 
 const categories = [
   {
     href: "/health",
     icon: Dumbbell,
-    title: "Health",
-    description: "Insulin resistance, hair loss, running, and fat loss — the science behind your body.",
-    topics: ["Insulin Resistance", "Hair Loss & DHT", "Running", "Weight Loss"],
+    title: "Health Knowledge Hub",
+    description: "A personal knowledge base — guides and notes on nutrition, fitness, sleep, recovery, dental & hair health, and lab results.",
+    topics: ["Nutrition", "Fitness", "Sleep & Recovery", "Lab Results"],
     gradient: "from-amber-500/25 via-orange-500/10 to-transparent",
     border: "border-amber-500/20 hover:border-amber-500/40",
     glow: "group-hover:shadow-amber-500/10",
     iconBg: "bg-amber-500/15 border-amber-500/25",
     iconColor: "text-amber-400",
     tagColor: "bg-amber-500/10 text-amber-300/80 border-amber-500/15",
-    badge: "4 topics",
+    badge: "Knowledge Hub",
+  },
+  {
+    href: "/tools",
+    icon: Wrench,
+    title: "Personalized Tools",
+    description: "Trackers and lists I actually use — log calories, manage the Costco run, and follow my body metrics over time.",
+    topics: ["Calorie Tracker", "Costco Grocery List", "My Metrics"],
+    gradient: "from-cyan-500/25 via-teal-500/10 to-transparent",
+    border: "border-cyan-500/20 hover:border-cyan-500/40",
+    glow: "group-hover:shadow-cyan-500/10",
+    iconBg: "bg-cyan-500/15 border-cyan-500/25",
+    iconColor: "text-cyan-400",
+    tagColor: "bg-cyan-500/10 text-cyan-300/80 border-cyan-500/15",
+    badge: "3 tools",
   },
   {
     href: "/photography",
@@ -103,7 +117,7 @@ export default function HomePage() {
           variants={container}
           initial="hidden"
           animate="show"
-          className="grid grid-cols-1 md:grid-cols-3 gap-5 w-full max-w-5xl"
+          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 w-full max-w-6xl"
         >
           {categories.map((cat) => {
             const Icon = cat.icon;

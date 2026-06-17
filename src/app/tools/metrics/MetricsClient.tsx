@@ -187,10 +187,10 @@ export default function MetricsClient({
         className="flex items-center justify-between mb-10"
       >
         <Link
-          href="/health"
+          href="/tools"
           className="inline-flex items-center gap-1.5 text-sm text-readable-soft hover:text-readable-strong transition-colors"
         >
-          <ArrowLeft size={14} /> Back to Health
+          <ArrowLeft size={14} /> Back to Tools
         </Link>
         {email ? (
           <button

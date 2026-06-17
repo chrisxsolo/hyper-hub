@@ -2,11 +2,12 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Brain, Camera, Dumbbell, Home } from "lucide-react";
+import { Brain, Camera, Dumbbell, Home, Wrench } from "lucide-react";
 
 const navItems = [
   { href: "/", label: "Home", icon: Home },
   { href: "/health", label: "Health", icon: Dumbbell },
+  { href: "/tools", label: "Tools", icon: Wrench },
   { href: "/photography", label: "Photography", icon: Camera },
   { href: "/stoicism", label: "Stoicism", icon: Brain },
 ];

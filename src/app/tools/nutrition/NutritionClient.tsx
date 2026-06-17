@@ -329,8 +329,8 @@ export default function NutritionClient({ email, canEdit }: { email: string | nu
     <div className="max-w-4xl mx-auto px-4 sm:px-6 py-12">
       {/* Back + account */}
       <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.3 }} className="flex items-center justify-between mb-8">
-        <Link href="/health" className="inline-flex items-center gap-1.5 text-sm text-readable-soft hover:text-readable-strong transition-colors">
-          <ArrowLeft size={14} /> Back to Health
+        <Link href="/tools" className="inline-flex items-center gap-1.5 text-sm text-readable-soft hover:text-readable-strong transition-colors">
+          <ArrowLeft size={14} /> Back to Tools
         </Link>
         <div className="flex items-center gap-3">
           {canEdit && (

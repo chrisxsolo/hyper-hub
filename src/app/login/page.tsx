@@ -28,7 +28,7 @@ export default function LoginPage() {
       setStatus("error");
       return;
     }
-    router.replace("/health/nutrition");
+    router.replace("/tools/nutrition");
     router.refresh();
   }
 
