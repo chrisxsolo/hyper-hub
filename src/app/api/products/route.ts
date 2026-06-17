@@ -1,7 +1,7 @@
 import { type NextRequest } from "next/server";
 import { getAuthContext, jsonError, jsonOk, requestId } from "@/lib/owner";
 import { productCreateSchema } from "@/lib/products/schemas";
-import { loadAllOverview, loadOverviewRow } from "@/lib/products/server";
+import { loadAllOverview, loadOverviewRow, recordProductImage } from "@/lib/products/server";
 
 // The product database is private (owner-only RLS).
 
@@ -80,6 +80,13 @@ export async function POST(request: NextRequest) {
     // Roll back the orphaned product so we don't leave a price-less record.
     await supabase.from("costco_products").delete().eq("id", product.id);
     return jsonError(500, prErr.message, rid);
+  }
+
+  // Record the scan as a typed product image (best-effort) so the detail page's
+  // Photos & Scans section is populated. source_type tells us what it depicts.
+  if (body.imagePath) {
+    const kind = p.sourceType === "shelf_label" ? "price_label" : "product_front";
+    await recordProductImage(supabase, product.id, kind, body.imagePath, kind === "product_front");
   }
 
   const overview = await loadOverviewRow(supabase, product.id);

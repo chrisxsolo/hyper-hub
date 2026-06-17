@@ -1,5 +1,7 @@
 import { type NextRequest } from "next/server";
 import { groceryCreateSchema } from "@/lib/health/schemas";
+import { enrichGroceryItems } from "@/lib/health/grocery-server";
+import type { DbGroceryItem } from "@/lib/health/grocery";
 import { getAuthContext, jsonError, jsonOk, requestId } from "@/lib/owner";
 
 // The grocery list is private (owner-only RLS).
@@ -17,7 +19,8 @@ export async function GET() {
     .order("position", { ascending: true })
     .order("created_at", { ascending: true });
   if (error) return jsonError(500, error.message, rid);
-  return jsonOk({ items: data ?? [] }, rid);
+  const items = await enrichGroceryItems(supabase, (data ?? []) as DbGroceryItem[]);
+  return jsonOk({ items }, rid);
 }
 
 // POST — add an item.
@@ -42,9 +45,11 @@ export async function POST(request: NextRequest) {
       quantity: body.quantity ?? null,
       category: body.category ?? null,
       position: body.position ?? 0,
+      product_id: body.product_id ?? null,
     })
     .select("*")
     .single();
   if (error) return jsonError(500, error.message, rid);
-  return jsonOk({ item: data }, rid, 201);
+  const [enriched] = await enrichGroceryItems(supabase, [data as DbGroceryItem]);
+  return jsonOk({ item: enriched }, rid, 201);
 }

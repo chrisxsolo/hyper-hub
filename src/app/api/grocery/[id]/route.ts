@@ -1,6 +1,8 @@
 import { type NextRequest } from "next/server";
 import { z } from "zod";
 import { groceryUpdateSchema } from "@/lib/health/schemas";
+import { enrichGroceryItems } from "@/lib/health/grocery-server";
+import type { DbGroceryItem } from "@/lib/health/grocery";
 import { getAuthContext, jsonError, jsonOk, requestId } from "@/lib/owner";
 
 const idSchema = z.string().uuid();
@@ -31,7 +33,8 @@ export async function PATCH(request: NextRequest, ctx: { params: Promise<{ id: s
     .single();
   if (error) return jsonError(500, error.message, rid);
   if (!data) return jsonError(404, "Item not found.", rid);
-  return jsonOk({ item: data }, rid);
+  const [item] = await enrichGroceryItems(supabase, [data as DbGroceryItem]);
+  return jsonOk({ item }, rid);
 }
 
 // DELETE — remove an item.

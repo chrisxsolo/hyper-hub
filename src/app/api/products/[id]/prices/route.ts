@@ -2,7 +2,7 @@ import { type NextRequest } from "next/server";
 import { z } from "zod";
 import { getAuthContext, jsonError, jsonOk, requestId } from "@/lib/owner";
 import { priceAppendSchema } from "@/lib/products/schemas";
-import { loadOverviewRow } from "@/lib/products/server";
+import { loadOverviewRow, recordProductImage } from "@/lib/products/server";
 
 const idSchema = z.string().uuid();
 
@@ -51,6 +51,11 @@ export async function POST(request: NextRequest, ctx: { params: Promise<{ id: st
     observed_at: p.observedAt ?? new Date().toISOString(),
   });
   if (error) return jsonError(500, error.message, rid);
+
+  // Record the price scan as a typed image (best-effort).
+  if (p.sourceImagePath) {
+    await recordProductImage(supabase, id, "price_label", p.sourceImagePath);
+  }
 
   const overview = await loadOverviewRow(supabase, id);
   return jsonOk({ product: overview }, rid, 201);

@@ -65,11 +65,17 @@ export default function ProductScanner({
   onSaved,
   onAddedToGrocery,
   defaultAddToGrocery = false,
+  forProduct,
+  title,
 }: {
   onClose: () => void;
   onSaved?: (product: ProductOverview) => void;
   onAddedToGrocery?: (item: DbGroceryItem) => void;
   defaultAddToGrocery?: boolean;
+  // When set, the scan always appends a price to this existing product
+  // (skips matching / "save as new"). Used by the product detail page.
+  forProduct?: { id: string; name: string };
+  title?: string;
 }) {
   const [step, setStep] = useState<Step>("capture");
   const [preview, setPreview] = useState<string | null>(null);
@@ -83,7 +89,9 @@ export default function ProductScanner({
   const [imagePath, setImagePath] = useState<string | null>(null);
   const [confidence, setConfidence] = useState<number | null>(null);
   const [sourceType, setSourceType] = useState<string>("manual");
-  const [match, setMatch] = useState<{ id: string; name: string; reason: string } | null>(null);
+  const [match, setMatch] = useState<{ id: string; name: string; reason: string } | null>(
+    forProduct ? { id: forProduct.id, name: forProduct.name, reason: "this product" } : null,
+  );
   const [saveAsNew, setSaveAsNew] = useState(false);
   const [addToGrocery, setAddToGrocery] = useState(defaultAddToGrocery);
 
@@ -124,7 +132,7 @@ export default function ProductScanner({
       if (!res.ok) throw new Error(json.error || "Scan failed.");
 
       setImagePath(json.imagePath);
-      setMatch(json.match);
+      if (!forProduct) setMatch(json.match);
       setWarning(json.warning);
       const sc = json.scan;
       if (sc) {
@@ -238,6 +246,7 @@ export default function ProductScanner({
             name: form.name.trim(),
             quantity: null,
             category: form.category.trim() || null,
+            product_id: product.id,
           });
           onAddedToGrocery?.(g.item as DbGroceryItem);
         } catch {
@@ -276,7 +285,7 @@ export default function ProductScanner({
             <div className="flex items-center gap-2">
               <ScanLine size={18} className="text-emerald-400" />
               <h2 className="text-base font-semibold text-white">
-                {step === "capture" ? "Scan product or price" : "Review product"}
+                {title ?? (step === "capture" ? "Scan product or price" : "Review product")}
               </h2>
             </div>
             <button
@@ -367,7 +376,11 @@ export default function ProductScanner({
                 </div>
               )}
 
-              {match && (
+              {match && forProduct ? (
+                <div className="rounded-lg border border-cyan-400/30 bg-cyan-400/[0.07] px-3 py-2.5 text-xs text-cyan-100/90">
+                  <p className="font-medium">Adding a price to “{match.name}”.</p>
+                </div>
+              ) : match ? (
                 <div className="rounded-lg border border-cyan-400/30 bg-cyan-400/[0.07] px-3 py-2.5 text-xs text-cyan-100/90">
                   <p className="font-medium">You already track “{match.name}”.</p>
                   <p className="text-cyan-100/70 mt-0.5">Matched by {match.reason}.</p>
@@ -381,7 +394,7 @@ export default function ProductScanner({
                     Add this as a new price to that product
                   </label>
                 </div>
-              )}
+              ) : null}
 
               {confidence != null && !warning && (
                 <p className="text-[11px] text-readable-faint">

@@ -1,6 +1,7 @@
 import { getViewer } from "@/lib/supabase/server";
 import GroceryClient from "./GroceryClient";
-import type { DbGroceryItem } from "@/lib/health/grocery";
+import { enrichGroceryItems } from "@/lib/health/grocery-server";
+import type { DbGroceryItem, GroceryItemView } from "@/lib/health/grocery";
 
 // Private tool — the list is owner-only (no public-read RLS). Visitors see a
 // sign-in prompt; the owner sees their full grocery list.
@@ -15,7 +16,7 @@ export default async function GroceryPage() {
   const { supabase, email } = await getViewer();
   const canEdit = email === OWNER_EMAIL;
 
-  let items: DbGroceryItem[] = [];
+  let items: GroceryItemView[] = [];
   if (canEdit) {
     const { data } = await supabase
       .from("grocery_items")
@@ -23,7 +24,7 @@ export default async function GroceryPage() {
       .order("checked", { ascending: true })
       .order("position", { ascending: true })
       .order("created_at", { ascending: true });
-    items = (data as DbGroceryItem[]) ?? [];
+    items = await enrichGroceryItems(supabase, (data as DbGroceryItem[]) ?? []);
   }
 
   return <GroceryClient email={email} canEdit={canEdit} initialItems={items} />;

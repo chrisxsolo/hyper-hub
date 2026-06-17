@@ -3,7 +3,17 @@
 // matching. Auth + JSON helpers are reused from lib/owner.ts. Never logs secrets.
 
 import type { SupabaseClient } from "@supabase/supabase-js";
-import type { DbCostcoProduct, ProductOverview } from "./types";
+import type {
+  DbCostcoProduct,
+  DbCostcoProductImage,
+  DbCostcoProductNutritionVersion,
+  DbCostcoProductPrice,
+  NutritionVersionEntry,
+  PriceHistoryEntry,
+  ProductImageEntry,
+  ProductImageType,
+  ProductOverview,
+} from "./types";
 
 type OverviewRow = Omit<ProductOverview, "imageUrl">;
 
@@ -31,13 +41,16 @@ function extFor(mediaType: string): string {
 }
 
 // Upload a base64 scan image to the private bucket; returns the object path.
+// `folder` keeps scan kinds tidy (scans/ for product+price, nutrition/ for
+// labels, images/ for product photos).
 export async function uploadScanImage(
   supabase: SupabaseClient,
   base64: string,
   mediaType: string,
+  folder = "scans",
 ): Promise<string> {
   const id = globalThis.crypto.randomUUID();
-  const path = `scans/${id}.${extFor(mediaType)}`;
+  const path = `${folder}/${id}.${extFor(mediaType)}`;
   const bytes = Buffer.from(base64, "base64");
   const { error } = await supabase.storage
     .from(PRODUCT_BUCKET)
@@ -109,6 +122,77 @@ export async function loadOverviewRow(
   if (!data) return null;
   const r = data as OverviewRow;
   return { ...r, imageUrl: await signImagePath(supabase, r.image_url) };
+}
+
+// All images for a product, newest/primary first, with signed display URLs.
+export async function loadProductImages(
+  supabase: SupabaseClient,
+  productId: string,
+): Promise<ProductImageEntry[]> {
+  const { data } = await supabase
+    .from("costco_product_images")
+    .select("*")
+    .eq("product_id", productId)
+    .order("is_primary", { ascending: false })
+    .order("created_at", { ascending: false });
+  const rows = (data ?? []) as DbCostcoProductImage[];
+  const signed = await signImagePaths(supabase, rows.map((r) => r.image_url));
+  return rows.map((r) => ({ ...r, signedUrl: signed.get(r.image_url) ?? null }));
+}
+
+// Record an image row for a product (the scan routes call this after upload).
+export async function recordProductImage(
+  supabase: SupabaseClient,
+  productId: string,
+  imageType: ProductImageType,
+  path: string,
+  isPrimary = false,
+): Promise<void> {
+  await supabase.from("costco_product_images").insert({
+    product_id: productId,
+    image_type: imageType,
+    image_url: path,
+    is_primary: isPrimary,
+  });
+}
+
+// Full price history for a product (newest first), with signed source images.
+export async function loadPriceHistory(
+  supabase: SupabaseClient,
+  productId: string,
+): Promise<PriceHistoryEntry[]> {
+  const { data } = await supabase
+    .from("costco_product_prices")
+    .select("*")
+    .eq("product_id", productId)
+    .order("observed_at", { ascending: false })
+    .order("created_at", { ascending: false });
+  const rows = (data ?? []) as DbCostcoProductPrice[];
+  const signed = await signImagePaths(supabase, rows.map((p) => p.source_image_url));
+  return rows.map((p) => ({
+    ...p,
+    sourceImageUrl: p.source_image_url ? signed.get(p.source_image_url) ?? null : null,
+  }));
+}
+
+// All nutrition versions for a product (current first, then newest), with the
+// source-label image signed for display.
+export async function loadNutritionVersions(
+  supabase: SupabaseClient,
+  productId: string,
+): Promise<NutritionVersionEntry[]> {
+  const { data } = await supabase
+    .from("costco_product_nutrition_versions")
+    .select("*")
+    .eq("product_id", productId)
+    .order("is_current", { ascending: false })
+    .order("observed_at", { ascending: false });
+  const rows = (data ?? []) as DbCostcoProductNutritionVersion[];
+  const signed = await signImagePaths(supabase, rows.map((r) => r.source_image_url));
+  return rows.map((r) => ({
+    ...r,
+    sourceImageUrl: r.source_image_url ? signed.get(r.source_image_url) ?? null : null,
+  }));
 }
 
 // Match a scan against the existing database, in the spec's priority order:

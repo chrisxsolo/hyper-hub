@@ -5,14 +5,17 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import {
-  ArrowLeft, LogOut, Lock, Star, Trash2, ScanLine, Search, Package,
-  ListPlus, Check, Loader2, ChevronDown, History, Layers,
+  ArrowLeft, LogOut, Lock, Star, Trash2, Plus, Search, Package,
+  ListPlus, Check, Loader2, Layers, Apple, ChevronRight,
 } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import { formatUnitPrice } from "@/lib/products/units";
-import { PRODUCT_CATEGORIES, type ProductOverview, type PriceHistoryEntry } from "@/lib/products/types";
+import { PRODUCT_CATEGORIES, type ProductOverview } from "@/lib/products/types";
 import ProductScanner from "./ProductScanner";
 import BatchScanner from "./BatchScanner";
+import AddProductMenu, { type AddMode } from "./AddProductMenu";
+import NutritionScanner from "./NutritionScanner";
+import ProductPicker from "./ProductPicker";
 
 const inputCls =
   "rounded-lg bg-white/[0.04] border border-white/10 px-3 py-2 text-sm text-white placeholder:text-white/30 focus:outline-none focus:border-emerald-500/40 transition-colors";
@@ -23,6 +26,13 @@ function sizeSummary(p: ProductOverview): string | null {
   if (p.package_size != null) return `${p.package_size} ${p.package_unit ?? ""}`.trim();
   return null;
 }
+
+const MODE_TITLE: Record<Exclude<AddMode, "nutrition">, string> = {
+  product: "Scan product",
+  price: "Scan price label",
+  barcode: "Scan barcode",
+  receipt: "Scan receipt",
+};
 
 export default function ProductsClient({
   email,
@@ -40,8 +50,12 @@ export default function ProductsClient({
   const [search, setSearch] = useState("");
   const [favOnly, setFavOnly] = useState(false);
   const [cat, setCat] = useState("");
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [scanTitle, setScanTitle] = useState<string | null>(null);
   const [scanOpen, setScanOpen] = useState(false);
   const [batchOpen, setBatchOpen] = useState(false);
+  const [pickNutrition, setPickNutrition] = useState(false);
+  const [nutritionTarget, setNutritionTarget] = useState<{ id: string; name: string } | null>(null);
   const [err, setErr] = useState("");
 
   async function signOut() {
@@ -57,6 +71,16 @@ export default function ProductsClient({
       next[i] = p;
       return next;
     });
+  }
+
+  function onPickMode(mode: AddMode) {
+    setMenuOpen(false);
+    if (mode === "nutrition") {
+      setPickNutrition(true);
+    } else {
+      setScanTitle(MODE_TITLE[mode]);
+      setScanOpen(true);
+    }
   }
 
   async function toggleFav(p: ProductOverview) {
@@ -149,20 +173,20 @@ export default function ProductsClient({
         </div>
       ) : (
         <>
-          {/* Scan CTAs */}
+          {/* Add product info */}
           <div className="flex gap-2 mb-6">
             <button
-              onClick={() => setScanOpen(true)}
+              onClick={() => setMenuOpen(true)}
               className="flex-1 inline-flex items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-emerald-500/20 to-teal-500/15 border border-emerald-500/30 text-emerald-200 px-4 py-3.5 text-sm font-semibold hover:from-emerald-500/30 hover:to-teal-500/25 transition-colors"
             >
-              <ScanLine size={18} /> Scan Product or Price
+              <Plus size={18} /> Add Product Information
             </button>
             <button
               onClick={() => setBatchOpen(true)}
               className="inline-flex items-center justify-center gap-2 rounded-2xl bg-white/[0.04] border border-white/10 text-white px-4 py-3.5 text-sm font-medium hover:bg-white/[0.08] transition-colors"
               title="Upload several product photos at once"
             >
-              <Layers size={17} /> <span className="hidden sm:inline">Batch upload</span>
+              <Layers size={17} /> <span className="hidden sm:inline">Batch</span>
             </button>
           </div>
 
@@ -196,7 +220,7 @@ export default function ProductsClient({
           {products.length === 0 && (
             <div className="glass rounded-2xl border border-white/10 p-10 text-center">
               <Package size={26} className="text-rose-400/70 mx-auto mb-3" />
-              <p className="text-sm text-readable-soft">No products yet. Tap <span className="text-emerald-300">Scan Product or Price</span> to capture your first one.</p>
+              <p className="text-sm text-readable-soft">No products yet. Tap <span className="text-emerald-300">Add Product Information</span> to capture your first one.</p>
             </div>
           )}
 
@@ -215,8 +239,31 @@ export default function ProductsClient({
         </>
       )}
 
-      {scanOpen && <ProductScanner onClose={() => setScanOpen(false)} onSaved={upsert} />}
+      {menuOpen && <AddProductMenu onPick={onPickMode} onClose={() => setMenuOpen(false)} />}
+      {scanOpen && (
+        <ProductScanner
+          title={scanTitle ?? undefined}
+          onClose={() => { setScanOpen(false); setScanTitle(null); }}
+          onSaved={upsert}
+        />
+      )}
       {batchOpen && <BatchScanner onClose={() => setBatchOpen(false)} onSaved={upsert} />}
+      {pickNutrition && (
+        <ProductPicker
+          title="Scan Nutrition Facts"
+          subtitle="Choose the product this label belongs to."
+          onPick={(prod) => { setPickNutrition(false); setNutritionTarget({ id: prod.id, name: prod.name }); }}
+          onClose={() => setPickNutrition(false)}
+        />
+      )}
+      {nutritionTarget && (
+        <NutritionScanner
+          productId={nutritionTarget.id}
+          productName={nutritionTarget.name}
+          onClose={() => setNutritionTarget(null)}
+          onSaved={(p) => { upsert(p); setNutritionTarget(null); }}
+        />
+      )}
     </div>
   );
 }
@@ -232,9 +279,6 @@ function ProductCard({
 }) {
   const [added, setAdded] = useState(false);
   const [adding, setAdding] = useState(false);
-  const [open, setOpen] = useState(false);
-  const [history, setHistory] = useState<PriceHistoryEntry[] | null>(null);
-  const [loadingHist, setLoadingHist] = useState(false);
 
   const unit = formatUnitPrice(p.last_unit_price, p.last_unit_type);
   const size = sizeSummary(p);
@@ -246,7 +290,7 @@ function ProductCard({
       const res = await fetch("/api/grocery", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name: p.name, category: p.category ?? null }),
+        body: JSON.stringify({ name: p.name, category: p.category ?? null, product_id: p.id }),
       });
       if (!res.ok) throw new Error();
       setAdded(true);
@@ -254,23 +298,6 @@ function ProductCard({
       /* ignore */
     } finally {
       setAdding(false);
-    }
-  }
-
-  async function toggleHistory() {
-    const next = !open;
-    setOpen(next);
-    if (next && history === null && !loadingHist) {
-      setLoadingHist(true);
-      try {
-        const res = await fetch(`/api/products/${p.id}`);
-        const json = await res.json();
-        setHistory((json.history as PriceHistoryEntry[]) ?? []);
-      } catch {
-        setHistory([]);
-      } finally {
-        setLoadingHist(false);
-      }
     }
   }
 
@@ -283,41 +310,40 @@ function ProductCard({
       transition={{ duration: 0.2 }}
       className="glass rounded-xl border border-white/8 overflow-hidden"
     >
-      <div className="flex gap-3 p-3">
-        {/* Thumbnail */}
-        <div className="w-16 h-16 rounded-lg bg-white/[0.04] border border-white/10 shrink-0 overflow-hidden flex items-center justify-center">
-          {p.imageUrl ? (
-            // eslint-disable-next-line @next/next/no-img-element
-            <img src={p.imageUrl} alt={p.name} className="w-full h-full object-cover" />
-          ) : (
-            <Package size={20} className="text-readable-faint" />
-          )}
-        </div>
+      <div className="relative">
+        <Link href={`/tools/products/${p.id}`} className="flex gap-3 p-3 hover:bg-white/[0.03] transition-colors">
+          {/* Thumbnail */}
+          <div className="w-16 h-16 rounded-lg bg-white/[0.04] border border-white/10 shrink-0 overflow-hidden flex items-center justify-center">
+            {p.imageUrl ? (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img src={p.imageUrl} alt={p.name} className="w-full h-full object-cover" />
+            ) : (
+              <Package size={20} className="text-readable-faint" />
+            )}
+          </div>
 
-        {/* Info */}
-        <div className="flex-1 min-w-0">
-          <div className="flex items-start justify-between gap-2">
-            <div className="min-w-0">
-              <p className="text-sm font-medium text-white truncate">{p.name}</p>
-              <p className="text-xs text-readable-faint truncate">
-                {[p.brand, p.variant, size].filter(Boolean).join(" · ") || "—"}
-              </p>
+          {/* Info */}
+          <div className="flex-1 min-w-0">
+            <p className="text-sm font-medium text-white truncate pr-7">{p.name}</p>
+            <p className="text-xs text-readable-faint truncate">
+              {[p.brand, p.variant, size].filter(Boolean).join(" · ") || "—"}
+            </p>
+            <div className="flex items-center gap-2 mt-1.5 flex-wrap">
+              {p.last_total_price != null && (
+                <span className="text-sm font-semibold text-emerald-300">${Number(p.last_total_price).toFixed(2)}</span>
+              )}
+              {unit && <span className="text-[11px] text-readable-soft">{unit}</span>}
+              {p.has_nutrition && p.n_calories != null && (
+                <span className="inline-flex items-center gap-1 text-[10px] px-1.5 py-0.5 rounded-full border border-emerald-500/25 bg-emerald-500/10 text-emerald-300">
+                  <Apple size={10} /> {p.n_calories} cal · {p.n_protein_g ?? "—"} g protein
+                </span>
+              )}
             </div>
-            <button onClick={onToggleFav} aria-label="Toggle favorite" className="p-1 shrink-0">
-              <Star size={16} className={p.is_favorite ? "fill-amber-300 text-amber-300" : "text-readable-faint hover:text-amber-300"} />
-            </button>
           </div>
-
-          <div className="flex items-center gap-2 mt-1.5 flex-wrap">
-            {p.last_total_price != null && (
-              <span className="text-sm font-semibold text-emerald-300">${Number(p.last_total_price).toFixed(2)}</span>
-            )}
-            {unit && <span className="text-[11px] text-readable-soft">{unit}</span>}
-            {p.category && (
-              <span className="text-[10px] px-1.5 py-0.5 rounded-full border border-white/10 text-readable-faint">{p.category}</span>
-            )}
-          </div>
-        </div>
+        </Link>
+        <button onClick={onToggleFav} aria-label="Toggle favorite" className="absolute top-3 right-3 p-1">
+          <Star size={16} className={p.is_favorite ? "fill-amber-300 text-amber-300" : "text-readable-faint hover:text-amber-300"} />
+        </button>
       </div>
 
       {/* Actions */}
@@ -326,44 +352,13 @@ function ProductCard({
           {added ? <Check size={13} className="text-emerald-400" /> : adding ? <Loader2 size={13} className="animate-spin" /> : <ListPlus size={13} />}
           {added ? "Added" : "Add to list"}
         </button>
-        <button onClick={toggleHistory} className="flex-1 inline-flex items-center justify-center gap-1.5 py-2 text-readable-soft hover:bg-white/[0.04] transition-colors">
-          <History size={13} /> {p.price_count} price{p.price_count === 1 ? "" : "s"}
-          <ChevronDown size={12} className={`transition-transform ${open ? "rotate-180" : ""}`} />
-        </button>
+        <Link href={`/tools/products/${p.id}`} className="flex-1 inline-flex items-center justify-center gap-1.5 py-2 text-readable-soft hover:bg-white/[0.04] transition-colors">
+          Details · {p.price_count} price{p.price_count === 1 ? "" : "s"} <ChevronRight size={12} />
+        </Link>
         <button onClick={onRemove} aria-label="Delete product" className="px-4 inline-flex items-center justify-center py-2 text-readable-faint hover:text-red-300 hover:bg-red-500/[0.06] transition-colors">
           <Trash2 size={13} />
         </button>
       </div>
-
-      {/* Price history */}
-      <AnimatePresence initial={false}>
-        {open && (
-          <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }} exit={{ height: 0, opacity: 0 }} className="border-t border-white/[0.06] bg-black/20 overflow-hidden">
-            <div className="p-3">
-              {loadingHist ? (
-                <p className="text-xs text-readable-faint">Loading price history…</p>
-              ) : history && history.length > 0 ? (
-                <ul className="space-y-1.5">
-                  {history.map((h) => (
-                    <li key={h.id} className="flex items-center justify-between text-xs">
-                      <span className="text-readable-faint">
-                        {new Date(h.observed_at).toLocaleDateString(undefined, { year: "numeric", month: "short", day: "numeric" })}
-                        {h.store_name ? ` · ${h.store_name}` : ""}
-                      </span>
-                      <span className="text-readable-soft">
-                        ${Number(h.total_price).toFixed(2)}
-                        {h.unit_price != null && h.unit_type ? ` · ${formatUnitPrice(Number(h.unit_price), h.unit_type)}` : ""}
-                      </span>
-                    </li>
-                  ))}
-                </ul>
-              ) : (
-                <p className="text-xs text-readable-faint">No price history yet.</p>
-              )}
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
     </motion.li>
   );
 }

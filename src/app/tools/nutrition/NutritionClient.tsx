@@ -14,6 +14,7 @@ import ProgressRing from "@/components/charts/ProgressRing";
 import BarChart from "@/components/charts/BarChart";
 import TrendChart from "@/components/charts/TrendChart";
 import MealLogger, { DRAFT_KEY } from "./MealLogger";
+import ProductFoodPicker from "../products/ProductFoodPicker";
 import ReviewPanel from "./ReviewPanel";
 import MealTimeline from "./MealTimeline";
 import EditMealSheet from "./EditMealSheet";
@@ -72,6 +73,7 @@ export default function NutritionClient({ email, canEdit }: { email: string | nu
   const [busyMealId, setBusyMealId] = useState<string | null>(null);
   const [editing, setEditing] = useState<MealWithItems | null>(null);
   const [showSettings, setShowSettings] = useState(false);
+  const [foodPickerOpen, setFoodPickerOpen] = useState(false);
 
   // ── Load (server-side date-range query; excludes soft-deleted) ───────────────
   const load = useCallback(async () => {
@@ -448,6 +450,12 @@ export default function NutritionClient({ email, canEdit }: { email: string | nu
             ) : (
               <>
                 <MealLogger defaultDate={selectedDate} busy={analyzing} onAnalyze={(input) => analyze(input)} />
+                <button
+                  onClick={() => setFoodPickerOpen(true)}
+                  className="w-full inline-flex items-center justify-center gap-2 rounded-xl border border-white/10 text-readable-soft px-4 py-2.5 text-sm hover:bg-white/[0.05] transition-colors"
+                >
+                  <UtensilsCrossed size={15} className="text-emerald-400" /> Log from your Costco products
+                </button>
                 {analyzeFailed && pending && (
                   <div className="glass rounded-2xl border border-amber-500/25 bg-amber-500/[0.06] p-4">
                     <div className="flex items-start gap-2 mb-3">
@@ -499,6 +507,15 @@ export default function NutritionClient({ email, canEdit }: { email: string | nu
           targetHistory={targetHistory} calTarget={calTarget} proteinTarget={proteinTarget}
           weekStart={weekStart} today={today}
           onPickDay={(d) => { setSelectedDate(d); setTab("today"); }}
+        />
+      )}
+
+      {/* Log a Costco product (food library → serving entry) */}
+      {foodPickerOpen && (
+        <ProductFoodPicker
+          defaultDate={selectedDate}
+          onLogged={() => { setSelectedDate(selectedDate); setFlash("Logged from your products."); load(); }}
+          onClose={() => setFoodPickerOpen(false)}
         />
       )}
 

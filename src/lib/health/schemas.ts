@@ -27,6 +27,7 @@ export const groceryCreateSchema = z.object({
   quantity: z.string().trim().max(60).nullable().optional(),
   category: z.string().trim().max(60).nullable().optional(),
   position: z.number().int().optional(),
+  product_id: z.string().uuid().nullable().optional(),
 });
 
 export const groceryUpdateSchema = z
@@ -36,5 +37,6 @@ export const groceryUpdateSchema = z
     category: z.string().trim().max(60).nullable().optional(),
     checked: z.boolean().optional(),
     position: z.number().int().optional(),
+    product_id: z.string().uuid().nullable().optional(),
   })
   .refine((p) => Object.keys(p).length > 0, { message: "No fields to update." });

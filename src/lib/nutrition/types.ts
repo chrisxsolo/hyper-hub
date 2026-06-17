@@ -90,6 +90,19 @@ export type ProposedItem = {
   assumptions: string[];
   requiresConfirmation: boolean;
   verified: boolean;
+  // Canonical-product link + frozen macro snapshot, present only for items
+  // logged from a Costco product. Optional so AI/USDA/manual items are unaffected.
+  productId?: string | null;
+  nutritionVersionId?: string | null;
+  totalFatG?: number | null;
+  saturatedFatG?: number | null;
+  transFatG?: number | null;
+  cholesterolMg?: number | null;
+  sodiumMg?: number | null;
+  totalCarbohydrateG?: number | null;
+  dietaryFiberG?: number | null;
+  totalSugarsG?: number | null;
+  addedSugarsG?: number | null;
 };
 
 export type ProposedMeal = {

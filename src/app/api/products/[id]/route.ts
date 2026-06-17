@@ -2,7 +2,13 @@ import { type NextRequest } from "next/server";
 import { z } from "zod";
 import { getAuthContext, jsonError, jsonOk, requestId } from "@/lib/owner";
 import { productUpdateSchema } from "@/lib/products/schemas";
-import { deleteImages, loadOverviewRow, signImagePaths } from "@/lib/products/server";
+import {
+  deleteImages,
+  loadNutritionVersions,
+  loadOverviewRow,
+  loadProductImages,
+  signImagePaths,
+} from "@/lib/products/server";
 import type { DbCostcoProduct, DbCostcoProductPrice, PriceHistoryEntry } from "@/lib/products/types";
 
 const idSchema = z.string().uuid();
@@ -32,7 +38,12 @@ export async function GET(_request: NextRequest, ctx: { params: Promise<{ id: st
     sourceImageUrl: p.source_image_url ? signed.get(p.source_image_url) ?? null : null,
   }));
 
-  return jsonOk({ product, history }, rid);
+  const [images, nutritionVersions] = await Promise.all([
+    loadProductImages(supabase, id),
+    loadNutritionVersions(supabase, id),
+  ]);
+
+  return jsonOk({ product, history, images, nutritionVersions }, rid);
 }
 
 // PATCH — edit product attributes (favorite, name, category, notes, …).

@@ -27,6 +27,18 @@ export const itemRowSchema = z.object({
   confidence: z.number().nullable().optional(),
   assumptions: z.array(z.string()).default([]),
   verified: z.boolean().default(false),
+  // Canonical-product link + frozen macro snapshot (product-logged items only).
+  product_id: z.string().uuid().nullable().optional(),
+  nutrition_version_id: z.string().uuid().nullable().optional(),
+  total_fat_g: z.number().nullable().optional(),
+  saturated_fat_g: z.number().nullable().optional(),
+  trans_fat_g: z.number().nullable().optional(),
+  cholesterol_mg: z.number().nullable().optional(),
+  sodium_mg: z.number().nullable().optional(),
+  total_carbohydrate_g: z.number().nullable().optional(),
+  dietary_fiber_g: z.number().nullable().optional(),
+  total_sugars_g: z.number().nullable().optional(),
+  added_sugars_g: z.number().nullable().optional(),
 });
 export type ItemRow = z.infer<typeof itemRowSchema>;
 

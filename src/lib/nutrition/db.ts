@@ -45,6 +45,18 @@ export type DbItem = {
   assumptions: string[] | null;
   verified: boolean;
   created_at: string;
+  // Canonical-product link + frozen macro snapshot (product-logged items only).
+  product_id: string | null;
+  nutrition_version_id: string | null;
+  total_fat_g: number | null;
+  saturated_fat_g: number | null;
+  trans_fat_g: number | null;
+  cholesterol_mg: number | null;
+  sodium_mg: number | null;
+  total_carbohydrate_g: number | null;
+  dietary_fiber_g: number | null;
+  total_sugars_g: number | null;
+  added_sugars_g: number | null;
 };
 
 export type MealWithItems = DbMeal & { items: DbItem[] };
@@ -77,6 +89,17 @@ export function dbItemToProposed(it: DbItem): ProposedItem {
     assumptions: it.assumptions ?? [],
     requiresConfirmation: false,
     verified: it.verified,
+    productId: it.product_id,
+    nutritionVersionId: it.nutrition_version_id,
+    totalFatG: it.total_fat_g,
+    saturatedFatG: it.saturated_fat_g,
+    transFatG: it.trans_fat_g,
+    cholesterolMg: it.cholesterol_mg,
+    sodiumMg: it.sodium_mg,
+    totalCarbohydrateG: it.total_carbohydrate_g,
+    dietaryFiberG: it.dietary_fiber_g,
+    totalSugarsG: it.total_sugars_g,
+    addedSugarsG: it.added_sugars_g,
   };
 }
 
@@ -104,6 +127,17 @@ export function proposedItemToRow(it: ProposedItem, position: number) {
     confidence: it.confidence,
     assumptions: it.assumptions,
     verified: it.verified,
+    product_id: it.productId ?? null,
+    nutrition_version_id: it.nutritionVersionId ?? null,
+    total_fat_g: it.totalFatG ?? null,
+    saturated_fat_g: it.saturatedFatG ?? null,
+    trans_fat_g: it.transFatG ?? null,
+    cholesterol_mg: it.cholesterolMg ?? null,
+    sodium_mg: it.sodiumMg ?? null,
+    total_carbohydrate_g: it.totalCarbohydrateG ?? null,
+    dietary_fiber_g: it.dietaryFiberG ?? null,
+    total_sugars_g: it.totalSugarsG ?? null,
+    added_sugars_g: it.addedSugarsG ?? null,
   };
 }
 
