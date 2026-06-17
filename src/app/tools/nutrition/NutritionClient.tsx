@@ -258,6 +258,16 @@ export default function NutritionClient({ email, canEdit }: { email: string | nu
   }
 
   function recalculate(meal: MealWithItems) {
+    // Items logged from a saved product carry a verified, frozen label snapshot
+    // (product_id + nutrition_version_id). Recalculate re-runs the AI text
+    // analyzer on the meal's description — for product-logged meals that text is
+    // just the product name — which would replace those exact values with an
+    // estimate and drop the product link. Make that loss explicit before doing it.
+    const linked = meal.items.filter((it) => it.product_id).length;
+    if (linked > 0 && !window.confirm(
+      `This meal has ${linked} item${linked === 1 ? "" : "s"} logged from a saved product with exact label nutrition. ` +
+      "Recalculating replaces those values with an AI estimate from the meal text and removes the product link. Continue?",
+    )) return;
     setTab("today"); setSelectedDate(meal.eaten_on);
     analyze({ text: meal.original_text, mealType: meal.meal_type, date: meal.eaten_on, time: "" }, meal.id);
   }
