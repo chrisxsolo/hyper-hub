@@ -34,7 +34,7 @@ export default function ToolsClient({
     {
       href: "/tools/grocery",
       icon: ShoppingCart,
-      title: "Costco Grocery List",
+      title: "Grocery List",
       summary: grocerySummary,
       cta: "Open list",
       gradient: "from-amber-500/20 to-orange-500/10",
@@ -84,7 +84,7 @@ export default function ToolsClient({
           </div>
         </div>
         <p className="text-readable-soft max-w-xl mt-4 text-sm leading-relaxed">
-          Interactive trackers and lists — log meals, manage the Costco run, and follow my
+          Interactive trackers and lists — log meals, manage the grocery run, and follow my
           body metrics over time.
         </p>
       </motion.div>

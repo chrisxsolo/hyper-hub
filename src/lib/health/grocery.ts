@@ -1,4 +1,4 @@
-// Client-safe types + constants for the grocery_items table (the Costco list
+// Client-safe types + constants for the grocery_items table (the grocery list
 // tool). No server-only imports here.
 
 export type DbGroceryItem = {
@@ -12,7 +12,7 @@ export type DbGroceryItem = {
   updated_at: string;
 };
 
-// Common Costco aisles — used to optionally group items. Free-form is allowed
+// Common grocery aisles — used to optionally group items. Free-form is allowed
 // too; these are just quick-pick suggestions.
 export const GROCERY_CATEGORIES = [
   "Produce",

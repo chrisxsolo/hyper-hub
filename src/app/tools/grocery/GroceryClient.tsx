@@ -190,7 +190,7 @@ export default function GroceryClient({
             <ShoppingCart size={20} className="text-emerald-400" />
           </div>
           <div>
-            <h1 className="text-3xl font-bold text-white tracking-tight">Costco Grocery List</h1>
+            <h1 className="text-3xl font-bold text-white tracking-tight">Grocery List</h1>
             <p className="text-sm text-readable-soft">
               {canEdit
                 ? remaining > 0
@@ -209,7 +209,7 @@ export default function GroceryClient({
           <Lock size={28} className="text-readable-faint mx-auto mb-4" />
           <h2 className="text-lg font-semibold text-white mb-2">This list is private</h2>
           <p className="text-sm text-readable-soft mb-6 max-w-sm mx-auto">
-            The Costco grocery list is personal. Sign in to view and manage it.
+            The grocery list is personal. Sign in to view and manage it.
           </p>
           <Link
             href="/login"

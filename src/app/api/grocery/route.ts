@@ -2,7 +2,7 @@ import { type NextRequest } from "next/server";
 import { groceryCreateSchema } from "@/lib/health/schemas";
 import { getAuthContext, jsonError, jsonOk, requestId } from "@/lib/owner";
 
-// The Costco grocery list is private (owner-only RLS).
+// The grocery list is private (owner-only RLS).
 
 // GET — list items: unchecked first, then by position / age.
 export async function GET() {

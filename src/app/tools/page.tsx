@@ -9,7 +9,7 @@ const OWNER_EMAIL = "chrissolorzano118@gmail.com";
 
 export const metadata = {
   title: "Personalized Tools — Hyper Hub",
-  description: "Calorie tracker, Costco grocery list, and personal metrics.",
+  description: "Calorie tracker, grocery list, and personal metrics.",
 };
 
 export default async function ToolsPage() {
@@ -52,7 +52,7 @@ export default async function ToolsPage() {
 
   // ── Grocery summary (private — owner only) ──
   const groceryP = (async () => {
-    if (!canEdit) return "Your running Costco shopping list";
+    if (!canEdit) return "Your running grocery list";
     try {
       const { count } = await supabase
         .from("grocery_items")
@@ -61,9 +61,9 @@ export default async function ToolsPage() {
       if (count != null) {
         return count > 0 ? `${count} item${count === 1 ? "" : "s"} remaining` : "All caught up — list is clear";
       }
-      return "Your running Costco shopping list";
+      return "Your running grocery list";
     } catch {
-      return "Your running Costco shopping list";
+      return "Your running grocery list";
     }
   })();
 

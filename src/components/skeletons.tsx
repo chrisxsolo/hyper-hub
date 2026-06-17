@@ -109,7 +109,7 @@ export function DashboardSkeleton() {
   );
 }
 
-/** /tools/grocery — Costco Grocery List (rows). */
+/** /tools/grocery — Grocery List (rows). */
 export function ListSkeleton() {
   return (
     <div className="max-w-2xl mx-auto px-4 sm:px-6 py-12">

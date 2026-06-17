@@ -3,12 +3,12 @@ import GroceryClient from "./GroceryClient";
 import type { DbGroceryItem } from "@/lib/health/grocery";
 
 // Private tool — the list is owner-only (no public-read RLS). Visitors see a
-// sign-in prompt; the owner sees their full Costco list.
+// sign-in prompt; the owner sees their full grocery list.
 const OWNER_EMAIL = "chrissolorzano118@gmail.com";
 
 export const metadata = {
-  title: "Costco Grocery List — Hyper Hub",
-  description: "A running Costco shopping list.",
+  title: "Grocery List — Hyper Hub",
+  description: "A running grocery list.",
 };
 
 export default async function GroceryPage() {
