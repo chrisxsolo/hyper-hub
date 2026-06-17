@@ -16,7 +16,8 @@ const MODEL = process.env.PRODUCT_SCAN_MODEL || process.env.NUTRITION_MODEL || "
 // Field descriptions double as extraction instructions. Values must be read in
 // the label's standard units (US labels: g for fats/carbs/protein/fiber/sugars,
 // mg for sodium/cholesterol/calcium/iron/potassium, mcg for vitamin D).
-const PROPERTIES = {
+// Exported so the multi-photo combo scanner can compose the same field set.
+export const PROPERTIES = {
   servingSizeDescription: { type: ["string", "null"], description: "The serving size exactly as printed, e.g. '4 oz (112 g)', '2/3 cup (55g)', '1 bar'. Null if unreadable." },
   servingSizeValue: { type: ["number", "null"], description: "The numeric serving size in the metric unit shown in parentheses, e.g. 112 for '4 oz (112 g)', 55 for '(55g)'. Use the gram weight when shown; otherwise the primary numeric amount. Null if none." },
   servingSizeUnit: { type: ["string", "null"], description: "Unit for servingSizeValue: 'g', 'ml', 'oz', 'piece', etc. Prefer 'g' or 'ml' when a metric weight/volume is printed." },

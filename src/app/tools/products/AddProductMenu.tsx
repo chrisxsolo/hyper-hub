@@ -2,11 +2,12 @@
 
 import { useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { X, Package, Tag, Barcode, Receipt, Apple, ChevronRight } from "lucide-react";
+import { X, Package, Tag, Barcode, Receipt, Apple, ChevronRight, Layers } from "lucide-react";
 
-export type AddMode = "product" | "price" | "nutrition" | "barcode" | "receipt";
+export type AddMode = "multi" | "product" | "price" | "nutrition" | "barcode" | "receipt";
 
 const OPTIONS: { mode: AddMode; label: string; hint: string; icon: React.ElementType }[] = [
+  { mode: "multi", label: "Scan a Product", hint: "Front, price tag & nutrition — all at once", icon: Layers },
   { mode: "product", label: "Scan Product", hint: "Package front — name, brand, size", icon: Package },
   { mode: "price", label: "Scan Price Label", hint: "Costco shelf tag or receipt price", icon: Tag },
   { mode: "nutrition", label: "Scan Nutrition Facts", hint: "The Nutrition Facts panel", icon: Apple },

@@ -13,6 +13,7 @@ import { formatUnitPrice } from "@/lib/products/units";
 import { PRODUCT_CATEGORIES, type ProductOverview } from "@/lib/products/types";
 import ProductScanner from "./ProductScanner";
 import BatchScanner from "./BatchScanner";
+import MultiPhotoScanner from "./MultiPhotoScanner";
 import AddProductMenu, { type AddMode } from "./AddProductMenu";
 import NutritionScanner from "./NutritionScanner";
 import ProductPicker from "./ProductPicker";
@@ -27,7 +28,7 @@ function sizeSummary(p: ProductOverview): string | null {
   return null;
 }
 
-const MODE_TITLE: Record<Exclude<AddMode, "nutrition">, string> = {
+const MODE_TITLE: Record<Exclude<AddMode, "nutrition" | "multi">, string> = {
   product: "Scan product",
   price: "Scan price label",
   barcode: "Scan barcode",
@@ -54,6 +55,7 @@ export default function ProductsClient({
   const [scanTitle, setScanTitle] = useState<string | null>(null);
   const [scanOpen, setScanOpen] = useState(false);
   const [batchOpen, setBatchOpen] = useState(false);
+  const [multiOpen, setMultiOpen] = useState(false);
   const [pickNutrition, setPickNutrition] = useState(false);
   const [nutritionTarget, setNutritionTarget] = useState<{ id: string; name: string } | null>(null);
   const [err, setErr] = useState("");
@@ -75,7 +77,9 @@ export default function ProductsClient({
 
   function onPickMode(mode: AddMode) {
     setMenuOpen(false);
-    if (mode === "nutrition") {
+    if (mode === "multi") {
+      setMultiOpen(true);
+    } else if (mode === "nutrition") {
       setPickNutrition(true);
     } else {
       setScanTitle(MODE_TITLE[mode]);
@@ -240,6 +244,7 @@ export default function ProductsClient({
       )}
 
       {menuOpen && <AddProductMenu onPick={onPickMode} onClose={() => setMenuOpen(false)} />}
+      {multiOpen && <MultiPhotoScanner onClose={() => setMultiOpen(false)} onSaved={upsert} />}
       {scanOpen && (
         <ProductScanner
           title={scanTitle ?? undefined}

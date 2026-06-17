@@ -10,12 +10,18 @@ import {
 
 const idSchema = z.string().uuid();
 
-const bodySchema = z.object({
-  imageBase64: z.string().min(1).max(20_000_000),
-  mediaType: z.enum(["image/jpeg", "image/png", "image/webp"]),
-  imageType: z.enum(NUTRITION_IMAGE_TYPES).default("other"),
-  isPrimary: z.boolean().default(false),
-});
+// Either upload a fresh image (imageBase64) or attach an already-uploaded object
+// path (imagePath, e.g. one returned by a scan endpoint) — the multi-photo flow
+// uses the latter so photos aren't re-uploaded.
+const bodySchema = z
+  .object({
+    imageBase64: z.string().min(1).max(20_000_000).optional(),
+    mediaType: z.enum(["image/jpeg", "image/png", "image/webp"]).optional(),
+    imagePath: z.string().trim().min(1).max(400).optional(),
+    imageType: z.enum(NUTRITION_IMAGE_TYPES).default("other"),
+    isPrimary: z.boolean().default(false),
+  })
+  .refine((b) => !!b.imageBase64 || !!b.imagePath, { message: "Provide imageBase64 or imagePath." });
 
 // GET — all stored images for a product, signed.
 export async function GET(_request: NextRequest, ctx: { params: Promise<{ id: string }> }) {
@@ -52,10 +58,14 @@ export async function POST(request: NextRequest, ctx: { params: Promise<{ id: st
   if (!exists) return jsonError(404, "Product not found.", rid);
 
   let path: string;
-  try {
-    path = await uploadScanImage(supabase, body.imageBase64, body.mediaType, "images");
-  } catch (e) {
-    return jsonError(502, e instanceof Error ? e.message : "Image upload failed.", rid);
+  if (body.imagePath) {
+    path = body.imagePath;
+  } else {
+    try {
+      path = await uploadScanImage(supabase, body.imageBase64!, body.mediaType ?? "image/jpeg", "images");
+    } catch (e) {
+      return jsonError(502, e instanceof Error ? e.message : "Image upload failed.", rid);
+    }
   }
   await recordProductImage(supabase, id, body.imageType, path, body.isPrimary);
 

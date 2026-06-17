@@ -13,7 +13,8 @@ import type { ScannedProduct } from "./types";
 const MODEL = process.env.PRODUCT_SCAN_MODEL || process.env.NUTRITION_MODEL || "claude-opus-4-8";
 
 // Field descriptions double as extraction instructions — Claude fills each one.
-const PROPERTIES = {
+// Exported so the multi-photo combo scanner can compose the same field set.
+export const PROPERTIES = {
   name: { type: ["string", "null"], description: "Full product name as printed, e.g. 'Kirkland Signature Boneless Skinless Chicken Breast'. Null if unreadable." },
   brand: { type: ["string", "null"], description: "Brand, e.g. 'Kirkland Signature', 'Tillamook'. Null if not visible." },
   variant: { type: ["string", "null"], description: "Variant/flavor/cut, e.g. 'Boneless Skinless', 'Sharp Cheddar', '2% Reduced Fat'. Null if none." },

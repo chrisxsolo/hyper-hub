@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Check, Loader2, Plus, X, AlertTriangle } from "lucide-react";
 import type { AdditionalNutrient, ScannedNutrition } from "@/lib/products/types";
 import type { NutritionVersionSave } from "@/lib/products/nutrition-schemas";
@@ -71,7 +71,9 @@ export default function NutritionReview({
   busy = false,
   saveLabel = "Save Nutrition Facts",
   warning,
+  embedded = false,
   onSave,
+  onChange,
   onBack,
 }: {
   initial: Partial<ScannedNutrition>;
@@ -79,7 +81,11 @@ export default function NutritionReview({
   busy?: boolean;
   saveLabel?: string;
   warning?: string | null;
-  onSave: (payload: NutritionVersionSave) => void;
+  // When embedded (e.g. inside the multi-photo review), hide the save/back
+  // buttons and report the current values upward via onChange instead.
+  embedded?: boolean;
+  onSave?: (payload: NutritionVersionSave) => void;
+  onChange?: (payload: NutritionVersionSave) => void;
   onBack?: () => void;
 }) {
   const [form, setForm] = useState<Form>(() => buildInitial(initial));
@@ -90,9 +96,8 @@ export default function NutritionReview({
     setForm((prev) => ({ ...prev, [k]: v }));
   }
 
-  function submit() {
-    if (busy) return;
-    const payload: NutritionVersionSave = {
+  function buildPayload(): NutritionVersionSave {
+    return {
       servingSizeDescription: form.servingSizeDescription.trim() || null,
       servingSizeValue: toNum(form.servingSizeValue),
       servingSizeUnit: form.servingSizeUnit.trim() || null,
@@ -117,7 +122,17 @@ export default function NutritionReview({
         .map((e) => ({ name: e.name.trim(), value: e.value, unit: e.unit })),
       notes: form.notes.trim() || null,
     };
-    onSave(payload);
+  }
+
+  // In embedded mode, surface the latest values to the parent on every change.
+  useEffect(() => {
+    if (embedded) onChange?.(buildPayload());
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [form, extras, embedded]);
+
+  function submit() {
+    if (busy) return;
+    onSave?.(buildPayload());
   }
 
   return (
@@ -213,17 +228,19 @@ export default function NutritionReview({
         <input className={inputCls} value={form.notes} onChange={(e) => set("notes", e.target.value)} placeholder="e.g. values as prepared, dual-column label…" />
       </Field>
 
-      <div className="flex gap-2 pt-1">
-        {onBack && (
-          <button onClick={onBack} className="inline-flex items-center justify-center gap-2 rounded-lg border border-white/10 text-readable-soft px-4 py-2.5 text-sm hover:bg-white/[0.06] transition-colors">
-            Back
+      {!embedded && (
+        <div className="flex gap-2 pt-1">
+          {onBack && (
+            <button onClick={onBack} className="inline-flex items-center justify-center gap-2 rounded-lg border border-white/10 text-readable-soft px-4 py-2.5 text-sm hover:bg-white/[0.06] transition-colors">
+              Back
+            </button>
+          )}
+          <button onClick={submit} disabled={busy} className="flex-1 inline-flex items-center justify-center gap-2 rounded-lg bg-emerald-500/20 border border-emerald-500/30 text-emerald-300 px-4 py-2.5 text-sm font-medium hover:bg-emerald-500/30 transition-colors disabled:opacity-40">
+            {busy ? <Loader2 size={15} className="animate-spin" /> : <Check size={15} />}
+            {saveLabel}
           </button>
-        )}
-        <button onClick={submit} disabled={busy} className="flex-1 inline-flex items-center justify-center gap-2 rounded-lg bg-emerald-500/20 border border-emerald-500/30 text-emerald-300 px-4 py-2.5 text-sm font-medium hover:bg-emerald-500/30 transition-colors disabled:opacity-40">
-          {busy ? <Loader2 size={15} className="animate-spin" /> : <Check size={15} />}
-          {saveLabel}
-        </button>
-      </div>
+        </div>
+      )}
     </div>
   );
 }
