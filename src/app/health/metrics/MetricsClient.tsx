@@ -294,6 +294,7 @@ export default function MetricsClient({
               steps={steps}
               workouts={workouts}
               sleep={sleep}
+              vitals={vitals}
               experiments={experiments}
               canEdit={canEdit}
               saving={saving}

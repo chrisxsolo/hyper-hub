@@ -5,6 +5,7 @@ import { motion } from "framer-motion";
 import {
   FlaskConical, ShieldAlert, GitCompareArrows, Activity, Crosshair, Moon,
   Footprints, Beaker, ClipboardList, CheckCircle2, CircleDot, Trash2, Link2,
+  HeartPulse,
 } from "lucide-react";
 import TrendChart from "@/components/charts/TrendChart";
 import {
@@ -14,7 +15,7 @@ import {
   Field, AddCard, SectionCard, Narrative, EmptyState, Pill, inputCls, fadeUp,
 } from "@/components/health/ui";
 import type {
-  WeightRow, StepRow, WorkoutRow, SleepRow, ExperimentRow,
+  WeightRow, StepRow, WorkoutRow, SleepRow, ExperimentRow, VitalsRow,
 } from "@/lib/health/types";
 
 const KM2MI = 0.621371;
@@ -50,12 +51,13 @@ function strengthColor(r: number): string {
 }
 
 export default function CorrelationLabView({
-  weight, steps, workouts, sleep, experiments, canEdit, saving, onAddExperiment, onDeleteExperiment,
+  weight, steps, workouts, sleep, vitals, experiments, canEdit, saving, onAddExperiment, onDeleteExperiment,
 }: {
   weight: WeightRow[];
   steps: StepRow[];
   workouts: WorkoutRow[];
   sleep: SleepRow[];
+  vitals: VitalsRow[];
   experiments: ExperimentRow[];
   canEdit: boolean;
   saving: boolean;
@@ -79,6 +81,14 @@ export default function CorrelationLabView({
         .sort((a, b) => a.date.localeCompare(b.date)),
     [weight],
   );
+  const vitalDaily = (key: "resting_hr" | "hrv_ms") =>
+    [...vitals]
+      .filter((r) => r[key] != null)
+      .map((r) => ({ date: r.measured_on.slice(0, 10), value: Number(r[key]) }))
+      .filter((p) => Number.isFinite(p.value))
+      .sort((a, b) => a.date.localeCompare(b.date));
+  const rhrDaily = useMemo(() => vitalDaily("resting_hr"), [vitals]); // eslint-disable-line react-hooks/exhaustive-deps
+  const hrvDaily = useMemo(() => vitalDaily("hrv_ms"), [vitals]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // Weekly aggregates aligned by ISO week.
   const correlations = useMemo<Corr[]>(() => {
@@ -106,6 +116,25 @@ export default function CorrelationLabView({
 
     const wWeight = weeklyMean(weightDaily);
     const wSteps = weeklyMean(stepsDaily);
+    const wRhr = weeklyMean(rhrDaily);
+    const wHrv = weeklyMean(hrvDaily);
+
+    // Daily running miles, reused by several pairings.
+    const runDaily = workouts
+      .filter((w) => (w.workout_type ?? "").includes("Run") && w.started_at && Number(w.distance_km) > 0)
+      .map((w) => ({ date: w.started_at!.slice(0, 10), value: Number(w.distance_km) * KM2MI }))
+      .filter((p) => Number.isFinite(p.value));
+    const wMiles = weeklySum(runDaily);
+
+    // Push a Corr card from two equal-length aligned arrays.
+    const pushPair = (
+      key: string, title: string, icon: React.ElementType, xs: number[], ys: number[],
+      minN: number, caption: (r: number, n: number) => string,
+    ) => {
+      if (xs.length < minN) return;
+      const r = pearson(xs, ys);
+      out.push({ key, title, icon, color: strengthColor(r), r, n: xs.length, caption: caption(r, xs.length) });
+    };
 
     // 1) weekly avg steps vs weekly avg weight
     {
@@ -130,11 +159,6 @@ export default function CorrelationLabView({
 
     // 2) weekly running mileage vs weekly avg weight
     {
-      const runDaily = workouts
-        .filter((w) => (w.workout_type ?? "").includes("Run") && w.started_at && Number(w.distance_km) > 0)
-        .map((w) => ({ date: w.started_at!.slice(0, 10), value: Number(w.distance_km) * KM2MI }))
-        .filter((p) => Number.isFinite(p.value));
-      const wMiles = weeklySum(runDaily);
       const xs: number[] = []; const ys: number[] = [];
       wMiles.forEach((mv, k) => {
         const wv = wWeight.get(k);
@@ -181,8 +205,42 @@ export default function CorrelationLabView({
       }
     }
 
+    // ── Vitals pairings (dense daily resting HR / HRV) ────────────────────────
+    // 4) HRV vs resting HR, same day — the expected inverse, a physiology anchor.
+    {
+      const lc = laggedCorrelation(hrvDaily, rhrDaily, 0);
+      if (lc.n >= 10) out.push({
+        key: "hrv-rhr", title: "HRV vs resting HR (same day)", icon: HeartPulse, color: strengthColor(lc.r),
+        r: lc.r, n: lc.n,
+        caption: `Across ${lc.n} days, higher HRV and lower resting heart rate ${direction(lc.r)} — the recovery relationship you'd expect. A useful internal sanity check that these signals track real physiology.`,
+      });
+    }
+    // 5) steps → next-day resting HR (does a busy day show up the next morning?)
+    {
+      const lc = laggedCorrelation(stepsDaily, rhrDaily, 1);
+      if (lc.n >= 10) out.push({
+        key: "steps-rhr", title: "Steps → next-day resting HR", icon: Footprints, color: strengthColor(lc.r),
+        r: lc.r, n: lc.n,
+        caption: `Over ${lc.n} day-pairs, a day's step count and the next morning's resting heart rate ${direction(lc.r)}. Plenty else moves resting HR overnight — alcohol, stress, illness — so treat this as a hint.`,
+      });
+    }
+    // 6) weekly run mileage vs weekly resting HR (endurance base vs resting HR)
+    {
+      const xs: number[] = []; const ys: number[] = [];
+      wMiles.forEach((mv, k) => { const rv = wRhr.get(k); if (rv != null) { xs.push(mv); ys.push(rv); } });
+      pushPair("miles-rhr", "Weekly mileage vs resting HR", Activity, xs, ys, 4,
+        (r, n) => `Over ${n} weeks, running volume and weekly resting heart rate ${direction(r)}. A lower resting HR alongside more mileage is the classic aerobic-base pattern — but it's still observational.`);
+    }
+    // 7) weekly run mileage vs weekly HRV
+    {
+      const xs: number[] = []; const ys: number[] = [];
+      wMiles.forEach((mv, k) => { const hv = wHrv.get(k); if (hv != null) { xs.push(mv); ys.push(hv); } });
+      pushPair("miles-hrv", "Weekly mileage vs HRV", HeartPulse, xs, ys, 4,
+        (r, n) => `Over ${n} weeks, training volume and heart-rate variability ${direction(r)}. HRV is noisy and many things drive it, so read the direction, not the decimals.`);
+    }
+
     return out;
-  }, [weightDaily, stepsDaily, workouts, sleep]);
+  }, [weightDaily, stepsDaily, rhrDaily, hrvDaily, workouts, sleep]);
 
   // Lag explorer state.
   const [lag, setLag] = useState(7);
