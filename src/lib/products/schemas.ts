@@ -12,10 +12,13 @@ const num = z.preprocess((v) => {
   return typeof n === "number" && Number.isFinite(n) ? n : null;
 }, z.number().nullable());
 
-const str = z.preprocess(
-  (v) => (typeof v === "string" && v.trim() !== "" ? v.trim() : null),
-  z.string().max(400).nullable(),
-);
+// Truncate rather than reject: an over-long free-text field (usually `notes`)
+// must never discard an otherwise-good extraction.
+const str = z.preprocess((v) => {
+  if (typeof v !== "string") return null;
+  const t = v.trim();
+  return t === "" ? null : t.slice(0, 400);
+}, z.string().max(400).nullable());
 
 // Claude's forced-tool output for a scanned image.
 export const scannedProductSchema = z.object({
