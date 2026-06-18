@@ -28,6 +28,7 @@ import {
   type DbItem, type DbMeal, type MealWithItems,
 } from "@/lib/nutrition/db";
 import { round } from "@/lib/nutrition/units";
+import { pricePerGram, buildMealCost, type MealCostSummary } from "@/lib/products/cost";
 import { blankProposedItem, targetsOnDate } from "@/lib/nutrition/helpers";
 import type {
   AliasRow, MealTemplate, MealType, NutritionSettings, ProposedItem, ProposedMeal,
@@ -36,6 +37,16 @@ import type {
 
 type Tab = "today" | "trends" | "calendar";
 type PendingInput = { text: string; mealType: MealType; date: string; time: string };
+// Pricing/size columns we read from costco_products_overview to cost meals.
+type PricingRow = {
+  id: string;
+  last_total_price: number | null;
+  total_weight: number | null;
+  weight_unit: string | null;
+  n_serving_value: number | null;
+  n_serving_unit: string | null;
+  n_servings_per_container: number | null;
+};
 
 const DEFAULT_CAL_TARGET = 2200;
 const DEFAULT_PROTEIN_TARGET = 160;
@@ -56,6 +67,9 @@ export default function NutritionClient({ email, canEdit }: { email: string | nu
   const [aliases, setAliases] = useState<AliasRow[]>([]);
   const [savedFoods, setSavedFoods] = useState<SavedFood[]>([]);
   const [targetHistory, setTargetHistory] = useState<TargetHistoryRow[]>([]);
+  // Price per gram for each product the owner has scanned, used to cost meals
+  // logged from products. Empty for public viewers (the product DB is owner-only).
+  const [pricePerGramByProduct, setPricePerGramByProduct] = useState<Map<string, number>>(new Map());
   const [loading, setLoading] = useState(true);
   const [err, setErr] = useState("");
   const [flash, setFlash] = useState("");
@@ -82,7 +96,7 @@ export default function NutritionClient({ email, canEdit }: { email: string | nu
   // ── Load (server-side date-range query; excludes soft-deleted) ───────────────
   const load = useCallback(async () => {
     const cutoff = addDays(todayInTz("America/Los_Angeles"), -HISTORY_DAYS);
-    const [mRes, iRes, sRes, tRes, aRes, fRes, thRes] = await Promise.all([
+    const [mRes, iRes, sRes, tRes, aRes, fRes, thRes, pRes] = await Promise.all([
       supabase.from("nutrition_meals").select("*").is("deleted_at", null).gte("eaten_on", cutoff).order("consumed_at"),
       supabase.from("nutrition_meal_items").select("*").order("position"),
       supabase.from("nutrition_settings").select("*").limit(1).maybeSingle(),
@@ -90,6 +104,8 @@ export default function NutritionClient({ email, canEdit }: { email: string | nu
       supabase.from("nutrition_aliases").select("*"),
       supabase.from("nutrition_foods").select("id,name,brand,preparation_state,basis,calories_per_100g,protein_per_100g,serving_calories,serving_protein_g,serving_label,source_type,verified,times_logged").order("times_logged", { ascending: false }),
       supabase.from("nutrition_target_history").select("*").order("effective_on"),
+      // Product pricing for cost-per-meal. Owner-only RLS → empty for visitors.
+      supabase.from("costco_products_overview").select("id,last_total_price,total_weight,weight_unit,n_serving_value,n_serving_unit,n_servings_per_container"),
     ]);
     if (mRes.error) setErr(mRes.error.message);
     const byMeal = new Map<string, DbItem[]>();
@@ -104,12 +120,43 @@ export default function NutritionClient({ email, canEdit }: { email: string | nu
     setAliases((aRes.data as AliasRow[]) ?? []);
     setSavedFoods((fRes.data as SavedFood[]) ?? []);
     setTargetHistory((thRes.data as TargetHistoryRow[]) ?? []);
+
+    // Derive price-per-gram for each scanned product (weight-based products only).
+    const ppg = new Map<string, number>();
+    for (const row of (pRes.data ?? []) as PricingRow[]) {
+      const v = pricePerGram({
+        totalPrice: row.last_total_price,
+        totalWeight: row.total_weight,
+        weightUnit: row.weight_unit,
+        servingSizeValue: row.n_serving_value,
+        servingSizeUnit: row.n_serving_unit,
+        servingsPerContainer: row.n_servings_per_container,
+      });
+      if (v != null) ppg.set(row.id, v);
+    }
+    setPricePerGramByProduct(ppg);
     setLoading(false);
   }, [supabase]);
 
   useEffect(() => { load(); }, [load]);
   useEffect(() => { if (!flash) return; const t = setTimeout(() => setFlash(""), 3000); return () => clearTimeout(t); }, [flash]);
   useEffect(() => { if (!undo) return; const t = setTimeout(() => setUndo(null), 6000); return () => clearTimeout(t); }, [undo]);
+
+  // Cost per meal, for meals whose items link to scanned products (spec §8).
+  const costByMeal = useMemo(() => {
+    const m = new Map<string, MealCostSummary>();
+    if (pricePerGramByProduct.size === 0) return m;
+    for (const meal of meals) {
+      const c = buildMealCost(
+        meal.items.map((it) => ({ productId: it.product_id, grams: it.grams })),
+        pricePerGramByProduct,
+        meal.total_calories,
+        meal.total_protein_g,
+      );
+      if (c) m.set(meal.id, c);
+    }
+    return m;
+  }, [meals, pricePerGramByProduct]);
 
   const calTarget = settings?.calorie_target ?? DEFAULT_CAL_TARGET;
   const proteinTarget = settings?.protein_target_g ?? DEFAULT_PROTEIN_TARGET;
@@ -505,6 +552,7 @@ export default function NutritionClient({ email, canEdit }: { email: string | nu
             </h2>
             <MealTimeline
               meals={dayMeals}
+              costByMeal={costByMeal}
               canEdit={canEdit}
               busyId={busyMealId}
               onEdit={setEditing}

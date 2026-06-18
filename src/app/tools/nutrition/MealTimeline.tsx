@@ -4,10 +4,11 @@ import { useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import {
   ChevronDown, Flame, Beef, Trash2, Copy, CalendarPlus, RefreshCw,
-  BookmarkPlus, Clock, Loader2, Pencil, StickyNote,
+  BookmarkPlus, Clock, Loader2, Pencil, StickyNote, DollarSign,
 } from "lucide-react";
 import { SOURCE_LABELS, type SourceType } from "@/lib/nutrition/types";
 import { MEAL_TYPE_META, fmtTime, type MealWithItems } from "@/lib/nutrition/db";
+import type { MealCostSummary } from "@/lib/products/cost";
 
 const SOURCE_COLOR: Record<SourceType, string> = {
   personal: "#34d399", official_restaurant: "#22d3ee", usda: "#60a5fa",
@@ -23,6 +24,7 @@ function confDot(c: number | null) {
 
 export default function MealTimeline({
   meals,
+  costByMeal,
   canEdit,
   busyId,
   onEdit,
@@ -33,6 +35,7 @@ export default function MealTimeline({
   onSaveTemplate,
 }: {
   meals: MealWithItems[];
+  costByMeal?: Map<string, MealCostSummary>;
   canEdit: boolean;
   busyId: string | null;
   onEdit: (meal: MealWithItems) => void;
@@ -78,6 +81,7 @@ export default function MealTimeline({
         const meta = MEAL_TYPE_META[meal.meal_type];
         const isOpen = expanded.has(meal.id);
         const busy = busyId === meal.id;
+        const cost = costByMeal?.get(meal.id) ?? null;
         return (
           <motion.div
             key={meal.id}
@@ -106,7 +110,7 @@ export default function MealTimeline({
               <div className="flex items-center gap-3 shrink-0">
                 <div className="text-right">
                   <div className="flex items-center gap-1 text-sm font-semibold text-white"><Flame size={12} className="text-orange-400" />{Math.round(meal.total_calories).toLocaleString()}</div>
-                  <div className="flex items-center gap-1 text-[11px] text-readable-faint justify-end"><Beef size={11} className="text-emerald-400" />{Math.round(meal.total_protein_g)}g · {meal.items.length} food{meal.items.length === 1 ? "" : "s"}</div>
+                  <div className="flex items-center gap-1 text-[11px] text-readable-faint justify-end"><Beef size={11} className="text-emerald-400" />{Math.round(meal.total_protein_g)}g · {meal.items.length} food{meal.items.length === 1 ? "" : "s"}{cost && <span className="text-amber-300/80">{" "}· {cost.complete ? "" : "≥"}${cost.cost.toFixed(2)}</span>}</div>
                 </div>
                 <ChevronDown size={16} className={`text-readable-faint transition-transform ${isOpen ? "rotate-180" : ""}`} />
               </div>
@@ -141,6 +145,25 @@ export default function MealTimeline({
                         );
                       })}
                     </div>
+
+                    {cost && (
+                      <div className="mt-3 flex flex-wrap items-center gap-x-2 gap-y-1 text-[11px]">
+                        <span className="inline-flex items-center gap-1 text-amber-300 font-medium">
+                          <DollarSign size={11} />{cost.complete ? "" : "≥ "}${cost.cost.toFixed(2)}
+                        </span>
+                        {cost.complete ? (
+                          <span className="text-readable-faint">
+                            {cost.proteinPerDollar != null && `${cost.proteinPerDollar} g protein / $`}
+                            {cost.proteinPerDollar != null && cost.costPer100Cal != null && " · "}
+                            {cost.costPer100Cal != null && `$${cost.costPer100Cal.toFixed(2)} / 100 cal`}
+                          </span>
+                        ) : (
+                          <span className="text-readable-faint">
+                            {cost.pricedItems} of {cost.totalItems} foods priced
+                          </span>
+                        )}
+                      </div>
+                    )}
 
                     {meal.note && (
                       <p className="mt-2 text-xs text-readable-soft flex items-start gap-1.5"><StickyNote size={12} className="mt-0.5 shrink-0 text-readable-faint" />{meal.note}</p>

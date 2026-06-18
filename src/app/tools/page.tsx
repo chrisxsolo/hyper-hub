@@ -1,5 +1,7 @@
 import { getViewer } from "@/lib/supabase/server";
 import { todayInTz } from "@/lib/nutrition/db";
+import { withMetrics, rankBy } from "@/lib/products/rankings";
+import type { ProductOverview } from "@/lib/products/types";
 import ToolsClient from "./ToolsClient";
 
 // Personalized Tools hub. The tools I actively use (vs. read). Tiles show a
@@ -85,6 +87,25 @@ export default async function ToolsPage() {
     }
   })();
 
+  // ── ROI rankings summary (private — owner only) ──
+  // Reuses the same value-metric math as the rankings page; we skip image
+  // signing here since the one-line summary only needs name + protein/$.
+  const roiP = (async () => {
+    if (!canEdit) return "Rank your foods by nutrition value for the money";
+    try {
+      const { data } = await supabase.from("costco_products_overview").select("*");
+      const rows = (data ?? []) as unknown as ProductOverview[];
+      const top = rankBy(withMetrics(rows), "proteinPerDollar")[0];
+      if (top?.metrics.proteinPerDollar != null) {
+        const name = top.product.name.length > 24 ? `${top.product.name.slice(0, 23)}…` : top.product.name;
+        return `Best protein value: ${name} · ${top.metrics.proteinPerDollar.toFixed(1)} g/$`;
+      }
+      return "Scan prices + nutrition to rank your best-value foods";
+    } catch {
+      return "Rank your foods by nutrition value for the money";
+    }
+  })();
+
   // ── Metrics summary (public-read data) ──
   const metricsP = (async () => {
     try {
@@ -103,18 +124,15 @@ export default async function ToolsPage() {
     }
   })();
 
-  const [calorieSummary, grocerySummary, productsSummary, metricsSummary] = await Promise.all([
-    calorieP,
-    groceryP,
-    productsP,
-    metricsP,
-  ]);
+  const [calorieSummary, grocerySummary, productsSummary, roiSummary, metricsSummary] =
+    await Promise.all([calorieP, groceryP, productsP, roiP, metricsP]);
 
   return (
     <ToolsClient
       calorieSummary={calorieSummary}
       grocerySummary={grocerySummary}
       productsSummary={productsSummary}
+      roiSummary={roiSummary}
       metricsSummary={metricsSummary}
     />
   );

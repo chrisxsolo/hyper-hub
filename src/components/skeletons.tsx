@@ -52,14 +52,14 @@ function CardSkeleton() {
   );
 }
 
-/** /tools — the Personalized Tools hub (3 tiles). */
+/** /tools — the Personalized Tools hub (5 tiles). */
 export function ToolsHubSkeleton() {
   return (
     <div className="max-w-5xl mx-auto px-6 py-12">
       <BackLink label="Back to Hub" />
       <PageHeader titleWidth="w-64" />
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-        {[0, 1, 2, 3].map((i) => (
+        {[0, 1, 2, 3, 4].map((i) => (
           <CardSkeleton key={i} />
         ))}
       </div>
@@ -139,6 +139,27 @@ export function ProductsSkeleton() {
       <div className="flex flex-col gap-3">
         {Array.from({ length: 4 }).map((_, i) => (
           <Box key={i} className="h-28" />
+        ))}
+      </div>
+    </div>
+  );
+}
+
+/** /tools/roi — Food ROI Rankings (metric pills + ranked rows). */
+export function RoiSkeleton() {
+  return (
+    <div className="max-w-3xl mx-auto px-4 sm:px-6 py-12">
+      <BackLink label="Back to Tools" />
+      <PageHeader titleWidth="w-56" />
+      <Bar className="h-3.5 w-full max-w-md mb-5" />
+      <div className="flex gap-2 mb-6">
+        {Array.from({ length: 4 }).map((_, i) => (
+          <Bar key={i} className="h-8 w-24 rounded-full" />
+        ))}
+      </div>
+      <div className="flex flex-col gap-2.5">
+        {Array.from({ length: 6 }).map((_, i) => (
+          <Box key={i} className="h-[68px]" />
         ))}
       </div>
     </div>
