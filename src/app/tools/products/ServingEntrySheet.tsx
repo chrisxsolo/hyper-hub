@@ -2,12 +2,12 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { X, Loader2, UtensilsCrossed, AlertTriangle } from "lucide-react";
+import { X, Loader2, UtensilsCrossed, AlertTriangle, Sparkles, RotateCcw } from "lucide-react";
 import { scaleNutrition } from "@/lib/products/serving";
 import { massToGrams, round } from "@/lib/nutrition/units";
 import { FRACTION_PRESETS, validateServings } from "@/lib/nutrition/portion";
 import type { DbCostcoProductNutritionVersion } from "@/lib/products/types";
-import { MEAL_TYPES, type MealType } from "@/lib/nutrition/types";
+import { MEAL_TYPES, type MealType, type ProposedItem } from "@/lib/nutrition/types";
 import { MEAL_TYPE_META } from "@/lib/nutrition/db";
 
 const inputCls =
@@ -18,6 +18,12 @@ const inputCls =
 // grams/servings are direct amounts. Every mode resolves to an (amount, unit)
 // pair the server's scaleNutrition() already understands.
 type PortionMode = "whole" | "half" | "fraction" | "grams" | "servings";
+
+function pickCurrent(
+  versions: DbCostcoProductNutritionVersion[],
+): DbCostcoProductNutritionVersion | null {
+  return versions.find((v) => v.is_current) ?? versions[0] ?? null;
+}
 
 // "How much did you eat?" — logs a Costco product into the calorie tracker via
 // /api/nutrition/log-product. The server recomputes the snapshot; this sheet
@@ -43,20 +49,26 @@ export default function ServingEntrySheet({
   onClose: () => void;
   onLogged?: (mealId: string) => void;
 }) {
+  // The version we log against. Starts from the prop; if the user picks "Whole
+  // item" on a product whose full size we don't know (e.g. an old per-100 g
+  // estimate), we estimate it, save it as a 1-serving version, and swap it in —
+  // so it's instant next time.
+  const [version, setVersion] = useState<DbCostcoProductNutritionVersion>(nutrition);
+  const [vId, setVId] = useState<string | null>(versionId ?? nutrition.id);
+
   // How many servings make up the entire item/package (drives whole/half/fraction).
   const wholeServings =
-    nutrition.servings_per_container && nutrition.servings_per_container > 0
-      ? nutrition.servings_per_container
+    version.servings_per_container && version.servings_per_container > 0
+      ? version.servings_per_container
       : null;
-  const canWhole = wholeServings != null;
   // Grams logging is only meaningful when one serving has a known weight.
   const servingMassGrams =
-    nutrition.serving_size_unit != null ? massToGrams(nutrition.serving_size_value ?? 1, nutrition.serving_size_unit) : null;
+    version.serving_size_unit != null ? massToGrams(version.serving_size_value ?? 1, version.serving_size_unit) : null;
   const canGrams = servingMassGrams != null && servingMassGrams > 0;
 
   // Single-unit items (a bar, a sandwich, an AI-estimated whole food) default to
   // "whole"; multi-serving tubs keep the safe "1 serving" default.
-  const initialMode: PortionMode = canWhole && (wholeServings as number) <= 2 ? "whole" : "servings";
+  const initialMode: PortionMode = wholeServings != null && wholeServings <= 2 ? "whole" : "servings";
 
   const [mode, setMode] = useState<PortionMode>(initialMode);
   const [fractionInput, setFractionInput] = useState("1");
@@ -67,6 +79,9 @@ export default function ServingEntrySheet({
   const [date, setDate] = useState(defaultDate);
   const [busy, setBusy] = useState(false);
   const [err, setErr] = useState("");
+  // Whole-item estimate (only when we don't already know the full size).
+  const [estimating, setEstimating] = useState(false);
+  const [estimateErr, setEstimateErr] = useState("");
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => e.key === "Escape" && onClose();
@@ -74,10 +89,71 @@ export default function ServingEntrySheet({
     return () => window.removeEventListener("keydown", onKey);
   }, [onClose]);
 
+  // Estimate the whole item with AI and save it as a 1-serving nutrition version,
+  // so "Whole item / Half / Fraction" work for foods stored only as per-100 g.
+  async function estimateWholeItem() {
+    if (estimating) return;
+    setEstimating(true);
+    setEstimateErr("");
+    try {
+      const res = await fetch("/api/nutrition/analyze", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          text: [brand, productName].filter(Boolean).join(" "),
+          mealType,
+          forceFresh: true,
+        }),
+      });
+      const json = await res.json().catch(() => ({}));
+      if (!res.ok) throw new Error(json?.error || "Couldn't estimate the whole item.");
+      const item = (json.meal?.items?.[0] as ProposedItem | undefined) ?? null;
+      if (!item) throw new Error("No estimate returned — try grams instead.");
+      const grams = item.gramsEstimate ?? null;
+      const cal =
+        item.calories ??
+        (item.caloriesPer100g != null && grams != null ? (item.caloriesPer100g * grams) / 100 : null);
+      const prot =
+        item.proteinGrams ??
+        (item.proteinPer100g != null && grams != null ? (item.proteinPer100g * grams) / 100 : null);
+      if (cal == null || cal <= 0) throw new Error("The estimate had no calories — try grams instead.");
+      const hasGrams = grams != null && grams > 0;
+
+      const save = await fetch(`/api/products/${productId}/nutrition`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          servingSizeDescription: hasGrams ? `Whole item (~${round(grams, 0)} g)` : "Whole item",
+          servingSizeValue: hasGrams ? round(grams, 0) : 1,
+          servingSizeUnit: hasGrams ? "g" : "item",
+          servingsPerContainer: 1,
+          calories: round(cal, 0),
+          proteinG: prot != null && prot > 0 ? round(prot, 1) : null,
+          notes: "AI estimate — whole item",
+          recognitionConfidence: { overall: item.confidence },
+        }),
+      });
+      const sjson = await save.json().catch(() => ({}));
+      if (!save.ok) throw new Error(sjson?.error || "Couldn't save the estimate.");
+      const newV = pickCurrent((sjson.versions as DbCostcoProductNutritionVersion[]) ?? []);
+      if (!newV) throw new Error("Saved, but couldn't load the estimate.");
+      setVersion(newV);
+      setVId(newV.id);
+    } catch (e) {
+      setEstimateErr(e instanceof Error ? e.message : "Couldn't estimate the whole item.");
+    } finally {
+      setEstimating(false);
+    }
+  }
+
   function pickMode(m: PortionMode) {
     setMode(m);
     setErr("");
     setConfirmHigh(false);
+    // Whole-item modes need the full size — estimate it on demand the first time.
+    if ((m === "whole" || m === "half" || m === "fraction") && wholeServings == null && !estimating) {
+      estimateWholeItem();
+    }
   }
 
   // Resolve the selected mode to the (amount, unit) the tracker logs.
@@ -105,8 +181,8 @@ export default function ServingEntrySheet({
   }, [mode, wholeServings, fractionInput, gramsInput, servingsInput]);
 
   const result = useMemo(
-    () => (resolved ? scaleNutrition(nutrition, resolved.amount, resolved.unit) : null),
-    [nutrition, resolved],
+    () => (resolved ? scaleNutrition(version, resolved.amount, resolved.unit) : null),
+    [version, resolved],
   );
   const snap = result?.ok ? result.snapshot : null;
 
@@ -116,15 +192,17 @@ export default function ServingEntrySheet({
     mode === "servings" && resolved ? validateServings(resolved.amount) : null;
   const blockedHigh = !!servingsCheck && !servingsCheck.valid && servingsCheck.blocked;
   const needsConfirm = !!servingsCheck?.warning;
-  const canLog = !!snap && !blockedHigh && (!needsConfirm || confirmHigh);
+  const wholeBased = mode === "whole" || mode === "half" || mode === "fraction";
+  const awaitingEstimate = wholeBased && wholeServings == null; // estimating or failed
+  const canLog = !!snap && !blockedHigh && !awaitingEstimate && (!needsConfirm || confirmHigh);
 
   // Calories for a given amount/unit, for the whole/half pill labels.
   function calsFor(amount: number, unit: string): number | null {
-    const r = scaleNutrition(nutrition, amount, unit);
+    const r = scaleNutrition(version, amount, unit);
     return r.ok ? r.snapshot.calories : null;
   }
-  const wholeCals = canWhole ? calsFor(wholeServings as number, "serving") : null;
-  const halfCals = canWhole ? calsFor((wholeServings as number) / 2, "serving") : null;
+  const wholeCals = wholeServings != null ? calsFor(wholeServings, "serving") : null;
+  const halfCals = wholeServings != null ? calsFor(wholeServings / 2, "serving") : null;
 
   async function log() {
     if (busy || !snap || !resolved || !canLog) return;
@@ -137,7 +215,7 @@ export default function ServingEntrySheet({
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           productId,
-          versionId: versionId ?? nutrition.id,
+          versionId: vId ?? version.id,
           amount: resolved.amount,
           unit: resolved.unit,
           mealType,
@@ -156,9 +234,9 @@ export default function ServingEntrySheet({
   }
 
   const modes: { key: PortionMode; label: string; show: boolean }[] = [
-    { key: "whole", label: "Whole item", show: canWhole },
-    { key: "half", label: "Half", show: canWhole },
-    { key: "fraction", label: "Fraction", show: canWhole },
+    { key: "whole", label: "Whole item", show: true },
+    { key: "half", label: "Half", show: true },
+    { key: "fraction", label: "Fraction", show: true },
     { key: "grams", label: "Grams", show: canGrams },
     { key: "servings", label: "Servings", show: true },
   ];
@@ -180,7 +258,7 @@ export default function ServingEntrySheet({
               <h2 className="text-base font-semibold text-white">How much did you eat?</h2>
               <p className="text-xs text-readable-faint truncate">
                 {[brand, productName].filter(Boolean).join(" · ")}
-                {nutrition.serving_size_description ? ` — serving: ${nutrition.serving_size_description}` : ""}
+                {version.serving_size_description ? ` — serving: ${version.serving_size_description}` : ""}
               </p>
             </div>
             <button onClick={onClose} aria-label="Close" className="p-1.5 rounded-md text-readable-faint hover:text-white hover:bg-white/10 transition-colors shrink-0">
@@ -205,57 +283,81 @@ export default function ServingEntrySheet({
           </div>
 
           {/* Mode-specific input */}
-          {(mode === "whole" || mode === "half") && (
-            <p className="text-xs text-readable-soft mb-3">
-              Logging {mode === "whole" ? "the whole item" : "half the item"}
-              {wholeServings != null && ` (${round(mode === "whole" ? wholeServings : wholeServings / 2, 2)} ${wholeServings === 1 && mode === "whole" ? "serving" : "servings"})`}
-              {(mode === "whole" ? wholeCals : halfCals) != null && ` — about ${Math.round((mode === "whole" ? wholeCals : halfCals) as number)} cal`}
-              .
-            </p>
-          )}
-
-          {mode === "fraction" && (
-            <div className="mb-3">
-              <div className="flex flex-wrap gap-1.5 mb-2">
-                {FRACTION_PRESETS.map((f) => {
-                  const active = Number(fractionInput) === f;
-                  return (
-                    <button
-                      key={f}
-                      onClick={() => { setFractionInput(String(f)); }}
-                      className={`text-xs px-2.5 py-1 rounded-full border transition-colors ${active ? "border-emerald-400/50 bg-emerald-400/10 text-emerald-200" : "border-white/10 text-readable-soft hover:bg-white/[0.06]"}`}
-                    >
-                      {f}×
-                    </button>
-                  );
-                })}
+          {awaitingEstimate ? (
+            estimating ? (
+              <p className="flex items-center gap-2 text-sm text-readable-soft mb-3 py-2">
+                <Sparkles size={15} className="text-emerald-400 animate-pulse" /> Estimating the whole item…
+              </p>
+            ) : (
+              <div className="mb-3">
+                <p className="text-xs text-readable-soft mb-2">
+                  We don&apos;t know this item&apos;s full size yet — estimate it once and it&apos;s saved for next time.
+                </p>
+                {estimateErr && <p className="text-xs text-amber-300/90 mb-2">{estimateErr}</p>}
+                <button
+                  onClick={estimateWholeItem}
+                  className="inline-flex items-center gap-2 rounded-lg bg-emerald-500/20 border border-emerald-500/30 text-emerald-300 px-3 py-2 text-sm font-medium hover:bg-emerald-500/30 transition-colors"
+                >
+                  {estimateErr ? <RotateCcw size={14} /> : <Sparkles size={14} />}
+                  {estimateErr ? "Retry estimate" : "Estimate the whole item"}
+                </button>
               </div>
-              <label className="flex items-center gap-2">
-                <span className="text-[10px] uppercase tracking-wide text-readable-faint shrink-0">Fraction of item</span>
-                <input inputMode="decimal" value={fractionInput} onChange={(e) => setFractionInput(e.target.value)} className={`${inputCls} w-24`} placeholder="0.5" />
-              </label>
-            </div>
-          )}
+            )
+          ) : (
+            <>
+              {(mode === "whole" || mode === "half") && (
+                <p className="text-xs text-readable-soft mb-3">
+                  Logging {mode === "whole" ? "the whole item" : "half the item"}
+                  {wholeServings != null && wholeServings !== 1 && ` (${round(mode === "whole" ? wholeServings : wholeServings / 2, 2)} servings)`}
+                  {(mode === "whole" ? wholeCals : halfCals) != null && ` — about ${Math.round((mode === "whole" ? wholeCals : halfCals) as number)} cal`}
+                  .
+                </p>
+              )}
 
-          {mode === "grams" && (
-            <label className="flex items-center gap-2 mb-3">
-              <span className="text-[10px] uppercase tracking-wide text-readable-faint shrink-0">Grams</span>
-              <input inputMode="decimal" value={gramsInput} onChange={(e) => setGramsInput(e.target.value)} className={`${inputCls} flex-1`} placeholder="e.g. 150" />
-              <span className="text-sm text-readable-faint">g</span>
-            </label>
-          )}
+              {mode === "fraction" && (
+                <div className="mb-3">
+                  <div className="flex flex-wrap gap-1.5 mb-2">
+                    {FRACTION_PRESETS.map((f) => {
+                      const active = Number(fractionInput) === f;
+                      return (
+                        <button
+                          key={f}
+                          onClick={() => { setFractionInput(String(f)); }}
+                          className={`text-xs px-2.5 py-1 rounded-full border transition-colors ${active ? "border-emerald-400/50 bg-emerald-400/10 text-emerald-200" : "border-white/10 text-readable-soft hover:bg-white/[0.06]"}`}
+                        >
+                          {f}×
+                        </button>
+                      );
+                    })}
+                  </div>
+                  <label className="flex items-center gap-2">
+                    <span className="text-[10px] uppercase tracking-wide text-readable-faint shrink-0">Fraction of item</span>
+                    <input inputMode="decimal" value={fractionInput} onChange={(e) => setFractionInput(e.target.value)} className={`${inputCls} w-24`} placeholder="0.5" />
+                  </label>
+                </div>
+              )}
 
-          {mode === "servings" && (
-            <label className="flex items-center gap-2 mb-2">
-              <span className="text-[10px] uppercase tracking-wide text-readable-faint shrink-0">Servings</span>
-              <input
-                inputMode="decimal"
-                value={servingsInput}
-                onChange={(e) => { setServingsInput(e.target.value); setConfirmHigh(false); setErr(""); }}
-                className={`${inputCls} flex-1 ${blockedHigh ? "border-red-500/50" : needsConfirm ? "border-amber-400/50" : ""}`}
-                placeholder="1"
-              />
-            </label>
+              {mode === "grams" && (
+                <label className="flex items-center gap-2 mb-3">
+                  <span className="text-[10px] uppercase tracking-wide text-readable-faint shrink-0">Grams</span>
+                  <input inputMode="decimal" value={gramsInput} onChange={(e) => setGramsInput(e.target.value)} className={`${inputCls} flex-1`} placeholder="e.g. 150" />
+                  <span className="text-sm text-readable-faint">g</span>
+                </label>
+              )}
+
+              {mode === "servings" && (
+                <label className="flex items-center gap-2 mb-2">
+                  <span className="text-[10px] uppercase tracking-wide text-readable-faint shrink-0">Servings</span>
+                  <input
+                    inputMode="decimal"
+                    value={servingsInput}
+                    onChange={(e) => { setServingsInput(e.target.value); setConfirmHigh(false); setErr(""); }}
+                    className={`${inputCls} flex-1 ${blockedHigh ? "border-red-500/50" : needsConfirm ? "border-amber-400/50" : ""}`}
+                    placeholder="1"
+                  />
+                </label>
+              )}
+            </>
           )}
 
           {/* Serving guard — warn (confirm) or block */}
@@ -286,9 +388,9 @@ export default function ServingEntrySheet({
               <Stat label="Carbs" value={snap.totalCarbohydrateG} unit="g" />
               <Stat label="Fat" value={snap.totalFatG} unit="g" />
             </div>
-          ) : (
+          ) : !awaitingEstimate ? (
             <p className="text-xs text-readable-faint mb-3">Choose how much to preview.</p>
-          )}
+          ) : null}
 
           {/* Meal type */}
           <div className="flex flex-wrap gap-1.5 mb-3">
