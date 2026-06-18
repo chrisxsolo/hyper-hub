@@ -4,11 +4,12 @@ import { useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import {
   ChevronDown, Flame, Beef, Trash2, Copy, CalendarPlus, RefreshCw,
-  BookmarkPlus, Clock, Loader2, Pencil, StickyNote, DollarSign,
+  BookmarkPlus, Clock, Loader2, Pencil, StickyNote, DollarSign, Gauge,
 } from "lucide-react";
 import { SOURCE_LABELS, type SourceType } from "@/lib/nutrition/types";
 import { MEAL_TYPE_META, fmtTime, type MealWithItems } from "@/lib/nutrition/db";
 import type { MealCostSummary } from "@/lib/products/cost";
+import { hasSatiety, satietyLabel, hungerLabel, ratingColor, type SatietyInput } from "@/lib/nutrition/satiety";
 
 const SOURCE_COLOR: Record<SourceType, string> = {
   personal: "#34d399", official_restaurant: "#22d3ee", usda: "#60a5fa",
@@ -33,6 +34,7 @@ export default function MealTimeline({
   onCopyToDay,
   onRecalculate,
   onSaveTemplate,
+  onSetSatiety,
 }: {
   meals: MealWithItems[];
   costByMeal?: Map<string, MealCostSummary>;
@@ -44,11 +46,13 @@ export default function MealTimeline({
   onCopyToDay: (meal: MealWithItems, date: string) => void;
   onRecalculate: (meal: MealWithItems) => void;
   onSaveTemplate: (meal: MealWithItems, name: string) => void;
+  onSetSatiety: (mealId: string, input: SatietyInput) => void;
 }) {
   const [expanded, setExpanded] = useState<Set<string>>(new Set());
   const [copyFor, setCopyFor] = useState<string | null>(null);
   const [tplFor, setTplFor] = useState<string | null>(null);
   const [tplName, setTplName] = useState("");
+  const [satFor, setSatFor] = useState<string | null>(null);
 
   function toggle(id: string) {
     setExpanded((prev) => {
@@ -104,6 +108,9 @@ export default function MealTimeline({
                   <span className="text-[11px] text-readable-faint">{fmtTime(meal.consumed_at)}</span>
                   <span className="w-1.5 h-1.5 rounded-full" style={{ background: confDot(meal.confidence) }} title={`${Math.round((meal.confidence ?? 0) * 100)}% confidence`} />
                   {meal.note && <StickyNote size={11} className="text-readable-faint" />}
+                  {hasSatiety(meal) && (
+                    <Gauge size={11} style={{ color: ratingColor(meal.satiety_score ?? 3, true) }} />
+                  )}
                 </div>
                 <p className="text-xs text-readable-soft truncate mt-0.5">{meal.original_text}</p>
               </div>
@@ -165,6 +172,29 @@ export default function MealTimeline({
                       </div>
                     )}
 
+                    {hasSatiety(meal) && (
+                      <div className="mt-2 text-[11px]">
+                        <div className="flex flex-wrap items-center gap-x-2 gap-y-1">
+                          {meal.satiety_score != null && (
+                            <span className="inline-flex items-center gap-1 text-readable-soft">
+                              <Gauge size={11} style={{ color: ratingColor(meal.satiety_score, true) }} />
+                              Fullness {meal.satiety_score}/5 · {satietyLabel(meal.satiety_score)}
+                            </span>
+                          )}
+                          {meal.hunger_after_2h != null && (
+                            <span className="text-readable-faint">hunger @2h {meal.hunger_after_2h}/5</span>
+                          )}
+                          {meal.hunger_after_3h != null && (
+                            <span className="text-readable-faint">@3h {meal.hunger_after_3h}/5</span>
+                          )}
+                          {meal.cravings_after_meal != null && (
+                            <span className="text-readable-faint">cravings {meal.cravings_after_meal}/5</span>
+                          )}
+                        </div>
+                        {meal.satiety_note && <p className="text-readable-faint mt-0.5">{meal.satiety_note}</p>}
+                      </div>
+                    )}
+
                     {meal.note && (
                       <p className="mt-2 text-xs text-readable-soft flex items-start gap-1.5"><StickyNote size={12} className="mt-0.5 shrink-0 text-readable-faint" />{meal.note}</p>
                     )}
@@ -174,8 +204,9 @@ export default function MealTimeline({
                         <ActionBtn icon={Pencil} label="Edit" onClick={() => onEdit(meal)} />
                         <ActionBtn icon={RefreshCw} label="Recalculate" busy={busy} onClick={() => onRecalculate(meal)} />
                         <ActionBtn icon={Copy} label="Duplicate" onClick={() => onDuplicate(meal)} />
-                        <ActionBtn icon={CalendarPlus} label="Copy to day" onClick={() => { setCopyFor(copyFor === meal.id ? null : meal.id); setTplFor(null); }} />
-                        <ActionBtn icon={BookmarkPlus} label="Save as meal" onClick={() => { setTplFor(tplFor === meal.id ? null : meal.id); setTplName(meal.original_text.slice(0, 40)); setCopyFor(null); }} />
+                        <ActionBtn icon={CalendarPlus} label="Copy to day" onClick={() => { setCopyFor(copyFor === meal.id ? null : meal.id); setTplFor(null); setSatFor(null); }} />
+                        <ActionBtn icon={BookmarkPlus} label="Save as meal" onClick={() => { setTplFor(tplFor === meal.id ? null : meal.id); setTplName(meal.original_text.slice(0, 40)); setCopyFor(null); setSatFor(null); }} />
+                        <ActionBtn icon={Gauge} label="Satiety" onClick={() => { setSatFor(satFor === meal.id ? null : meal.id); setCopyFor(null); setTplFor(null); }} />
                         <button type="button" onClick={() => onDelete(meal.id)} className="ml-auto inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs text-readable-faint hover:text-rose-400 hover:bg-rose-500/10 transition-colors">
                           <Trash2 size={13} /> Delete
                         </button>
@@ -192,6 +223,13 @@ export default function MealTimeline({
                         <input value={tplName} onChange={(e) => setTplName(e.target.value)} placeholder="Name this meal (e.g. usual lunch)" className="rounded-lg bg-white/[0.04] border border-white/10 px-2 py-1.5 text-xs text-white focus:outline-none focus:border-cyan-500/40 flex-1" />
                         <button type="button" disabled={!tplName.trim()} onClick={() => { onSaveTemplate(meal, tplName.trim()); setTplFor(null); }} className="rounded-lg bg-white/[0.06] border border-white/15 text-white px-3 py-1.5 text-xs hover:bg-white/[0.1] transition-colors disabled:opacity-40">Save</button>
                       </div>
+                    )}
+                    {satFor === meal.id && (
+                      <SatietyEditor
+                        meal={meal}
+                        onSave={(input) => { onSetSatiety(meal.id, input); setSatFor(null); }}
+                        onCancel={() => setSatFor(null)}
+                      />
                     )}
                   </div>
                 </motion.div>
@@ -210,5 +248,95 @@ function ActionBtn({ icon: Icon, label, onClick, busy }: { icon: React.ElementTy
       {busy ? <Loader2 size={13} className="animate-spin" /> : <Icon size={13} />}
       {label}
     </button>
+  );
+}
+
+// Inline editor for a meal's satiety / behavior ratings (spec §11). Pre-fills
+// from the meal; tapping a selected number again clears it back to "no rating".
+function SatietyEditor({
+  meal,
+  onSave,
+  onCancel,
+}: {
+  meal: MealWithItems;
+  onSave: (input: SatietyInput) => void;
+  onCancel: () => void;
+}) {
+  const [satiety, setSatiety] = useState<number | null>(meal.satiety_score);
+  const [h2, setH2] = useState<number | null>(meal.hunger_after_2h);
+  const [h3, setH3] = useState<number | null>(meal.hunger_after_3h);
+  const [crav, setCrav] = useState<number | null>(meal.cravings_after_meal);
+  const [note, setNote] = useState(meal.satiety_note ?? "");
+
+  const anySet = satiety != null || h2 != null || h3 != null || crav != null || note.trim() !== "";
+  function save(clear = false) {
+    onSave(
+      clear
+        ? { satietyScore: null, hungerAfter2h: null, hungerAfter3h: null, cravingsAfterMeal: null, note: null }
+        : { satietyScore: satiety, hungerAfter2h: h2, hungerAfter3h: h3, cravingsAfterMeal: crav, note: note.trim() || null },
+    );
+  }
+
+  return (
+    <div className="mt-2 space-y-2 rounded-lg border border-white/10 bg-white/[0.02] p-3">
+      <p className="text-[11px] text-readable-faint">Rate how this meal kept you full (tap a number again to clear).</p>
+      <RatingRow label="Fullness" value={satiety} onChange={setSatiety} higherIsBetter />
+      <RatingRow label="Hunger @2h" value={h2} onChange={setH2} />
+      <RatingRow label="Hunger @3h" value={h3} onChange={setH3} />
+      <RatingRow label="Cravings" value={crav} onChange={setCrav} />
+      <input
+        value={note}
+        onChange={(e) => setNote(e.target.value)}
+        placeholder="Notes (optional) — e.g. kept me full till dinner"
+        maxLength={500}
+        className="w-full rounded-lg bg-white/[0.04] border border-white/10 px-2 py-1.5 text-xs text-white placeholder:text-white/30 focus:outline-none focus:border-emerald-500/40"
+      />
+      <div className="flex items-center gap-2">
+        <button type="button" onClick={() => save(false)} className="rounded-lg bg-emerald-500/15 border border-emerald-500/30 text-emerald-200 px-3 py-1.5 text-xs font-medium hover:bg-emerald-500/25 transition-colors">Save</button>
+        <button type="button" onClick={onCancel} className="rounded-lg border border-white/10 text-readable-soft px-3 py-1.5 text-xs hover:bg-white/[0.05] transition-colors">Cancel</button>
+        {anySet && (
+          <button type="button" onClick={() => save(true)} className="ml-auto text-[11px] text-readable-faint hover:text-rose-300 transition-colors">Clear</button>
+        )}
+      </div>
+    </div>
+  );
+}
+
+function RatingRow({
+  label,
+  value,
+  onChange,
+  higherIsBetter = false,
+}: {
+  label: string;
+  value: number | null;
+  onChange: (n: number | null) => void;
+  higherIsBetter?: boolean;
+}) {
+  return (
+    <div className="flex items-center gap-2">
+      <span className="text-[11px] text-readable-soft w-[68px] shrink-0">{label}</span>
+      <div className="flex gap-1">
+        {[1, 2, 3, 4, 5].map((n) => {
+          const active = value === n;
+          return (
+            <button
+              key={n}
+              type="button"
+              onClick={() => onChange(active ? null : n)}
+              className={`w-7 h-7 rounded-md text-xs font-medium border transition-colors ${active ? "text-black border-transparent" : "border-white/10 text-readable-soft hover:bg-white/[0.06]"}`}
+              style={active ? { background: ratingColor(n, higherIsBetter) } : undefined}
+            >
+              {n}
+            </button>
+          );
+        })}
+      </div>
+      {value != null && (
+        <span className="text-[10px] text-readable-faint truncate">
+          {higherIsBetter ? satietyLabel(value) : hungerLabel(value)}
+        </span>
+      )}
+    </div>
   );
 }

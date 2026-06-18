@@ -17,6 +17,12 @@ export type DbMeal = {
   deleted_at: string | null;
   client_token: string | null;
   created_at: string;
+  // Satiety / behavior ratings (1–5), captured retrospectively (spec §11).
+  satiety_score: number | null;
+  hunger_after_2h: number | null;
+  hunger_after_3h: number | null;
+  cravings_after_meal: number | null;
+  satiety_note: string | null;
 };
 
 export type DbItem = {

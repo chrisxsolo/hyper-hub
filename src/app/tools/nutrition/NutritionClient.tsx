@@ -30,6 +30,7 @@ import {
 import { round } from "@/lib/nutrition/units";
 import { pricePerGram, buildMealCost, type MealCostSummary } from "@/lib/products/cost";
 import { blankProposedItem, targetsOnDate } from "@/lib/nutrition/helpers";
+import type { SatietyInput } from "@/lib/nutrition/satiety";
 import type {
   AliasRow, MealTemplate, MealType, NutritionSettings, ProposedItem, ProposedMeal,
   SavedFood, TargetHistoryRow,
@@ -326,6 +327,28 @@ export default function NutritionClient({ email, canEdit }: { email: string | nu
     if (res.ok) { setFlash(`Saved "${name}" — add an alias in Targets to load it by phrase.`); await load(); }
   }
 
+  // Record satiety / behavior ratings for a meal. These don't change totals, so
+  // we update optimistically and persist (resync on failure).
+  async function setSatiety(mealId: string, input: SatietyInput) {
+    setMeals((prev) =>
+      prev.map((m) =>
+        m.id === mealId
+          ? {
+              ...m,
+              satiety_score: input.satietyScore,
+              hunger_after_2h: input.hungerAfter2h,
+              hunger_after_3h: input.hungerAfter3h,
+              cravings_after_meal: input.cravingsAfterMeal,
+              satiety_note: input.note,
+            }
+          : m,
+      ),
+    );
+    const res = await api(`/api/nutrition/meals/${mealId}/satiety`, "PATCH", input);
+    if (res.ok) setFlash("Satiety saved.");
+    else await load();
+  }
+
   // ── Settings / saved-item management ────────────────────────────────────────────
   async function saveSettings(patch: Record<string, unknown>) {
     setSaving(true);
@@ -561,6 +584,7 @@ export default function NutritionClient({ email, canEdit }: { email: string | nu
               onCopyToDay={(m, date) => duplicateOrCopy(m, date, false)}
               onRecalculate={recalculate}
               onSaveTemplate={saveTemplate}
+              onSetSatiety={setSatiety}
             />
           </div>
 
