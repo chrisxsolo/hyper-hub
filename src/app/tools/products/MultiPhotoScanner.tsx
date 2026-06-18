@@ -89,9 +89,15 @@ const EMPTY_FORM: Form = {
 export default function MultiPhotoScanner({
   onClose,
   onSaved,
+  autoScan = false,
+  requirePrice = true,
 }: {
   onClose: () => void;
   onSaved?: (product: ProductOverview) => void;
+  // Auto-start scanning as soon as photos are picked (one-tap food logging).
+  autoScan?: boolean;
+  // When false, a product can be saved without a price (in-tracker scan-to-log).
+  requirePrice?: boolean;
 }) {
   const [step, setStep] = useState<Step>("select");
   const [items, setItems] = useState<Item[]>([]);
@@ -116,6 +122,16 @@ export default function MultiPhotoScanner({
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
   }, [onClose]);
+
+  // One-tap flow: once photos are picked, scan them automatically. Fires when any
+  // photo is still pending (covers "go back and add another"); re-entry is guarded
+  // by the step flip to "scanning", so it never loops.
+  useEffect(() => {
+    if (autoScan && step === "select" && !busy && items.some((i) => i.status === "pending")) {
+      scanAll();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [autoScan, step, busy, items]);
 
   async function onPick(files: FileList | null) {
     if (!files || !files.length) return;
@@ -233,32 +249,41 @@ export default function MultiPhotoScanner({
     if (busy) return;
     if (!form.name.trim()) { setErr("Give the product a name before saving."); return; }
     const price = toNum(form.price);
-    if (price == null) { setErr("Enter the price before saving."); return; }
+    if (requirePrice && price == null) { setErr("Enter the price before saving."); return; }
     setBusy(true);
     setErr("");
 
     const { results, price: priceImg, nutrition: nutritionImg, primary } = imagePaths();
-    const pricePayload = {
-      totalPrice: price,
-      currency: "USD",
-      unitPrice: pricing.unitPrice,
-      unitType: pricing.unitType,
-      pricePerLb: pricing.pricePerLb,
-      pricePerOz: pricing.pricePerOz,
-      pricePerItem: pricing.pricePerItem,
-      packageCount: toNum(form.packageCount),
-      packageSize: toNum(form.packageSize),
-      packageUnit: form.packageUnit.trim() || null,
-      storeName: form.storeName.trim() || null,
-      sourceType: priceSourceType,
-      sourceImagePath: priceImg ?? primary,
-    };
+    // No price entered (only possible when requirePrice is false) → log the food
+    // without a price observation.
+    const pricePayload =
+      price == null
+        ? null
+        : {
+            totalPrice: price,
+            currency: "USD",
+            unitPrice: pricing.unitPrice,
+            unitType: pricing.unitType,
+            pricePerLb: pricing.pricePerLb,
+            pricePerOz: pricing.pricePerOz,
+            pricePerItem: pricing.pricePerItem,
+            packageCount: toNum(form.packageCount),
+            packageSize: toNum(form.packageSize),
+            packageUnit: form.packageUnit.trim() || null,
+            storeName: form.storeName.trim() || null,
+            sourceType: priceSourceType,
+            sourceImagePath: priceImg ?? primary,
+          };
 
     try {
       let product: ProductOverview;
       let productId: string;
       if (match && !saveAsNew) {
-        const json = await postJson(`/api/products/${match.id}/prices`, pricePayload);
+        // Add a price to the existing product, or just fetch its overview when
+        // there's no price to record.
+        const json = pricePayload
+          ? await postJson(`/api/products/${match.id}/prices`, pricePayload)
+          : await getJson(`/api/products/${match.id}`);
         product = json.product as ProductOverview;
         productId = match.id;
       } else {
@@ -277,7 +302,7 @@ export default function MultiPhotoScanner({
           standardUnit: pricing.standardUnit,
           notes: form.notes.trim() || null,
           imagePath: primary,
-          price: pricePayload,
+          price: pricePayload ?? undefined,
         });
         product = json.product as ProductOverview;
         productId = product.id;
@@ -335,7 +360,9 @@ export default function MultiPhotoScanner({
             <div className="flex items-center gap-2">
               <Layers size={18} className="text-emerald-400" />
               <h2 className="text-base font-semibold text-white">
-                {step === "review" ? "Review product" : "Scan a product"}
+                {step === "review"
+                  ? autoScan ? "Review & log" : "Review product"
+                  : autoScan ? "Scan a food" : "Scan a product"}
               </h2>
             </div>
             <button onClick={onClose} aria-label="Close" className="p-1.5 rounded-md text-readable-faint hover:text-white hover:bg-white/10 transition-colors">
@@ -343,7 +370,11 @@ export default function MultiPhotoScanner({
             </button>
           </div>
           <p className="text-xs text-readable-faint mb-4">
-            {step === "review" ? "Combined from your photos — confirm before saving." : "Add the front, price tag and nutrition label together."}
+            {step === "review"
+              ? "Combined from your photos — confirm before saving."
+              : autoScan
+                ? "Snap or choose a photo — it scans and analyzes automatically."
+                : "Add the front, price tag and nutrition label together."}
           </p>
 
           <input ref={uploadRef} type="file" accept="image/*" multiple className="hidden" onChange={(e) => onPick(e.target.files)} />
@@ -376,7 +407,7 @@ export default function MultiPhotoScanner({
 
               {prepErr && <p className="text-xs text-amber-300/90">{prepErr}</p>}
 
-              {items.length > 0 && (
+              {!autoScan && items.length > 0 && (
                 <button onClick={scanAll} className="inline-flex items-center justify-center gap-2 rounded-lg bg-emerald-500/20 border border-emerald-500/30 text-emerald-300 px-4 py-3 text-sm font-medium hover:bg-emerald-500/30 transition-colors">
                   <ScanLine size={16} /> Scan {items.length} photo{items.length === 1 ? "" : "s"}
                 </button>
@@ -436,7 +467,7 @@ export default function MultiPhotoScanner({
                 <Labeled label="Variant"><input className={`${inputCls} ${low("variant") ? lowCls : ""}`} value={form.variant} onChange={(e) => set("variant", e.target.value)} /></Labeled>
               </div>
               <div className="grid grid-cols-2 gap-3">
-                <Labeled label="Price ($)"><input inputMode="decimal" className={`${inputCls} ${low("totalPrice") ? lowCls : ""}`} value={form.price} onChange={(e) => set("price", e.target.value)} placeholder="26.42" /></Labeled>
+                <Labeled label={requirePrice ? "Price ($)" : "Price ($) — optional"}><input inputMode="decimal" className={`${inputCls} ${low("totalPrice") ? lowCls : ""}`} value={form.price} onChange={(e) => set("price", e.target.value)} placeholder={requirePrice ? "26.42" : "skip if logging a meal"} /></Labeled>
                 <Labeled label="Category">
                   <input list="multi-cats" className={inputCls} value={form.category} onChange={(e) => set("category", e.target.value)} />
                   <datalist id="multi-cats">{PRODUCT_CATEGORIES.map((c) => <option key={c} value={c} />)}</datalist>
@@ -498,6 +529,13 @@ export default function MultiPhotoScanner({
 
 async function postJson(url: string, body: unknown) {
   const res = await fetch(url, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) });
+  const json = await res.json().catch(() => ({}));
+  if (!res.ok) throw new Error(json?.error || "Request failed.");
+  return json;
+}
+
+async function getJson(url: string) {
+  const res = await fetch(url);
   const json = await res.json().catch(() => ({}));
   if (!res.ok) throw new Error(json?.error || "Request failed.");
   return json;

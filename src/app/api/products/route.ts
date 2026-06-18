@@ -58,34 +58,37 @@ export async function POST(request: NextRequest) {
     .single();
   if (pErr || !product) return jsonError(500, pErr?.message ?? "Couldn't create product.", rid);
 
+  // Price is optional: the in-tracker scan-to-log flow records a food without one.
   const p = body.price;
-  const { error: prErr } = await supabase.from("costco_product_prices").insert({
-    product_id: product.id,
-    total_price: p.totalPrice,
-    currency: p.currency,
-    unit_price: p.unitPrice ?? null,
-    unit_type: p.unitType ?? null,
-    package_count: p.packageCount ?? null,
-    package_size: p.packageSize ?? null,
-    package_unit: p.packageUnit ?? null,
-    store_name: p.storeName ?? null,
-    store_location: p.storeLocation ?? null,
-    source_type: p.sourceType,
-    source_image_url: p.sourceImagePath ?? null,
-    recognition_confidence: p.recognitionConfidence ?? null,
-    is_user_confirmed: true,
-    observed_at: p.observedAt ?? new Date().toISOString(),
-  });
-  if (prErr) {
-    // Roll back the orphaned product so we don't leave a price-less record.
-    await supabase.from("costco_products").delete().eq("id", product.id);
-    return jsonError(500, prErr.message, rid);
+  if (p) {
+    const { error: prErr } = await supabase.from("costco_product_prices").insert({
+      product_id: product.id,
+      total_price: p.totalPrice,
+      currency: p.currency,
+      unit_price: p.unitPrice ?? null,
+      unit_type: p.unitType ?? null,
+      package_count: p.packageCount ?? null,
+      package_size: p.packageSize ?? null,
+      package_unit: p.packageUnit ?? null,
+      store_name: p.storeName ?? null,
+      store_location: p.storeLocation ?? null,
+      source_type: p.sourceType,
+      source_image_url: p.sourceImagePath ?? null,
+      recognition_confidence: p.recognitionConfidence ?? null,
+      is_user_confirmed: true,
+      observed_at: p.observedAt ?? new Date().toISOString(),
+    });
+    if (prErr) {
+      // Roll back the orphaned product so we don't leave a half-created record.
+      await supabase.from("costco_products").delete().eq("id", product.id);
+      return jsonError(500, prErr.message, rid);
+    }
   }
 
   // Record the scan as a typed product image (best-effort) so the detail page's
   // Photos & Scans section is populated. source_type tells us what it depicts.
   if (body.imagePath) {
-    const kind = p.sourceType === "shelf_label" ? "price_label" : "product_front";
+    const kind = p?.sourceType === "shelf_label" ? "price_label" : "product_front";
     await recordProductImage(supabase, product.id, kind, body.imagePath, kind === "product_front");
   }
 

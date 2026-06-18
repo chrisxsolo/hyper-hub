@@ -43,8 +43,10 @@ export default function ScanFoodFlow({
   const [product, setProduct] = useState<ProductOverview | null>(null);
   const [version, setVersion] = useState<DbCostcoProductNutritionVersion | null>(null);
   const [estItem, setEstItem] = useState<ProposedItem | null>(null);
-  const [cal100, setCal100] = useState("");
-  const [prot100, setProt100] = useState("");
+  // Whole-item estimate (Claude already returns totals for the whole portion).
+  const [wholeCal, setWholeCal] = useState("");
+  const [wholeProt, setWholeProt] = useState("");
+  const [wholeGrams, setWholeGrams] = useState("");
   const [busy, setBusy] = useState(false);
   const [err, setErr] = useState("");
   // The scanner calls onClose() immediately after onSaved(); this guards that
@@ -92,18 +94,17 @@ export default function ScanFoodFlow({
       const item = (json.meal?.items?.[0] as ProposedItem | undefined) ?? null;
       if (!item) throw new Error("No estimate returned — enter the numbers below.");
       setEstItem(item);
-      const c =
-        item.caloriesPer100g ??
-        (item.calories != null && item.gramsEstimate
-          ? (item.calories / item.gramsEstimate) * 100
-          : null);
-      const pr =
-        item.proteinPer100g ??
-        (item.proteinGrams != null && item.gramsEstimate
-          ? (item.proteinGrams / item.gramsEstimate) * 100
-          : null);
-      setCal100(c != null ? String(round(c, 0)) : "");
-      setProt100(pr != null ? String(round(pr, 1)) : "");
+      const grams = item.gramsEstimate ?? null;
+      // Whole-item totals: prefer Claude's portion totals, else scale per-100g by grams.
+      const cal =
+        item.calories ??
+        (item.caloriesPer100g != null && grams != null ? (item.caloriesPer100g * grams) / 100 : null);
+      const prot =
+        item.proteinGrams ??
+        (item.proteinPer100g != null && grams != null ? (item.proteinPer100g * grams) / 100 : null);
+      setWholeCal(cal != null ? String(round(cal, 0)) : "");
+      setWholeProt(prot != null ? String(round(prot, 1)) : "");
+      setWholeGrams(grams != null ? String(round(grams, 0)) : "");
     } catch (e) {
       setErr(e instanceof Error ? e.message : "Couldn't estimate nutrition.");
     } finally {
@@ -113,12 +114,18 @@ export default function ScanFoodFlow({
 
   async function saveVersionThenServe() {
     if (!product || busy) return;
-    const c = Number(cal100);
-    const pr = Number(prot100);
-    if (!Number.isFinite(c) || c <= 0) {
-      setErr("Enter calories per 100 g (or retry the estimate).");
+    const cal = Number(wholeCal);
+    const prot = Number(wholeProt);
+    const grams = Number(wholeGrams);
+    if (!Number.isFinite(cal) || cal <= 0) {
+      setErr("Enter the calories for the whole item (or retry the estimate).");
       return;
     }
+    // Save the estimate as the whole item (1 serving). With a known weight the
+    // serving is gram-based so the serving sheet can also offer Grams; otherwise
+    // it's a single countable item. servings_per_container = 1 makes the serving
+    // sheet default to "Whole item".
+    const hasGrams = Number.isFinite(grams) && grams > 0;
     setBusy(true);
     setErr("");
     try {
@@ -126,12 +133,13 @@ export default function ScanFoodFlow({
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          servingSizeDescription: "100 g",
-          servingSizeValue: 100,
-          servingSizeUnit: "g",
-          calories: round(c, 0),
-          proteinG: Number.isFinite(pr) && pr > 0 ? round(pr, 1) : null,
-          notes: "AI estimate — adjust after weighing",
+          servingSizeDescription: hasGrams ? `Whole item (~${round(grams, 0)} g)` : "Whole item",
+          servingSizeValue: hasGrams ? round(grams, 0) : 1,
+          servingSizeUnit: hasGrams ? "g" : "item",
+          servingsPerContainer: 1,
+          calories: round(cal, 0),
+          proteinG: Number.isFinite(prot) && prot > 0 ? round(prot, 1) : null,
+          notes: "AI estimate — whole item; adjust if needed",
           recognitionConfidence: estItem ? { overall: estItem.confidence } : null,
         }),
       });
@@ -153,6 +161,8 @@ export default function ScanFoodFlow({
   if (phase === "scan") {
     return (
       <MultiPhotoScanner
+        autoScan
+        requirePrice={false}
         onSaved={handleSaved}
         onClose={() => {
           if (savedRef.current) return; // ignore the scanner's post-save self-close
@@ -218,24 +228,28 @@ export default function ScanFoodFlow({
             </p>
           ) : busy && !estItem ? (
             <p className="text-sm text-readable-faint flex items-center gap-2 py-8 justify-center">
-              <Sparkles size={15} className="text-emerald-400 animate-pulse" /> Estimating from the photo…
+              <Sparkles size={15} className="text-emerald-400 animate-pulse" /> Estimating the whole item…
             </p>
           ) : (
             <>
               <p className="text-xs text-readable-soft mb-3">
-                No nutrition label was found, so here&apos;s an estimate{" "}
-                <span className="text-white font-medium">per 100 g</span>. Adjust if needed — you&apos;ll weigh the
-                actual amount next.
+                No nutrition label was found, so here&apos;s an estimate for the{" "}
+                <span className="text-white font-medium">whole item</span>. Adjust if needed — you can log all of it, half,
+                or a custom amount next.
               </p>
 
-              <div className="grid grid-cols-2 gap-2 mb-3">
+              <div className="grid grid-cols-3 gap-2 mb-3">
                 <label className="flex flex-col gap-1">
-                  <span className="text-[10px] uppercase tracking-wide text-readable-faint">Calories / 100 g</span>
-                  <input inputMode="decimal" value={cal100} onChange={(e) => setCal100(e.target.value)} className={inputCls} placeholder="0" />
+                  <span className="text-[10px] uppercase tracking-wide text-readable-faint">Calories</span>
+                  <input inputMode="decimal" value={wholeCal} onChange={(e) => setWholeCal(e.target.value)} className={inputCls} placeholder="0" />
                 </label>
                 <label className="flex flex-col gap-1">
-                  <span className="text-[10px] uppercase tracking-wide text-readable-faint">Protein g / 100 g</span>
-                  <input inputMode="decimal" value={prot100} onChange={(e) => setProt100(e.target.value)} className={inputCls} placeholder="0" />
+                  <span className="text-[10px] uppercase tracking-wide text-readable-faint">Protein g</span>
+                  <input inputMode="decimal" value={wholeProt} onChange={(e) => setWholeProt(e.target.value)} className={inputCls} placeholder="0" />
+                </label>
+                <label className="flex flex-col gap-1">
+                  <span className="text-[10px] uppercase tracking-wide text-readable-faint">Weight g</span>
+                  <input inputMode="decimal" value={wholeGrams} onChange={(e) => setWholeGrams(e.target.value)} className={inputCls} placeholder="opt." />
                 </label>
               </div>
 
@@ -262,7 +276,7 @@ export default function ScanFoodFlow({
                   className="flex-1 inline-flex items-center justify-center gap-2 rounded-lg bg-emerald-500/20 border border-emerald-500/30 text-emerald-300 px-4 py-2.5 text-sm font-medium hover:bg-emerald-500/30 transition-colors disabled:opacity-40"
                 >
                   {busy ? <Loader2 size={15} className="animate-spin" /> : <ArrowRight size={15} />}
-                  Looks good — weigh it
+                  Looks good — choose amount
                 </button>
                 {product && (
                   <button

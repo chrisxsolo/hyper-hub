@@ -2,6 +2,7 @@ import { type NextRequest } from "next/server";
 import { z } from "zod";
 import { getAuthContext, jsonError, jsonOk, requestId } from "@/lib/nutrition/server";
 import { MEAL_TYPES } from "@/lib/nutrition/types";
+import { isServingUnit, MAX_ABSOLUTE_SERVINGS } from "@/lib/nutrition/portion";
 import { scaleNutrition } from "@/lib/products/serving";
 import type { DbCostcoProductNutritionVersion } from "@/lib/products/types";
 
@@ -31,6 +32,15 @@ export async function POST(request: NextRequest) {
     return jsonError(400, "Invalid log payload.", rid, {
       details: e instanceof Error ? e.message : undefined,
     });
+  }
+
+  // Reject absurd serving counts before they multiply the snapshot.
+  if (isServingUnit(body.unit) && body.amount > MAX_ABSOLUTE_SERVINGS) {
+    return jsonError(
+      422,
+      `Serving amount is too high (max ${MAX_ABSOLUTE_SERVINGS}). Use a realistic amount, Whole item, or grams.`,
+      rid,
+    );
   }
 
   // Load the requested version, or the product's current one.

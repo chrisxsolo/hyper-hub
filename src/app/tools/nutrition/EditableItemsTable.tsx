@@ -5,6 +5,7 @@ import { useState } from "react";
 import { SOURCE_LABELS, type ProposedItem, type SourceType } from "@/lib/nutrition/types";
 import { round, UNIT_OPTIONS } from "@/lib/nutrition/units";
 import { blankProposedItem } from "@/lib/nutrition/helpers";
+import { isServingUnit, validateServings } from "@/lib/nutrition/portion";
 
 export const SOURCE_COLOR: Record<SourceType, string> = {
   personal: "#34d399",
@@ -88,6 +89,10 @@ export default function EditableItemsTable({
           const color = SOURCE_COLOR[it.sourceType];
           const isRange = it.quantity == null && it.quantityMin != null;
           const lowConf = it.confidence < 0.45;
+          // Guard serving-based amounts so a typo (20 servings) can't silently
+          // multiply the meal. Blocking is enforced on save in ReviewPanel.
+          const servingCheck =
+            isServingUnit(it.unit) && it.quantity != null ? validateServings(it.quantity) : null;
           return (
             <div
               key={i}
@@ -112,6 +117,16 @@ export default function EditableItemsTable({
                     {isRange
                       ? `Portion needs confirmation (${it.quantityMin}–${it.quantityMax} ${it.unit} — using midpoint)`
                       : "Low-confidence estimate. Review before saving."}
+                  </div>
+                )}
+                {servingCheck && !servingCheck.valid && (
+                  <div className="flex items-center gap-1 mt-1 text-[10px] text-rose-300/90">
+                    <AlertCircle size={11} /> {servingCheck.message}
+                  </div>
+                )}
+                {servingCheck?.warning && (
+                  <div className="flex items-center gap-1 mt-1 text-[10px] text-amber-300/90">
+                    <AlertCircle size={11} /> {servingCheck.warning}
                   </div>
                 )}
               </div>

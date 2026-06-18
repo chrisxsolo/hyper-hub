@@ -5,6 +5,7 @@ import { motion } from "framer-motion";
 import { Check, X, Pencil, Save, Loader2, Flame, Beef, Info, ShieldCheck } from "lucide-react";
 import { confidenceLevel, type ProposedItem, type ProposedMeal } from "@/lib/nutrition/types";
 import { round } from "@/lib/nutrition/units";
+import { isServingUnit, validateServings } from "@/lib/nutrition/portion";
 import EditableItemsTable from "./EditableItemsTable";
 
 const CONF_COLOR = { high: "#34d399", medium: "#fbbf24", low: "#f87171" };
@@ -42,6 +43,13 @@ export default function ReviewPanel({
   }, [items, proposal.assumptions]);
 
   const overallLevel = confidenceLevel(totals.overall);
+
+  // Block saving while any item has an out-of-range serving count (e.g. 30
+  // servings) — the server rejects it too, but catch it before the round-trip.
+  const blockingServing = useMemo(
+    () => items.some((it) => isServingUnit(it.unit) && it.quantity != null && !validateServings(it.quantity).valid),
+    [items],
+  );
 
   return (
     <motion.div
@@ -103,7 +111,8 @@ export default function ReviewPanel({
         <button
           type="button"
           onClick={() => onSave(items)}
-          disabled={saving || items.length === 0}
+          disabled={saving || items.length === 0 || blockingServing}
+          title={blockingServing ? "One item has too many servings — lower it before saving." : undefined}
           className="inline-flex items-center gap-2 rounded-xl bg-emerald-500/20 border border-emerald-500/40 text-emerald-100 px-5 py-2.5 text-sm font-semibold hover:bg-emerald-500/30 transition-colors disabled:opacity-50"
         >
           {saving ? <Loader2 size={15} className="animate-spin" /> : <Check size={15} />}

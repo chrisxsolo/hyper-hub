@@ -3,6 +3,7 @@
 
 import { z } from "zod";
 import { MEAL_TYPES } from "./types";
+import { isServingUnit, MAX_ABSOLUTE_SERVINGS } from "./portion";
 
 export const itemRowSchema = z.object({
   position: z.number().int().optional(),
@@ -39,7 +40,18 @@ export const itemRowSchema = z.object({
   dietary_fiber_g: z.number().nullable().optional(),
   total_sugars_g: z.number().nullable().optional(),
   added_sugars_g: z.number().nullable().optional(),
-});
+})
+  // A serving-based amount can't exceed the absolute cap (e.g. 30 servings) — a
+  // realistic limit that stops a typo from multiplying a day's nutrition.
+  .superRefine((it, ctx) => {
+    if (it.quantity != null && isServingUnit(it.unit) && it.quantity > MAX_ABSOLUTE_SERVINGS) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ["quantity"],
+        message: `Serving amount is too high (max ${MAX_ABSOLUTE_SERVINGS}). Use a realistic amount, Whole item, or grams.`,
+      });
+    }
+  });
 export type ItemRow = z.infer<typeof itemRowSchema>;
 
 export const mealRowSchema = z.object({

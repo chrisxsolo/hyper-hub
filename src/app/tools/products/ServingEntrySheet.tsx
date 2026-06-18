@@ -2,14 +2,22 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { X, Loader2, UtensilsCrossed } from "lucide-react";
-import { scaleNutrition, LOG_UNIT_OPTIONS } from "@/lib/products/serving";
+import { X, Loader2, UtensilsCrossed, AlertTriangle } from "lucide-react";
+import { scaleNutrition } from "@/lib/products/serving";
+import { massToGrams, round } from "@/lib/nutrition/units";
+import { FRACTION_PRESETS, validateServings } from "@/lib/nutrition/portion";
 import type { DbCostcoProductNutritionVersion } from "@/lib/products/types";
 import { MEAL_TYPES, type MealType } from "@/lib/nutrition/types";
 import { MEAL_TYPE_META } from "@/lib/nutrition/db";
 
 const inputCls =
   "rounded-lg bg-white/[0.04] border border-white/10 px-3 py-2 text-sm text-white placeholder:text-white/30 focus:outline-none focus:border-emerald-500/40 transition-colors";
+
+// How much of the item the user is logging. Whole/half/fraction are expressed
+// as multiples of one serving via the container's servings-per-container;
+// grams/servings are direct amounts. Every mode resolves to an (amount, unit)
+// pair the server's scaleNutrition() already understands.
+type PortionMode = "whole" | "half" | "fraction" | "grams" | "servings";
 
 // "How much did you eat?" — logs a Costco product into the calorie tracker via
 // /api/nutrition/log-product. The server recomputes the snapshot; this sheet
@@ -35,13 +43,26 @@ export default function ServingEntrySheet({
   onClose: () => void;
   onLogged?: (mealId: string) => void;
 }) {
-  const servingGrams =
-    nutrition.serving_size_unit === "g" || nutrition.serving_size_unit === "ml"
-      ? nutrition.serving_size_value
+  // How many servings make up the entire item/package (drives whole/half/fraction).
+  const wholeServings =
+    nutrition.servings_per_container && nutrition.servings_per_container > 0
+      ? nutrition.servings_per_container
       : null;
+  const canWhole = wholeServings != null;
+  // Grams logging is only meaningful when one serving has a known weight.
+  const servingMassGrams =
+    nutrition.serving_size_unit != null ? massToGrams(nutrition.serving_size_value ?? 1, nutrition.serving_size_unit) : null;
+  const canGrams = servingMassGrams != null && servingMassGrams > 0;
 
-  const [amount, setAmount] = useState("1");
-  const [unit, setUnit] = useState("serving");
+  // Single-unit items (a bar, a sandwich, an AI-estimated whole food) default to
+  // "whole"; multi-serving tubs keep the safe "1 serving" default.
+  const initialMode: PortionMode = canWhole && (wholeServings as number) <= 2 ? "whole" : "servings";
+
+  const [mode, setMode] = useState<PortionMode>(initialMode);
+  const [fractionInput, setFractionInput] = useState("1");
+  const [gramsInput, setGramsInput] = useState(canGrams ? String(round(servingMassGrams as number, 0)) : "");
+  const [servingsInput, setServingsInput] = useState("1");
+  const [confirmHigh, setConfirmHigh] = useState(false);
   const [mealType, setMealType] = useState<MealType>(defaultMealType);
   const [date, setDate] = useState(defaultDate);
   const [busy, setBusy] = useState(false);
@@ -53,22 +74,60 @@ export default function ServingEntrySheet({
     return () => window.removeEventListener("keydown", onKey);
   }, [onClose]);
 
-  const amt = Number(amount.replace(/[^0-9.]/g, ""));
+  function pickMode(m: PortionMode) {
+    setMode(m);
+    setErr("");
+    setConfirmHigh(false);
+  }
+
+  // Resolve the selected mode to the (amount, unit) the tracker logs.
+  const resolved = useMemo<{ amount: number; unit: string } | null>(() => {
+    switch (mode) {
+      case "whole":
+        return wholeServings != null ? { amount: wholeServings, unit: "serving" } : null;
+      case "half":
+        return wholeServings != null ? { amount: round(wholeServings / 2, 4), unit: "serving" } : null;
+      case "fraction": {
+        const f = Number(fractionInput);
+        return wholeServings != null && Number.isFinite(f) && f > 0
+          ? { amount: round(wholeServings * f, 4), unit: "serving" }
+          : null;
+      }
+      case "grams": {
+        const g = Number(gramsInput);
+        return Number.isFinite(g) && g > 0 ? { amount: g, unit: "g" } : null;
+      }
+      case "servings": {
+        const s = Number(servingsInput);
+        return Number.isFinite(s) && s > 0 ? { amount: s, unit: "serving" } : null;
+      }
+    }
+  }, [mode, wholeServings, fractionInput, gramsInput, servingsInput]);
+
   const result = useMemo(
-    () => (Number.isFinite(amt) && amt > 0 ? scaleNutrition(nutrition, amt, unit) : null),
-    [nutrition, amt, unit],
+    () => (resolved ? scaleNutrition(nutrition, resolved.amount, resolved.unit) : null),
+    [nutrition, resolved],
   );
   const snap = result?.ok ? result.snapshot : null;
 
-  const quick: { label: string; amount: string; unit: string }[] = [
-    { label: "1 serving", amount: "1", unit: "serving" },
-    { label: "½ serving", amount: "0.5", unit: "serving" },
-    { label: "2 servings", amount: "2", unit: "serving" },
-    ...(servingGrams ? [{ label: `${servingGrams} g`, amount: String(servingGrams), unit: "g" }] : []),
-  ];
+  // Guard only the free-typed servings count — presets (whole/half/fraction) are
+  // deliberate choices and exempt.
+  const servingsCheck =
+    mode === "servings" && resolved ? validateServings(resolved.amount) : null;
+  const blockedHigh = !!servingsCheck && !servingsCheck.valid && servingsCheck.blocked;
+  const needsConfirm = !!servingsCheck?.warning;
+  const canLog = !!snap && !blockedHigh && (!needsConfirm || confirmHigh);
+
+  // Calories for a given amount/unit, for the whole/half pill labels.
+  function calsFor(amount: number, unit: string): number | null {
+    const r = scaleNutrition(nutrition, amount, unit);
+    return r.ok ? r.snapshot.calories : null;
+  }
+  const wholeCals = canWhole ? calsFor(wholeServings as number, "serving") : null;
+  const halfCals = canWhole ? calsFor((wholeServings as number) / 2, "serving") : null;
 
   async function log() {
-    if (busy || !snap) return;
+    if (busy || !snap || !resolved || !canLog) return;
     setBusy(true);
     setErr("");
     try {
@@ -79,8 +138,8 @@ export default function ServingEntrySheet({
         body: JSON.stringify({
           productId,
           versionId: versionId ?? nutrition.id,
-          amount: amt,
-          unit,
+          amount: resolved.amount,
+          unit: resolved.unit,
           mealType,
           eatenOn: date,
           consumedAt,
@@ -95,6 +154,14 @@ export default function ServingEntrySheet({
       setBusy(false);
     }
   }
+
+  const modes: { key: PortionMode; label: string; show: boolean }[] = [
+    { key: "whole", label: "Whole item", show: canWhole },
+    { key: "half", label: "Half", show: canWhole },
+    { key: "fraction", label: "Fraction", show: canWhole },
+    { key: "grams", label: "Grams", show: canGrams },
+    { key: "servings", label: "Servings", show: true },
+  ];
 
   return (
     <AnimatePresence>
@@ -121,29 +188,93 @@ export default function ServingEntrySheet({
             </button>
           </div>
 
-          {/* Quick amounts */}
+          {/* Portion mode */}
           <div className="flex flex-wrap gap-1.5 mb-3">
-            {quick.map((q) => {
-              const active = amount === q.amount && unit === q.unit;
+            {modes.filter((m) => m.show).map((m) => {
+              const active = mode === m.key;
               return (
                 <button
-                  key={q.label}
-                  onClick={() => { setAmount(q.amount); setUnit(q.unit); }}
-                  className={`text-xs px-2.5 py-1 rounded-full border transition-colors ${active ? "border-emerald-400/50 bg-emerald-400/10 text-emerald-200" : "border-white/10 text-readable-soft hover:bg-white/[0.06]"}`}
+                  key={m.key}
+                  onClick={() => pickMode(m.key)}
+                  className={`text-xs px-3 py-1.5 rounded-full border font-medium transition-colors ${active ? "border-emerald-400/50 bg-emerald-400/10 text-emerald-200" : "border-white/10 text-readable-soft hover:bg-white/[0.06]"}`}
                 >
-                  {q.label}
+                  {m.label}
                 </button>
               );
             })}
           </div>
 
-          {/* Custom amount */}
-          <div className="flex gap-2 mb-3">
-            <input inputMode="decimal" value={amount} onChange={(e) => setAmount(e.target.value)} className={`${inputCls} flex-1`} placeholder="Amount" />
-            <select value={unit} onChange={(e) => setUnit(e.target.value)} className={`${inputCls} w-28`}>
-              {LOG_UNIT_OPTIONS.map((u) => <option key={u} value={u}>{u}</option>)}
-            </select>
-          </div>
+          {/* Mode-specific input */}
+          {(mode === "whole" || mode === "half") && (
+            <p className="text-xs text-readable-soft mb-3">
+              Logging {mode === "whole" ? "the whole item" : "half the item"}
+              {wholeServings != null && ` (${round(mode === "whole" ? wholeServings : wholeServings / 2, 2)} ${wholeServings === 1 && mode === "whole" ? "serving" : "servings"})`}
+              {(mode === "whole" ? wholeCals : halfCals) != null && ` — about ${Math.round((mode === "whole" ? wholeCals : halfCals) as number)} cal`}
+              .
+            </p>
+          )}
+
+          {mode === "fraction" && (
+            <div className="mb-3">
+              <div className="flex flex-wrap gap-1.5 mb-2">
+                {FRACTION_PRESETS.map((f) => {
+                  const active = Number(fractionInput) === f;
+                  return (
+                    <button
+                      key={f}
+                      onClick={() => { setFractionInput(String(f)); }}
+                      className={`text-xs px-2.5 py-1 rounded-full border transition-colors ${active ? "border-emerald-400/50 bg-emerald-400/10 text-emerald-200" : "border-white/10 text-readable-soft hover:bg-white/[0.06]"}`}
+                    >
+                      {f}×
+                    </button>
+                  );
+                })}
+              </div>
+              <label className="flex items-center gap-2">
+                <span className="text-[10px] uppercase tracking-wide text-readable-faint shrink-0">Fraction of item</span>
+                <input inputMode="decimal" value={fractionInput} onChange={(e) => setFractionInput(e.target.value)} className={`${inputCls} w-24`} placeholder="0.5" />
+              </label>
+            </div>
+          )}
+
+          {mode === "grams" && (
+            <label className="flex items-center gap-2 mb-3">
+              <span className="text-[10px] uppercase tracking-wide text-readable-faint shrink-0">Grams</span>
+              <input inputMode="decimal" value={gramsInput} onChange={(e) => setGramsInput(e.target.value)} className={`${inputCls} flex-1`} placeholder="e.g. 150" />
+              <span className="text-sm text-readable-faint">g</span>
+            </label>
+          )}
+
+          {mode === "servings" && (
+            <label className="flex items-center gap-2 mb-2">
+              <span className="text-[10px] uppercase tracking-wide text-readable-faint shrink-0">Servings</span>
+              <input
+                inputMode="decimal"
+                value={servingsInput}
+                onChange={(e) => { setServingsInput(e.target.value); setConfirmHigh(false); setErr(""); }}
+                className={`${inputCls} flex-1 ${blockedHigh ? "border-red-500/50" : needsConfirm ? "border-amber-400/50" : ""}`}
+                placeholder="1"
+              />
+            </label>
+          )}
+
+          {/* Serving guard — warn (confirm) or block */}
+          {blockedHigh && (
+            <p className="flex items-start gap-1.5 text-xs text-red-300/90 mb-3">
+              <AlertTriangle size={13} className="mt-0.5 shrink-0" /> {servingsCheck?.message}
+            </p>
+          )}
+          {needsConfirm && !blockedHigh && (
+            <div className="mb-3 rounded-lg border border-amber-400/30 bg-amber-400/[0.07] px-3 py-2">
+              <p className="flex items-start gap-1.5 text-xs text-amber-200/90">
+                <AlertTriangle size={13} className="mt-0.5 shrink-0" /> {servingsCheck?.warning}
+              </p>
+              <label className="mt-1.5 flex items-center gap-2 cursor-pointer select-none text-xs text-amber-100/90">
+                <input type="checkbox" checked={confirmHigh} onChange={(e) => setConfirmHigh(e.target.checked)} className="accent-amber-400" />
+                Yes, I really ate this much
+              </label>
+            </div>
+          )}
 
           {/* Live preview */}
           {result && !result.ok ? (
@@ -156,7 +287,7 @@ export default function ServingEntrySheet({
               <Stat label="Fat" value={snap.totalFatG} unit="g" />
             </div>
           ) : (
-            <p className="text-xs text-readable-faint mb-3">Enter an amount to preview.</p>
+            <p className="text-xs text-readable-faint mb-3">Choose how much to preview.</p>
           )}
 
           {/* Meal type */}
@@ -184,7 +315,7 @@ export default function ServingEntrySheet({
 
           {err && <p className="text-xs text-red-300/90 mb-2">{err}</p>}
 
-          <button onClick={log} disabled={busy || !snap} className="w-full inline-flex items-center justify-center gap-2 rounded-lg bg-emerald-500/20 border border-emerald-500/30 text-emerald-300 px-4 py-2.5 text-sm font-medium hover:bg-emerald-500/30 transition-colors disabled:opacity-40">
+          <button onClick={log} disabled={busy || !canLog} className="w-full inline-flex items-center justify-center gap-2 rounded-lg bg-emerald-500/20 border border-emerald-500/30 text-emerald-300 px-4 py-2.5 text-sm font-medium hover:bg-emerald-500/30 transition-colors disabled:opacity-40">
             {busy ? <Loader2 size={15} className="animate-spin" /> : <UtensilsCrossed size={15} />}
             Log to tracker
           </button>

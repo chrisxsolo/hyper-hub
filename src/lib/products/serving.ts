@@ -13,7 +13,9 @@ const VOLUME_UNIT_TO_ML: Record<string, number> = {
   "fl oz": 29.5735, floz: 29.5735, "fluid ounce": 29.5735, "fluid ounces": 29.5735,
 };
 
-const SERVING_UNITS = new Set(["serving", "servings", "svg", "portion", "portions"]);
+// Units that mean "multiples of one serving/portion" (exported so the portion
+// helpers + serving guards can recognize serving-based amounts consistently).
+export const SERVING_UNITS = new Set(["serving", "servings", "svg", "portion", "portions"]);
 const COUNT_UNITS = new Set([
   "item", "items", "piece", "pieces", "each", "ct", "count",
   "bar", "bars", "cookie", "cookies", "slice", "slices", "packet", "packets",

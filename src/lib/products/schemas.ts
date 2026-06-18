@@ -97,7 +97,8 @@ export const productCreateSchema = z.object({
   standardUnit: z.string().trim().max(20).nullable().optional(),
   notes: z.string().trim().max(2000).nullable().optional(),
   imagePath: z.string().trim().max(400).nullable().optional(),
-  price: z.object(priceFields),
+  // Optional: the in-tracker scan-to-log flow logs a food without a price.
+  price: z.object(priceFields).optional(),
 });
 
 // POST /api/products/[id]/prices — append a price to an existing product.
